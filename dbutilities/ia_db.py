@@ -22,3 +22,7 @@ DBCC CHECKIDENT ('investment_high_interest', reseed,0);
 def save_hi(cursor, values):
     cursor.executemany("insert into investment_high_interest values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+def save_fund(cursor, values):
+    # TODO
+    pass
