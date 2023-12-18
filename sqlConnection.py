@@ -1,22 +1,17 @@
+from dbutilities import connection
 import pyodbc
-# windows authentication
-cnxn = pyodbc.connect(r'Driver=SQL Server;'
-                      r'Server=.\AIF;'
-                      r'Database=test1;'
-                      r'Trusted_Connection=yes;')
-
-# username & password
-# cnxn = pyodbc.connect('DRIVER={SQL Server};'
-#                       r'Server=.\AIF;'
-#                       'Database=test1;'
-#                       'Port=port#;'
-#                       'User ID=sa;'
-#                       'Password=password')
 
 selectAll = r"select * from newtable"
 insertion = r"insert into newtable values (?, ?)"
 deleteGreater2 = r"delete from newtable where id > 2"
 
+#with open("dbutilities\dbProperties.properties") as f:
+#db = connection.connect_db()
+
+cnxn = pyodbc.connect(r'Driver=SQL Server;'
+                      r'Server=.\AIF;'
+                      r'Database=test1;'
+                      r'Trusted_Connection=yes;')
 cursor = cnxn.cursor()
 
 print("clean database for testing: deleting id > 2")
