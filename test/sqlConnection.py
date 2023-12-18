@@ -8,6 +8,7 @@ deleteGreater2 = r"delete from newtable where id > 2"
 #with open("dbutilities\dbProperties.properties") as f:
 #db = connection.connect_db()
 
+# Connect MSSQL database with windows authentication
 cnxn = pyodbc.connect(r'Driver=SQL Server;'
                       r'Server=.\AIF;'
                       r'Database=test1;'

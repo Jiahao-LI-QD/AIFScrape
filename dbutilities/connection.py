@@ -1,3 +1,4 @@
+import os
 import pyodbc
 
 # windows authentication
@@ -15,7 +16,6 @@ import pyodbc
 #                       'User ID=sa;'
 #                       'Password=password')
 
-
 def connect_str(server, database, port=None, user=None, password=None):
     if user is None:
         return (f'Driver={{SQL Server}}; '
@@ -31,7 +31,18 @@ def connect_str(server, database, port=None, user=None, password=None):
                 f'Password={password};')
 
 
-def connect_db(server, database, port=None, user=None, password=None):
-    return pyodbc.connect(connect_str(server, database, port, user, password))
+def connect_db(port=None, user=None, password=None):
+    try :
+        with open(os.path.join(os.path.dirname(__file__), 'dbProperties.properties')) as properties:
+            l = [line.split("=") for line in properties.readlines()]
+            d = {key.strip(): value.strip() for key, value in l}
+        if "server" not in d or "database" not in d:
+            raise Exception("Property server or database not found")
+    except Exception as e:
+        print(e)
+        exit()
+    else:
+        print("Property file load successful!")
 
+    return pyodbc.connect(connect_str(d["server"], d["database"]))
 
