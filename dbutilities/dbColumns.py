@@ -15,8 +15,7 @@ transaction_columns = ["Contract_number", "Transaction_Date", "Transaction_type"
                        "Unit_value"]
 
 fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_name",
-                "Units",
-                "Unit_value", "Value", "ACB"]
+                "Units", "Unit_value", "Value", "ACB"]
 
 participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
 
