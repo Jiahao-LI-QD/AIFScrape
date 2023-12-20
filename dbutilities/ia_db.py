@@ -103,6 +103,65 @@ delete from Contract_Current;
 
 DBCC CHECKIDENT ('Contract_Current', reseed,0);
 """
+
+
+# CURRENT TRANSACTION TABLE CREATION
+"""
+CREATE TABLE Transaction_Current (
+    Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Transaction_Date DATE NOT NULL,
+    Transaction_type varchar(255) NOT NULL,
+    Fundcode varchar(255) NOT NULL,
+    Gross_amount money NOT NULL,
+    Units real,
+    Unit_value real,
+    Snapshot_time datetime NOT NULL,
+    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+);
+
+drop table Transaction_Current;
+
+select * from Transaction_Current;
+
+delete from Transaction_Current;
+
+DBCC CHECKIDENT ('Transaction_Current', reseed,0);
+"""
+def save_transaction(cursor, values):
+    cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.commit()
+#CURRENT FUND TABLE CREATION
+
+"""
+CREATE TABLE Fund_Current (
+    Fund_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Statement_Date DATE NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Account_type varchar(255) NOT NULL,
+    Investment_type varchar(255) NOT NULL,
+    Category varchar(255) NOT NULL,
+    Fund_name varchar(255) NOT NULL,
+    Units real NOT NULL,
+    Unit_value real NOT NULL,
+    Value money NOT NULL,
+    ACB money,
+    Snapshot_time datetime NOT NULL,
+    CONSTRAINT FK_Fund_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+);
+
+drop table Fund_Current;
+
+select * from Fund_Current;
+
+delete from Fund_Current;
+
+DBCC CHECKIDENT ('Fund_Current', reseed,0);
+"""
+
+def save_fund(cursor, values):
+    cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.commit()
 def save_fund(cursor, values):
     print("leyi branch")
 
