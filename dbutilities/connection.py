@@ -1,6 +1,7 @@
 import os
 import pyodbc
 
+
 # windows authentication
 # cnxn = pyodbc.connect(r'Driver=SQL Server;'
 #                       r'Server=.\AIF;'
@@ -18,21 +19,20 @@ import pyodbc
 
 def connect_str(server, database, port=None, user=None, password=None):
     if user is None:
-        return (f'Driver={{SQL Server}}; '
+        return (r'Driver={SQL Server}; '
                 f'Server=.\\{server}; '
                 f'Database={database}; '
                 f'Trusted_Connection=yes;')
     else:
-        return (f'Driver={{SQL Server}}; '
-                f'Server=.\\{server}; '
-                f'Database={database}; '
-                f'port={port}; '
-                f'User ID={user}; '
-                f'Password={password};')
+        return (r'DRIVER={SQL Server};'
+                f'SERVER={server},{port};'  # Note the comma before the port number
+                f'DATABASE={database};'  # Replace with your actual database name
+                f'UID={user};'  # Your username
+                f'PWD={password}') # password
 
 
 def connect_db(port=None, user=None, password=None):
-    try :
+    try:
         with open(os.path.join(os.path.dirname(__file__), 'dbProperties.properties')) as properties:
             l = [line.split("=") for line in properties.readlines()]
             d = {key.strip(): value.strip() for key, value in l}
@@ -44,5 +44,4 @@ def connect_db(port=None, user=None, password=None):
     else:
         print("Property file load successful!")
 
-    return pyodbc.connect(connect_str(d["server"], d["database"]))
-
+    return pyodbc.connect(connect_str(d["server"], d["database"],d["port"], d["user"], d["password"]))
