@@ -1,26 +1,27 @@
 # HIGH INTEREST TABLE CREATION
 """
-create table investment_high_interest (
-    HI_id bigint IDENTITY(1,1) PRIMARY KEY,
-    _Date date not null,
-    contract_number varchar(10) not null ,
-    account_type varchar(10) not null ,
-    investment_type varchar(50) not null,
-    rate real not null,
-    balance money not null,
-    snapshot_time datetime not null
+CREATE TABLE Saving_Current (
+    HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Statement_Date DATE NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Account_type varchar(255) NOT NULL,
+    Investment_type varchar(255) NOT NULL,
+    Rate real NOT NULL,
+    Balance money NOT NULL,
+    Snapshot_time datetime NOT NULL,
+    CONSTRAINT FK_Saving_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
 );
 
-drop table investment_high_interest;
+drop table Saving_Current;
 
-select * from investment_high_interest;
+select * from Saving_Current;
 
-delete from investment_high_interest;
+delete from Saving_Current;
 
-DBCC CHECKIDENT ('investment_high_interest', reseed,0);
+DBCC CHECKIDENT ('Saving_Current', reseed,0);
 """
-def save_hi(cursor, values):
-    cursor.executemany("insert into investment_high_interest values (?, ?, ?, ?, ?, ?, getdate())", values)
+def save_saving(cursor, values):
+    cursor.executemany("insert into Saving_Current values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 def save_fund(cursor, values):
