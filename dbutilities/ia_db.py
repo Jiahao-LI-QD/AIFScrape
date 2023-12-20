@@ -25,4 +25,5 @@ def save_hi(cursor, values):
 
 def save_fund(cursor, values):
     print("Jiahao branch")
+    print("Forrest branch")
     pass
