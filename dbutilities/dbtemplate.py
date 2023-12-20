@@ -14,6 +14,7 @@ client_template = [
     "English",  # language
     fake.date_between(start_date=start_date, end_date='today'),  # birthday
     fake.address(),  # address
+    None,
     fake.city(),  # city
     "ON",  # province
     "XXX XXX",  # zip code
