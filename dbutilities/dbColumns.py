@@ -6,3 +6,5 @@ client_columns = ["LastName", "FirstName", "Sex", "Language", "Birthday", "Addre
 participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
 
 beneficiary_columns = ["Contract_number", "Name", "Allocation", "Relationship", "Class"]
+
+hihihihi
