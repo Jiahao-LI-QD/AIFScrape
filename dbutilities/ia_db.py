@@ -105,9 +105,14 @@ delete from Contract_Current;
 
 DBCC CHECKIDENT ('Contract_Current', reseed,0);
 """
+def save_contract(cursor,values):
+    cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.commit()
 
 
-# CURRENT TRANSACTION TABLE CREATION
+
+
+#CURRENT TRANSACTION TABLE CREATION
 """
 CREATE TABLE Transaction_Current (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -130,6 +135,8 @@ delete from Transaction_Current;
 
 DBCC CHECKIDENT ('Transaction_Current', reseed,0);
 """
+
+
 def save_transaction(cursor, values):
     cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
