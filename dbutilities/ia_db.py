@@ -1,4 +1,4 @@
-# HIGH INTEREST TABLE CREATION
+# CURRENT SAVING TABLE CREATION
 """
 CREATE TABLE Saving_Current (
     HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -25,7 +25,7 @@ def save_saving(cursor, values):
     cursor.commit()
 
 
-# CLIENT TABLE CREATION
+# CURRENT CLIENT TABLE CREATION
 """
 CREATE TABLE Client_Current (
     Clientinfo_id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -59,6 +59,35 @@ DBCC CHECKIDENT ('Client_Current', reseed,0);
 def save_client(cursor, values):
     cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+
+# CURRENT TRANSACTION TABLE CREATION
+"""
+CREATE TABLE Transaction_Current (
+    Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Transaction_Date DATE NOT NULL,
+    Transaction_type varchar(255) NOT NULL,
+    Fundcode varchar(255) NOT NULL,
+    Gross_amount money NOT NULL,
+    Units real,
+    Unit_value real,
+    Snapshot_time datetime NOT NULL,
+    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+);
+
+drop table Transaction_Current;
+
+select * from Transaction_Current;
+
+delete from Transaction_Current;
+
+DBCC CHECKIDENT ('Client_Current', reseed,0);
+"""
+def save_transaction(cursor, values):
+    cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.commit()
+
 def save_fund(cursor, values):
     print("leyi branch")
 
