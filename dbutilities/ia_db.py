@@ -2,7 +2,7 @@
 """
 create table investment_high_interest (
     HI_id bigint IDENTITY(1,1) PRIMARY KEY,
-    Record_Date date not null,
+    _Date date not null,
     contract_number varchar(10) not null ,
     account_type varchar(10) not null ,
     investment_type varchar(50) not null,
@@ -22,3 +22,7 @@ DBCC CHECKIDENT ('investment_high_interest', reseed,0);
 def save_hi(cursor, values):
     cursor.executemany("insert into investment_high_interest values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+def save_fund(cursor, values):
+    # TODO
+    pass
