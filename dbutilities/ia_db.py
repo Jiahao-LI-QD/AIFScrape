@@ -1,4 +1,4 @@
-# HIGH INTEREST TABLE CREATION
+# CURRENT SAVING TABLE CREATION
 """
 CREATE TABLE Saving_Current (
     HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -25,7 +25,7 @@ def save_saving(cursor, values):
     cursor.commit()
 
 
-# CLIENT TABLE CREATION
+# CURRENT CLIENT TABLE CREATION
 """
 CREATE TABLE Client_Current (
     Clientinfo_id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -60,6 +60,8 @@ def save_client(cursor, values):
     cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
+
+#CURRENT CONTRACT TABLE CREATION
 """
 CREATE TABLE Contract_Current (
     Contractinfo_id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -131,8 +133,9 @@ DBCC CHECKIDENT ('Transaction_Current', reseed,0);
 def save_transaction(cursor, values):
     cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
-#CURRENT FUND TABLE CREATION
 
+
+#CURRENT FUND TABLE CREATION
 """
 CREATE TABLE Fund_Current (
     Fund_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -158,10 +161,35 @@ delete from Fund_Current;
 
 DBCC CHECKIDENT ('Fund_Current', reseed,0);
 """
-
 def save_fund(cursor, values):
     cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+#CURRENT PARTICIPANT TABLE CREATION
+"""
+CREATE TABLE Participant_Current (
+    Participant_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Role varchar(255) NOT NULL,
+    Name varchar(255) NOT NULL,
+    Birthday DATE NOT NULL,
+    Snapshot_time DATETIME NOT NULL,
+    CONSTRAINT FK_Participant_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+);
+
+drop table Participant_Current;
+
+select * from Participant_Current;
+
+delete from Participant_Current;
+
+DBCC CHECKIDENT ('Participant_Current', reseed,0);
+"""
+def save_participant(cursor, values):
+    cursor.executemany("insert into Participant_Current values (?, ?, ?, ?, getdate())", values)
+    cursor.commit()
+
+
 def save_fund(cursor, values):
     print("leyi branch")
 
