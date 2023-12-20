@@ -80,3 +80,14 @@ saving_template = [
     random.random() * 10,  # Rate
     random.random() * 10000  # balance
 ]
+
+# generate template for transaction
+transaction_template = [
+    1000000000 + cn.new_contract_number(),  # Contract_number
+    fake.date_between(start_date=start_date, end_date='today'),  # Transaction_Date
+    "Interest Payment",  # Transaction_type
+    random.random() * 10000, # Fundcode
+    None,  # Gross_amount
+    random.random() * 100, # Units
+    random.random() * 100 # Unit_value
+]
