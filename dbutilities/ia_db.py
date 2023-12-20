@@ -133,9 +133,8 @@ DBCC CHECKIDENT ('Transaction_Current', reseed,0);
 def save_transaction(cursor, values):
     cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
-
-
 #CURRENT FUND TABLE CREATION
+
 """
 CREATE TABLE Fund_Current (
     Fund_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -161,6 +160,7 @@ delete from Fund_Current;
 
 DBCC CHECKIDENT ('Fund_Current', reseed,0);
 """
+
 def save_fund(cursor, values):
     cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
@@ -189,6 +189,31 @@ def save_participant(cursor, values):
     cursor.executemany("insert into Participant_Current values (?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
+
+
+#CURRENT BENEFICIARY TABLE
+"""
+CREATE TABLE Beneficiary_Current (
+    Bene_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Contract_number varchar(255) NOT NULL,
+    Name varchar(255) NOT NULL,
+    Allocation real NOT NULL,
+    Relationship varchar(255) NOT NULL,
+    Class varchar(255) NOT NULL,
+    Snapshot_time DATETIME NOT NULL,
+    CONSTRAINT FK_Beneficiary_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+);
+drop table Beneficiary_Current;
+
+select * from Beneficiary_Current;
+
+delete from Beneficiary_Current;
+
+DBCC CHECKIDENT ('Beneficiary_Current', reseed,0);
+"""
+def save_beneficiary(cursor, values):
+    cursor.executemany("insert into Beneficiary_Current values (?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.commit()
 
 def save_fund(cursor, values):
     print("leyi branch")
