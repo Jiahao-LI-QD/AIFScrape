@@ -91,5 +91,3 @@ transaction_template = [
     random.random() * 100, # Units
     random.random() * 100 # Unit_value
 ]
-
-print(transaction_template)
