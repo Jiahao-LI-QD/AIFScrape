@@ -38,6 +38,10 @@ def connect_db(port=None, user=None, password=None):
             d = {key.strip(): value.strip() for key, value in l}
         if "server" not in d or "database" not in d:
             raise Exception("Property server or database not found")
+        if "port" not in d or "user" not in d or "password" not in d:
+            d["port"] = None
+            d["user"] = None
+            d["password"] = None
     except Exception as e:
         print(e)
         exit()
