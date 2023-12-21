@@ -71,6 +71,7 @@ contract_template = [
     "IFAST"  # Source varchar(255) NOT NULL,
 ]
 
+
 # generate template for saving
 saving_template = [
     fake.date_between(start_date=start_date, end_date='today'),  # Statement_Date
@@ -79,4 +80,51 @@ saving_template = [
     "HI",  # Investment_type
     random.random() * 10,  # Rate
     random.random() * 10000  # balance
+]
+
+
+# generate template for transaction
+transaction_template = [
+    1000000000 + cn.new_contract_number(),  # Contract_number
+    fake.date_between(start_date=start_date, end_date='today'),  # Transaction_Date
+    "Interest Payment",  # Transaction_type
+    random.random() * 10000, # Fundcode
+    None,  # Gross_amount
+    random.random() * 100, # Units
+    random.random() * 100 # Unit_value
+]
+
+
+#generate template for fund
+Category = ["U.S. Equities", "Specialty"]
+fund_template = [
+    fake.date_between(start_date=start_date, end_date='today'), # Statement_Date DATE NOT NULL,
+    1000000000 + cn.new_contract_number(), #     Contract_number varchar(255) NOT NULL,
+    "TFSA", #     Account_type varchar(255) NOT NULL,
+    "HI",#     Investment_type varchar(255) NOT NULL,
+    random.choice(Category), #     Category varchar(255) NOT NULL,
+    f"{random.randint(40000,50000)} U.S.", #     Fund_name varchar(255) NOT NULL,
+    random.random() * 100, #     Units real NOT NULL,
+    random.random() * 100, #     Unit_value real NOT NULL,
+    random.random() * 100000,#     Value money NOT NULL,
+    0#     ACB money,
+]
+
+
+#generate template for partcipant
+participant_template = [
+    1000000000 + cn.new_contract_number(), # Contract_number
+    "Annuitant", # Role
+    fake.name(), # Name
+    fake.date_between(start_date=start_date, end_date='today')  # Birthday
+]
+
+
+#generate template for beneficiary
+Relationship = ["Mother", "Father", "Other"]
+beneficiary_template = [
+    1000000000 + cn.new_contract_number(),  # Contract_number
+    random.random() * 10, # %Allocation
+    random.choice(Relationship),  # Relationship
+    "revocable" # Class
 ]
