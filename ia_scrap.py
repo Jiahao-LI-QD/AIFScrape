@@ -16,3 +16,5 @@ wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys('1819806281')
 
 wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
 
+
+
