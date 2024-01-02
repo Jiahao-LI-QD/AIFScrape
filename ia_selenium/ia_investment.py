@@ -40,12 +40,11 @@ Investment_type = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[1]/di
 Rate = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[2]/table/tbody/tr[2]/td[1]').text
 Balance = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[2]/table/tbody/tr[2]/td[2]').text
 Category =wd.find_elements(By.XPATH,)
-Fund_name =
-Units =
-Unit_value =
-ACB =
+# #Fund_name
+# Units =
+# Unit_value =
+# ACB =
 if "INTEREST" in type:
-
 
     print('Saving')
 else:
