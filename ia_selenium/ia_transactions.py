@@ -6,9 +6,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 wd = webdriver.Chrome()
 
-wd.implicitly_wait(15)
+wd.implicitly_wait(20)
 
-wd.get('https://iaa.secureweb.inalco.com/MKMWPN23/home')
+wd.get(ia_conf.web_url)
 
 ia_login.login(wd)
 
@@ -24,20 +24,21 @@ wd.find_element(By.XPATH, '//*[@id="Transactions"]').click()
 ## TODO#1: find date from downloaded excel or contract specification
 
 ## TODO#2: best to change to 'page is finished loading'
-time.sleep(5)
-wd.find_element(By.XPATH, '//*[@id="Debut"]').clear()
-wd.find_element(By.XPATH, '//*[@id="Debut"]').send_keys('2023-03-01')
-wd.find_element(By.XPATH, '//*[@id="rechercheTransactions"]').click()
+def scrape_transactions(wd, transactions):
+    time.sleep(5)
+    wd.find_element(By.XPATH, '//*[@id="Debut"]').clear()
+    wd.find_element(By.XPATH, '//*[@id="Debut"]').send_keys('2023-03-01')
+    wd.find_element(By.XPATH, '//*[@id="rechercheTransactions"]').click()
 
-transactions = []
+    transactions = []
 
 ## TODO#3: grab contract number and keep only the 10 digits between ' - '
 
-data = wd.find_element(By.XPATH, '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody').text
-transactions.append(data)
+    data = wd.find_element(By.XPATH, '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody').text
+    transactions.append(data)
 
-print(data)
-print(transactions)
+    print(data)
+    print(transactions)
 
 input()
 # //*[@id="TransactionsTrouveesDiv"]/div[3]/table/thead/tr/th[1]
