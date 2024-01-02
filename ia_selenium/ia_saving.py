@@ -16,6 +16,5 @@ def scrape(wd, saving):
     Rate = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[2]/table/tbody/tr[2]/td[1]').text
     Balance = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[2]/table/tbody/tr[2]/td[2]').text
 
-    print(formatted_date, Contract_number, Account_type, Investment_type, Rate, Balance)
 
-    saving.loc[len(saving)] = [print(formatted_date, Contract_number, Account_type, Investment_type, Rate, Balance)]
+    saving.loc[len(saving)] = [formatted_date, Contract_number, Account_type, Investment_type, Rate, Balance]
