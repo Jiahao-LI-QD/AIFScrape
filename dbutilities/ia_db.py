@@ -1,4 +1,5 @@
 # CURRENT SAVING TABLE CREATION
+from datetime import date
 """
 CREATE TABLE Saving_Current (
     HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -316,6 +317,7 @@ CREATE TABLE Contract_History (
     U_S_ varchar(255) NOT NULL,
     Representative_status varchar(255) NOT NULL,
     Source varchar(255) NOT NULL, 
+    Record_date Date NOT NULL,
     Snapshot_time datetime NOT NULL
 );
 
@@ -328,7 +330,8 @@ delete from Contract_History;
 DBCC CHECKIDENT ('Contract_History', reseed,0);
 """
 def save_contract_history(cursor,values):
-    cursor.executemany("insert into Contract_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Contract_History values "
+                       "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CAST( GETDATE() AS Date ), getdate())", values)
     cursor.commit()
 
 

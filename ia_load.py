@@ -21,18 +21,6 @@ except Exception as e:
 else:
     print("Database connection successful!")
     size = 1000
-    save_data_into_db(cursor, "csvs/clients.csv", ia_db.save_client, size)
-    save_data_into_db(cursor, "csvs/contracts.csv", ia_db.save_contract, size)
-    save_data_into_db(cursor, "csvs/transactions.csv", ia_db.save_transaction, size)
-    save_data_into_db(cursor, "csvs/funds.csv", ia_db.save_fund, size)
-    save_data_into_db(cursor, "csvs/savings.csv", ia_db.save_saving, size)
-    save_data_into_db(cursor, "csvs/participants.csv", ia_db.save_participant, size)
-    save_data_into_db(cursor, "csvs/beneficiaries.csv", ia_db.save_beneficiary, size)
-
     save_data_into_db(cursor, "csvs/clients.csv", ia_db.save_client_history, size)
     save_data_into_db(cursor, "csvs/contracts.csv", ia_db.save_contract_history, size)
     save_data_into_db(cursor, "csvs/transactions.csv", ia_db.save_transaction_history, size)
-    save_data_into_db(cursor, "csvs/funds.csv", ia_db.save_fund_history, size)
-    save_data_into_db(cursor, "csvs/savings.csv", ia_db.save_saving_history, size)
-    save_data_into_db(cursor, "csvs/participants.csv", ia_db.save_participant_history, size)
-    save_data_into_db(cursor, "csvs/beneficiaries.csv", ia_db.save_beneficiary_history, size)
