@@ -57,6 +57,6 @@ for index, row in contracts.iloc[2:].iterrows():
     # issue date: 'Contract_start_date'
     ia_investment.scrape_investment(wd, fund, saving)
 
-
-
+print(fund)
+fund.to_csv(os.path.join(parameters['csv_path'],'funds'))
 
