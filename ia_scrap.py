@@ -73,39 +73,39 @@ for index, row in contracts.iloc[2:].iterrows():
 
 print("scrape complete")
 print("=========================")
-# fund.to_csv(os.path.join(parameters['csv_path'],'funds.csv'))
-# saving.to_csv(os.path.join(parameters['csv_path'],'savings.csv'))
-# transaction.to_csv(os.path.join(parameters['csv_path'],'transactions.csv'))
-# client.to_csv(os.path.join(parameters['csv_path'],'clients.csv'))
-# beneficiary.to_csv(os.path.join(parameters['csv_path'],'beneficiaries.csv'))
-# participant.to_csv(os.path.join(parameters['csv_path'],'participants.csv'))
-# contracts.iloc[2:].to_csv(os.path.join(parameters['csv_path'],'contracts.csv'))
-# print("Saving to CSVS")
-# print("=========================")
-#
-#
-# try:
-#     cursor = connection.connect_db().cursor()
-# except Exception as e:
-#     print(e)
-#     print("Database connection failed!")
-# else:
-#     print("Database connection successful!")
-#     size = 1000
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'clients.csv'), ia_db.save_client_history, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'participants.csv'), ia_db.save_participant, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'beneficiaries.csv'), ia_db.save_beneficiary, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'savings.csv'), ia_db.save_saving_history, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'funds.csv'), ia_db.save_fund_history, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'transactions.csv'), ia_db.save_transaction, 1000)
-#
-#     save_data_into_db(cursor, os.path.join(parameters['csv_path'],'contracts.csv'), ia_db.save_contract, 1000)
-#
-# print("Saving to Databases")
-# print("=========================")
+fund.to_csv(os.path.join(parameters['csv_path'],'funds.csv'))
+saving.to_csv(os.path.join(parameters['csv_path'],'savings.csv'))
+transaction.to_csv(os.path.join(parameters['csv_path'],'transactions.csv'))
+client.to_csv(os.path.join(parameters['csv_path'],'clients.csv'))
+beneficiary.to_csv(os.path.join(parameters['csv_path'],'beneficiaries.csv'))
+participant.to_csv(os.path.join(parameters['csv_path'],'participants.csv'))
+contracts.iloc[2:].to_csv(os.path.join(parameters['csv_path'],'contracts.csv'))
+print("Saving to CSVS")
+print("=========================")
+
+
+try:
+    cursor = connection.connect_db().cursor()
+except Exception as e:
+    print(e)
+    print("Database connection failed!")
+else:
+    print("Database connection successful!")
+    size = 1000
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'clients.csv'), ia_db.save_client_history, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'participants.csv'), ia_db.save_participant, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'beneficiaries.csv'), ia_db.save_beneficiary, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'savings.csv'), ia_db.save_saving_history, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'funds.csv'), ia_db.save_fund_history, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'transactions.csv'), ia_db.save_transaction, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'contracts.csv'), ia_db.save_contract, 1000)
+
+print("Saving to Databases")
+print("=========================")
 
