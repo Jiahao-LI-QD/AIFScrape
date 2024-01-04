@@ -58,3 +58,5 @@ for index, row in contracts.iloc[2:].iterrows():
     ia_investment.scrape_investment(wd, fund, saving)
 
 
+
+
