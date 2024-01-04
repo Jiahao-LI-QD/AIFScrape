@@ -21,6 +21,7 @@ def scrape(wd, saving):
 
     #rate and balance
     rate = wd.find_element(By.XPATH, paths['rate']).text
+    decimal_rate=float(rate.strip('%') )* 0.01
     balance = wd.find_element(By.XPATH, paths['balance']).text
 
-    saving.loc[len(saving)] = [formatted_date, contract_number, account_type, investment_type, rate, balance]
+    saving.loc[len(saving)] = [formatted_date, contract_number, account_type, investment_type, decimal_rate, balance]
