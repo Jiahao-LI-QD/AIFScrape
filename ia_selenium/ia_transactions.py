@@ -17,7 +17,6 @@ def scrape_transaction(wd, transaction, issue_date):
     text = wd.find_element(By.XPATH, paths['contract_number_account_type']).text
     contract_number = text.split(' - ')[1]
 
-    ## TODO#2: Find account with more than one page of assignment.
 
     # grab contents of the transaction table
     row = wd.find_elements(By.XPATH, paths['row_data'])
@@ -30,3 +29,21 @@ def scrape_transaction(wd, transaction, issue_date):
         Unit_Value = cell.find_element(By.XPATH, './td[6]').text
         transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
                                                Unit_Value]
+## TODO#2: issue arises with find_element when 'next' is next clickable, need to research EC tobeclickable
+    # if wd.find_element(By.XPATH, paths['next_page']).is_displayed:
+    #     print('next button is here')
+    #     wd.find_element(By.XPATH, paths['next_page']).click()
+    #     time.sleep(20)
+    #
+    #     for cell in row:
+    #         Date = cell.find_element(By.XPATH, './td[1]').text
+    #         Transaction = cell.find_element(By.XPATH, './td[2]').text
+    #         Fund = cell.find_element(By.XPATH, './td[3]').text
+    #         Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
+    #         Units = cell.find_element(By.XPATH, './td[5]').text
+    #         Unit_Value = cell.find_element(By.XPATH, './td[6]').text
+    #         transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
+    #                                              Unit_Value]
+
+
+## 2nd page XPath: //*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr[9]/td[4]

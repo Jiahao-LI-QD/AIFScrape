@@ -21,6 +21,8 @@ delete from Saving_Current;
 
 DBCC CHECKIDENT ('Saving_Current', reseed,0);
 """
+
+
 def save_saving(cursor, values):
     cursor.executemany("insert into Saving_Current values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
