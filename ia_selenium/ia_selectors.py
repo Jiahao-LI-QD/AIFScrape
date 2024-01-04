@@ -16,3 +16,13 @@ def fund_paths():
             'table_rows':  ".//*"
         }
     }
+
+
+def transactions_path():
+    return {
+        'transaction_button': '//*[@id="Transactions"]/a',
+        'issue_date': '//*[@id="Debut"]',
+        'refresh_Button': '//*[@id="rechercheTransactions"]',
+        'contract_number_account_type': '//*[@id="content"]/div[1]/div[1]/div/span',
+        'row_data': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr'
+    }
