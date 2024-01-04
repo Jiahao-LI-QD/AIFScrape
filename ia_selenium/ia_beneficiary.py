@@ -7,7 +7,7 @@ def scrape(wd, beneficiary):
     Beneficiary_list = wd.find_elements(By.XPATH, paths['table_beneficiary']['main_beneficiary'])
     for Beneficiary_row in Beneficiary_list:
         Beneficiary_name = Beneficiary_row.find_element(By.XPATH, paths['table_beneficiary']['name_beneficiary']).text
-        Allocation = Beneficiary_row.find_element(By.XPATH, paths['table_beneficiary']['allocation_beneficiary']).text
+        Allocation = float(Beneficiary_row.find_element(By.XPATH, paths['table_beneficiary']['allocation_beneficiary']).text.strip('%'))/100
         Relationship = Beneficiary_row.find_element(By.XPATH, paths['table_beneficiary']['relationship_beneficiary']).text
         Benefit_class = Beneficiary_row.find_element(By.XPATH, paths['table_beneficiary']['class_beneficiary']).text
         beneficiary.loc[len(beneficiary)] = [Contract_number, Beneficiary_name, Allocation, Relationship, Benefit_class]
