@@ -5,11 +5,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
+from ia_load import save_data_into_db
 from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client
-from dbutilities import dbColumns
+from dbutilities import dbColumns, ia_db
 import pandas as pd
 from ia_selenium import keys
 from selenium.webdriver.support import expected_conditions as EC
+from dbutilities import connection
 
 # required parameters for app
 try:
@@ -49,25 +51,51 @@ fund = pd.DataFrame(columns=dbColumns.fund_columns)
 for index, row in contracts.iloc[2:].iterrows():
     print(f"scrapping for contract number {row['Contract_number']}")
 
-    wd.find_element(By.XPATH, '//*[@id="mnMesClients"]/a').click()
-
-    wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').clear()
-
-    wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(row['Contract_number'])
-
-    wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
-
     # TODO: Control Unit
-    ia_investment.scrape_investment(wd, fund, saving)
+    try:
+        wd.find_element(By.XPATH, '//*[@id="mnMesClients"]/a').click()
 
-    ia_transactions.scrape_transaction(wd, transaction, row['Contract_start_date'])
+        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').clear()
 
-    ia_client.scrape(wd, client, beneficiary, participant)
+        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(row['Contract_number'])
 
+        wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
+
+        ia_investment.scrape_investment(wd, fund, saving)
+
+        ia_transactions.scrape_transaction(wd, transaction, row['Contract_start_date'])
+
+        ia_client.scrape(wd, client, beneficiary, participant)
+    except Exception as e:
+        print(e)
+        print(f"something happens when account number is {row['Contract_number']}")
+
+print("scrape complete")
+print("=========================")
 fund.to_csv(os.path.join(parameters['csv_path'],'funds.csv'))
 saving.to_csv(os.path.join(parameters['csv_path'],'savings.csv'))
 transaction.to_csv(os.path.join(parameters['csv_path'],'transactions.csv'))
 client.to_csv(os.path.join(parameters['csv_path'],'clients.csv'))
 beneficiary.to_csv(os.path.join(parameters['csv_path'],'beneficiaries.csv'))
 participant.to_csv(os.path.join(parameters['csv_path'],'participants.csv'))
+print("Saving to CSVS")
+print("=========================")
+
+
+try:
+    cursor = connection.connect_db().cursor()
+except Exception as e:
+    print(e)
+    print("Database connection failed!")
+else:
+    print("Database connection successful!")
+    size = 1000
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'clients.csv'), ia_db.save_client_history, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'savings.csv'), ia_db.save_saving_history, 1000)
+
+    save_data_into_db(cursor, os.path.join(parameters['csv_path'],'transactions.csv'), ia_db.save_client_history, 1000)
+
+print("Saving to Databases")
+print("=========================")
 
