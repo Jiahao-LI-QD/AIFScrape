@@ -1,20 +1,22 @@
 from selenium.webdriver.common.by import By
 from ia_selenium import keys
+from ia_selenium import ia_selectors
 
 
 def login(wd, user, password):
+    paths = ia_selectors.login_paths()
     wd.find_element(By.XPATH,
-                    '//*[@id="eeCleanLoader"]/div/div[1]/div/div/div/div/div[2]/div[1]/div/div/div[1]/a').click()
+                    paths['sign_in_button']).click()
 
-    wd.find_element(By.XPATH, '//*[@id="idp-discovery-username"]').send_keys(user)
+    wd.find_element(By.XPATH, paths['username']).send_keys(user)
 
     # accept cookies
-    wd.find_element(By.XPATH, '/html/body/div[2]/div[2]/a[1]').click()
+    wd.find_element(By.XPATH, paths['cookie_button']).click()
 
-    wd.find_element(By.XPATH, '//*[@id="idp-discovery-submit"]').click()
+    wd.find_element(By.XPATH, paths['submit_username']).click()
 
-    wd.find_element(By.XPATH, '//*[@id="okta-signin-password"]').send_keys(password)
+    wd.find_element(By.XPATH, paths['password']).send_keys(password)
 
-    wd.find_element(By.XPATH, '//*[@id="okta-signin-submit"]').click()
+    wd.find_element(By.XPATH, paths['submit_password']).click()
 
     print(f"user : {user} login successful!")

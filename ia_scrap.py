@@ -12,6 +12,7 @@ import pandas as pd
 from ia_selenium import keys
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
+from ia_selenium import ia_selectors
 
 # required parameters for app
 try:
@@ -28,12 +29,13 @@ wd.implicitly_wait(15)
 wd.get(parameters['web_url'])
 
 ia_login.login(wd, parameters['username'], parameters['password'])
+paths = ia_selectors.scrape_paths()
 # accept cookie
 # accept cookie
 time.sleep(1)
 wait = WebDriverWait(wd, 10)  # seconds want to wait
 wait.until(
-    EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/a[1]"))
+    EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
 ).click()
 
 contracts = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts']))
@@ -50,16 +52,15 @@ fund = pd.DataFrame(columns=dbColumns.fund_columns)
 
 for index, row in contracts.iloc[2:].iterrows():
     print(f"scrapping for contract number {row['Contract_number']}")
-
     # TODO: Control Unit
     try:
-        wd.find_element(By.XPATH, '//*[@id="mnMesClients"]/a').click()
+        wd.find_element(By.XPATH, paths['myclient_button']).click()
 
-        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').clear()
+        wd.find_element(By.XPATH, paths['contract_number_input']).clear()
 
-        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(row['Contract_number'])
+        wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(row['Contract_number'])
 
-        wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
+        wd.find_element(By.XPATH, paths['search_button']).click()
 
         ia_investment.scrape_investment(wd, fund, saving)
 
