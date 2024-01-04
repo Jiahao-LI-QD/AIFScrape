@@ -1,10 +1,11 @@
 import os.path
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import ia_login, ia_investment
+from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client
 from dbutilities import dbColumns
 import pandas as pd
 from ia_selenium import keys
@@ -27,6 +28,7 @@ wd.get(parameters['web_url'])
 ia_login.login(wd, parameters['username'], parameters['password'])
 # accept cookie
 # accept cookie
+time.sleep(1)
 wait = WebDriverWait(wd, 10)  # seconds want to wait
 wait.until(
     EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/a[1]"))
@@ -54,9 +56,18 @@ for index, row in contracts.iloc[2:].iterrows():
     wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(row['Contract_number'])
 
     wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
-    # issue date: 'Contract_start_date'
+
+    # TODO: Control Unit
     ia_investment.scrape_investment(wd, fund, saving)
 
-print(fund)
-fund.to_csv(os.path.join(parameters['csv_path'],'funds'))
+    ia_transactions.scrape_transaction(wd, transaction, row['Contract_start_date'])
+
+    ia_client.scrape(wd, client, beneficiary, participant)
+
+fund.to_csv(os.path.join(parameters['csv_path'],'funds.csv'))
+saving.to_csv(os.path.join(parameters['csv_path'],'savings.csv'))
+transaction.to_csv(os.path.join(parameters['csv_path'],'transactions.csv'))
+client.to_csv(os.path.join(parameters['csv_path'],'clients.csv'))
+beneficiary.to_csv(os.path.join(parameters['csv_path'],'beneficiaries.csv'))
+participant.to_csv(os.path.join(parameters['csv_path'],'participants.csv'))
 

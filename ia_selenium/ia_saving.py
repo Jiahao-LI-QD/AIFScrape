@@ -24,5 +24,3 @@ def scrape(wd, saving):
     balance = wd.find_element(By.XPATH, paths['balance']).text
 
     saving.loc[len(saving)] = [formatted_date, contract_number, account_type, investment_type, rate, balance]
-
-    print(formatted_date, contract_number, account_type, investment_type, rate, balance)
