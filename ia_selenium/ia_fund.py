@@ -2,17 +2,19 @@ from datetime import datetime
 import pandas as pd
 from dbutilities import dbColumns
 from selenium.webdriver.common.by import By
-
+from ia_selenium import ia_selectors
 
 def scrape(wd, fund):
     # ["Statement_Date", "Contract_number", "Account_type", "Investment_type"
     # "Category", "Fund_name", "Units", "Unit_value", "Value", "ACB"]
+    paths = ia_selectors.fund_paths()
+
     statement_date = wd.find_element(By.XPATH, '//*[@id="content"]/div[3]').text.split(" ", 2)[2]
     formatted_date = datetime.strptime(statement_date, '%B %d, %Y').strftime('%Y-%m-%d')
 
     title = wd.find_element(By.XPATH, '//*[@id="content"]/div[1]/div[1]/div/span').text.split(' - ', 2)
     investment_type = wd.find_element(By.XPATH, '//*[@id="content"]/div[4]/div[1]/div/div[1]').text
-    tb = wd.find_elements(By.XPATH, '//*[@id="content"]/div[4]/div[2]/table/tbody/*')
+    tb = wd.find_elements(By.XPATH, paths['table_body']['main_body'])
 
     contract_number, account_type = title[1:]
     category_type = ""
@@ -21,7 +23,7 @@ def scrape(wd, fund):
         if t.get_attribute('style') == r'display: none;' or t.get_attribute('class') == 'footerRow':
             continue
 
-        elements = t.find_elements(By.XPATH, ".//*")
+        elements = t.find_elements(By.XPATH,  paths['table_body']['table_rows'])
 
         if elements[0].get_attribute('class') == 'classificationfondfu':
             category_type = t.text

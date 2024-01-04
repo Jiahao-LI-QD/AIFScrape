@@ -4,7 +4,7 @@ from ia_selenium import ia_selectors
 
 def scrape(wd, saving):
     paths = ia_selectors.saving_paths()
-    wd.find_element(By.XPATH, paths['investment_bottom']).click()
+    wd.find_element(By.XPATH, paths['investment_button']).click()
 
     #statement date
     date_text = wd.find_element(By.XPATH, paths['date_text']).text.split(' ', 2)[2]
