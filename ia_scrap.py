@@ -99,8 +99,6 @@ for index, row in contracts.iloc[start_index:].iterrows():
 
         wd.find_element(By.XPATH, paths['search_button']).click()
 
-
-        wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
         if control_unit == 1:
             ia_investment.scrape_investment(wd, fund, saving)
         elif control_unit == 2:
