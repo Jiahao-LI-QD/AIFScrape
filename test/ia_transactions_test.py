@@ -1,11 +1,9 @@
-import os.path
-import ia_selenium
-
+import ia_scrap
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import ia_login, ia_investment, ia_transactions
+from ia_selenium import ia_login, ia_transactions
 from dbutilities import dbColumns
 import pandas as pd
 from ia_selenium import keys
@@ -43,7 +41,7 @@ fund = pd.DataFrame(columns=dbColumns.fund_columns)
 
 wd.find_element(By.XPATH, '//*[@id="mnMesClients"]/a').click()
 wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').clear()
-wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys('1819806281')
+wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(ia_scrap.row['Contract_number'])
 wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
 
 ia_transactions.scrape_transaction(wd, transaction)

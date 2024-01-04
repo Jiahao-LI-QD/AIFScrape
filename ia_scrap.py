@@ -13,6 +13,7 @@ import pandas as pd
 from ia_selenium import keys
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
+from ia_selenium import ia_selectors
 
 
 ## control unit
@@ -32,17 +33,6 @@ elif control_unit == 2:
 else:
     print("Task: Clients Information")
 print("======================")
-
-# alternative
-# control_variable = input()
-# control_unit = 1 if control_variable == "2" else 0
-#
-# print("If you want to continue from a specific contract number")
-# print("If yes, please input a valid contract number")
-# start_number = input()
-# while not start_number.isnumeric():
-#     print("This is not a valid contract number")
-#     start_number = input()
 
 # required parameters for app
 try:
@@ -75,12 +65,13 @@ wd.implicitly_wait(15)
 wd.get(parameters['web_url'])
 
 ia_login.login(wd, parameters['username'], parameters['password'])
+paths = ia_selectors.scrape_paths()
 # accept cookie
 # accept cookie
 time.sleep(1)
 wait = WebDriverWait(wd, 10)  # seconds want to wait
 wait.until(
-    EC.element_to_be_clickable((By.XPATH, "/html/body/div[2]/div[2]/a[1]"))
+    EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
 ).click()
 
 
@@ -99,13 +90,15 @@ else:
 for index, row in contracts.iloc[start_index:].iterrows():
     print(f"scrapping for contract number {row['Contract_number']}")
 
-    # TODO: Control Unit
     try:
-        wd.find_element(By.XPATH, '//*[@id="mnMesClients"]/a').click()
+        wd.find_element(By.XPATH, paths['myclient_button']).click()
 
-        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').clear()
+        wd.find_element(By.XPATH, paths['contract_number_input']).clear()
 
-        wd.find_element(By.XPATH, '//*[@id="ContractNumber"]').send_keys(row['Contract_number'])
+        wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(row['Contract_number'])
+
+        wd.find_element(By.XPATH, paths['search_button']).click()
+
 
         wd.find_element(By.XPATH, '//*[@id="btnSearch"]').click()
         if control_unit == 1:
