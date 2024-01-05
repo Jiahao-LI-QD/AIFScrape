@@ -28,7 +28,7 @@ def connect_str(server, database, port=None, user=None, password=None):
                 f'SERVER={server},{port};'  # Note the comma before the port number
                 f'DATABASE={database};'  # Replace with your actual database name
                 f'UID={user};'  # Your username
-                f'PWD={password}') # password
+                f'PWD={password}')  # password
 
 
 def connect_db(port=None, user=None, password=None):
