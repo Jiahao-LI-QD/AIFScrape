@@ -15,7 +15,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
 
-
 ## control unit
 control_unit = 1
 start_contract = None
@@ -41,8 +40,9 @@ except Exception as e:
     print(e)
     exit()
 
-
 contracts = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts']))
+# print(type(contracts))
+# print(type(contracts.columns))
 contracts.columns = dbColumns.contract_columns
 start_index = 2
 if start_contract is not None:
@@ -60,7 +60,7 @@ print("======================")
 # start web driver
 wd = webdriver.Chrome()
 
-wd.implicitly_wait(15)
+wd.implicitly_wait(5)
 
 wd.get(parameters['web_url'])
 
