@@ -26,7 +26,7 @@ def scrape_transaction(wd, transaction, issue_date):
         Transaction = cell.find_element(By.XPATH, './td[2]').text
         Fund = cell.find_element(By.XPATH, './td[3]').text
         Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-        Units = cell.find_element(By.XPATH, './td[5]').text
-        Unit_Value = cell.find_element(By.XPATH, './td[6]').text
+        Units = cell.find_element(By.XPATH, './td[5]').text.replace(',', '')
+        Unit_Value = cell.find_element(By.XPATH, './td[6]').text.replace(',', '')
         transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
                                                Unit_Value]
