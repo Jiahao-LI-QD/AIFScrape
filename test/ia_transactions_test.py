@@ -1,9 +1,8 @@
-import ia_scrap
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import ia_login, ia_transactions
+from ia_selenium import ia_login, ia_transactions, ia_scrap
 from dbutilities import dbColumns
 import pandas as pd
 from ia_selenium import keys

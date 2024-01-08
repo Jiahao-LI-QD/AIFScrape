@@ -1,5 +1,7 @@
 # CURRENT SAVING TABLE CREATION
+import csv
 from datetime import date
+
 """
 CREATE TABLE Saving_Current (
     HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -21,6 +23,8 @@ delete from Saving_Current;
 
 DBCC CHECKIDENT ('Saving_Current', reseed,0);
 """
+
+
 def save_saving(cursor, values):
     cursor.executemany("insert into Saving_Current values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
@@ -57,12 +61,15 @@ delete from Client_Current;
 
 DBCC CHECKIDENT ('Client_Current', reseed,0);
 """
+
+
 def save_client(cursor, values):
-    cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())",
+                       values)
     cursor.commit()
 
 
-#CURRENT CONTRACT TABLE CREATION
+# CURRENT CONTRACT TABLE CREATION
 """
 CREATE TABLE Contract_Current (
     Contractinfo_id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -106,12 +113,16 @@ delete from Contract_Current;
 
 DBCC CHECKIDENT ('Contract_Current', reseed,0);
 """
-def save_contract(cursor,values):
-    cursor.executemany("insert into Contract_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+
+
+def save_contract(cursor, values):
+    cursor.executemany(
+        "insert into Contract_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())",
+        values)
     cursor.commit()
 
 
-#CURRENT TRANSACTION TABLE CREATION
+# CURRENT TRANSACTION TABLE CREATION
 """
 CREATE TABLE Transaction_Current (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -134,12 +145,14 @@ delete from Transaction_Current;
 
 DBCC CHECKIDENT ('Transaction_Current', reseed,0);
 """
+
+
 def save_transaction(cursor, values):
     cursor.executemany("insert into Transaction_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#CURRENT FUND TABLE CREATION
+# CURRENT FUND TABLE CREATION
 """
 CREATE TABLE Fund_Current (
     Fund_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -165,12 +178,14 @@ delete from Fund_Current;
 
 DBCC CHECKIDENT ('Fund_Current', reseed,0);
 """
+
+
 def save_fund(cursor, values):
     cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#CURRENT PARTICIPANT TABLE CREATION
+# CURRENT PARTICIPANT TABLE CREATION
 """
 CREATE TABLE Participant_Current (
     Participant_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -190,12 +205,14 @@ delete from Participant_Current;
 
 DBCC CHECKIDENT ('Participant_Current', reseed,0);
 """
+
+
 def save_participant(cursor, values):
     cursor.executemany("insert into Participant_Current values (?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#CURRENT BENEFICIARY TABLE
+# CURRENT BENEFICIARY TABLE
 """
 CREATE TABLE Beneficiary_Current (
     Bene_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -215,10 +232,11 @@ delete from Beneficiary_Current;
 
 DBCC CHECKIDENT ('Beneficiary_Current', reseed,0);
 """
+
+
 def save_beneficiary(cursor, values):
     cursor.executemany("insert into Beneficiary_Current values (?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
-
 
 
 # HISTORY SAVING TABLE CREATION
@@ -243,6 +261,8 @@ delete from Saving_History;
 
 DBCC CHECKIDENT ('Saving_History', reseed,0);
 """
+
+
 def save_saving_history(cursor, values):
     cursor.executemany("insert into Saving_History values (?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
@@ -279,12 +299,15 @@ delete from Client_History;
 
 DBCC CHECKIDENT ('Client_History', reseed,0);
 """
+
+
 def save_client_history(cursor, values):
-    cursor.executemany("insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())",
+                       values)
     cursor.commit()
 
 
-#HISTORY CONTRACT TABLE CREATION
+# HISTORY CONTRACT TABLE CREATION
 """
 CREATE TABLE Contract_History (
     Contractinfo_id bigint PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -329,13 +352,17 @@ delete from Contract_History;
 
 DBCC CHECKIDENT ('Contract_History', reseed,0);
 """
-def save_contract_history(cursor,values):
+
+
+def save_contract_history(cursor, values):
     cursor.executemany("insert into Contract_History values "
-                       "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CAST( GETDATE() AS Date ), getdate())", values)
+                       "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+                       "CAST( GETDATE() AS Date ), getdate())",
+                       values)
     cursor.commit()
 
 
-#HISTORY TRANSACTION TABLE CREATION
+# HISTORY TRANSACTION TABLE CREATION
 """
 CREATE TABLE Transaction_History (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -358,12 +385,14 @@ delete from Transaction_History;
 
 DBCC CHECKIDENT ('Transaction_History', reseed,0);
 """
+
+
 def save_transaction_history(cursor, values):
     cursor.executemany("insert into Transaction_History values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#HISTORY FUND TABLE CREATION
+# HISTORY FUND TABLE CREATION
 """
 CREATE TABLE Fund_History (
     Fund_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -389,12 +418,14 @@ delete from Fund_History;
 
 DBCC CHECKIDENT ('Fund_History', reseed,0);
 """
+
+
 def save_fund_history(cursor, values):
     cursor.executemany("insert into Fund_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#HISTORY PARTICIPANT TABLE CREATION
+# HISTORY PARTICIPANT TABLE CREATION
 """
 CREATE TABLE Participant_History (
     Participant_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -414,12 +445,14 @@ delete from Participant_History;
 
 DBCC CHECKIDENT ('Participant_History', reseed,0);
 """
+
+
 def save_participant_history(cursor, values):
     cursor.executemany("insert into Participant_History values (?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
-#HISTORY BENEFICIARY TABLE CREATION
+# HISTORY BENEFICIARY TABLE CREATION
 """
 CREATE TABLE Beneficiary_History (
     Bene_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -439,6 +472,18 @@ delete from Beneficiary_History;
 
 DBCC CHECKIDENT ('Beneficiary_History', reseed,0);
 """
+
+
 def save_beneficiary_history(cursor, values):
     cursor.executemany("insert into Beneficiary_History values (?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+
+def save_data_into_db(db_cursor, file_name, db_method, batch_size):
+    with open(file_name) as f:
+        f.readline()  # skip the headers
+        data = [tuple(line[1:]) for line in csv.reader(f)]
+    # in case of large dataset
+
+    for i in range(-(len(data) // -batch_size)):
+        db_method(db_cursor, data[i * batch_size:(i + 1) * batch_size])

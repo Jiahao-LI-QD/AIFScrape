@@ -1,4 +1,6 @@
 from datetime import datetime
+from locale import atof
+
 import pandas as pd
 from dbutilities import dbColumns
 from selenium.webdriver.common.by import By
@@ -38,6 +40,7 @@ def scrape(wd, fund):
                 row.append(None)
             else:
                 row.extend(table_columns[1:6])
-
+            row[-3] = atof(row[-3].replace(',', ''))
+            row[-4] = atof(row[-4].replace(',', ''))
             fund.loc[len(fund)] = row
 
