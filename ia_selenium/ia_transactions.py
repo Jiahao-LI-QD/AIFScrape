@@ -8,7 +8,7 @@ def scrape_transaction(wd, transaction, issue_date):
     paths = ia_selectors.transactions_path()
     wd.find_element(By.XPATH, paths['transaction_button']).click()
 
-    ## TODO#1: best to change to 'page is finished loading'
+    ## TODO: best to change to 'page is finished loading'
     time.sleep(10)
     wd.find_element(By.XPATH, paths['issue_date']).clear()
     wd.find_element(By.XPATH, paths['issue_date']).send_keys(issue_date)
@@ -31,12 +31,13 @@ def scrape_transaction(wd, transaction, issue_date):
                                              Unit_Value]
 
     # for "Next" button when there is more than one page of transactions
-    while wd.find_element(By.XPATH, paths['next_page']) and 'Next' in wd.find_element(By.XPATH, paths["next_page"]).get_attribute("outerHTML"):
+    while wd.find_element(By.XPATH, paths['next_page']):
+        next_page_button = wd.find_element(By.XPATH, paths["next_page"])
+        if 'Next' not in next_page_button.get_attribute("outerHTML"):
+            break
         wd.find_element(By.XPATH, paths['next_page']).click()
-        # <span align="right">Next</span> outerHTML
-        # wd.find_element(By.XPATH, paths['next_page']):
-        #         wd.find_element(By.XPATH, paths['next_page']).click()
 
+        ## TODO: best to change to 'page is finished loading'
         time.sleep(20)
 
         row = wd.find_elements(By.XPATH, paths['row_data'])
@@ -49,8 +50,3 @@ def scrape_transaction(wd, transaction, issue_date):
             Unit_Value = cell.find_element(By.XPATH, './td[6]').text
             transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
                                                  Unit_Value]
-
-
-
-
-## 2nd page XPath: //*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr[9]/td[4]
