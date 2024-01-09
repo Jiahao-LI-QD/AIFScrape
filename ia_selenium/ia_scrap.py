@@ -108,7 +108,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line
-            f.write("%s\n" % item)
+            f.write(item)
     # TODO: clean the related record in tables
 
     print("scrape traverse complete")
