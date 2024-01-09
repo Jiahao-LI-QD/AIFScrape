@@ -56,10 +56,12 @@ tables['contracts'] = ia_contracts
 tables['recover'] = []
 
 # do - while loop to traverse through the contract numbers until no exception
-while True:
-    ia_scrap.scrape_traverse(ia_wd, control_unit,tables)
+iteration_time = 1
+while iteration_time < 4:
+    ia_scrap.scrape_traverse(ia_wd, control_unit, tables, csvs, iteration_time)
     if len(tables['recover']) == 0:
         break
+    iteration_time += 1
 
 # record file names
 files = {
