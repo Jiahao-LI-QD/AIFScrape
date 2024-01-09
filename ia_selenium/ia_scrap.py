@@ -2,6 +2,10 @@ import os.path
 import time
 import traceback
 
+import os
+import shutil
+from datetime import datetime
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -119,7 +123,6 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
 
 
 def save_table_into_csv(control_unit, tables, files):
-
     print("Saving to CSVS")
     if control_unit & 1:
         tables['fund'].to_csv(files['fund'])
@@ -167,9 +170,48 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
 def click_contract_list(wd):
     # TODO: click new contract list
+    paths = ia_selectors.download_path()
+    wd.find_element(By.XPATH, paths['myclient_button']).click()
+    wd.find_element(By.XPATH, paths['download_option']).click()
+    wd.find_element(By.XPATH, paths['search_button']).click()
+    wd.find_element(By.XPATH, paths['submit_button']).click()
+    print('Download successfully submitted')
     pass
+
+
 
 
 def save_contract_list(wd):
     # TODO: download contract list file and move to destination & rename it with current date
+    paths = ia_selectors.save_path()
+
+    wd.find_element(By.XPATH, paths['mailbox_button']).click()
+    wd.find_element(By.XPATH, paths['file_link']).click()
+    wd.find_element(By.XPATH, paths['download_file']).click()
+    filename = wd.find_element(By.XPATH, paths['download_file']).text
+    time.sleep(3)
+
+    try:
+        ia_parameters = keys.ia_account()
+    except Exception as e:
+        print(e)
+        exit()
+
+    def rename_downloaded_file(old_name, new_name):
+        # Check if the file exists
+        if os.path.exists(old_name):
+            # Rename the file
+            os.rename(old_name, new_name)
+            print(f"File {old_name} renamed to {new_name}")
+        else:
+            print(f"File {old_name} does not exist")
+
+    # Provide the old and new file names
+    date_today = "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
+    new_filename = os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'],
+                                date_today + 'contract.XLSX')  # Replace with the desired new file name
+    old_file = os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], filename)
+
+    rename_downloaded_file(old_file, new_filename)
+    print('Rename file passed')
     pass
