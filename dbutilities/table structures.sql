@@ -23,7 +23,7 @@ CREATE CLUSTERED INDEX IX_Client_Current_name_birthday
 ON Client_Current (LastName,FirstName, Birthday);
 
 CREATE TABLE Contract_Current (
-    Contractinfo_id BIGINT PRIMARY KEY NONCLUSTERED IDENTITY(1,1) NOT NULL,
+    Contractinfo_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     Applicant_last_name varchar(255) NOT NULL,
     Applicant_first_name varchar(255) NOT NULL,
     City varchar(255) NOT NULL,
@@ -56,9 +56,6 @@ CREATE TABLE Contract_Current (
     Snapshot_time datetime NOT NULL,
 	CONSTRAINT UQ_Contract_Current_Contract_number UNIQUE (Contract_number)
 );
-
-CREATE CLUSTERED INDEX IX_Contract_Current_Contract_number
-ON Contract_Current (Contract_number);
 
 CREATE TABLE Transaction_Current (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -147,7 +144,7 @@ CREATE CLUSTERED INDEX IX_Client_History_name_birthday
 ON Client_History (LastName,FirstName, Birthday);
 
 CREATE TABLE Contract_History (
-    Contractinfo_id BIGINT PRIMARY KEY NONCLUSTERED IDENTITY(1,1) NOT NULL,
+    Contractinfo_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     Applicant_last_name varchar(255) NOT NULL,
     Applicant_first_name varchar(255) NOT NULL,
     City varchar(255) NOT NULL,
@@ -182,7 +179,7 @@ CREATE TABLE Contract_History (
 	CONSTRAINT UQ_Contract_History_Contract_number UNIQUE (Contract_number, Record_date)
 );
 
-CREATE CLUSTERED INDEX IX_Contract_History_Contract_number_and_Record_date
+CREATE NONCLUSTERED INDEX IX_Contract_History_Contract_number_and_Record_date
 ON Contract_History (Contract_number, Record_date);
 
 CREATE TABLE Transaction_History (
