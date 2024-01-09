@@ -75,9 +75,8 @@ def scrape_traverse(wd, control_unit, tables):
         except Exception as e:
             error_contract_number += 1
             print(f"Error: Cannot found customer: {row['Contract_number']}")
-
             # TODO: put error log in log file
-            # TODO: put the contract number into list in a dataframe
+            tables['recover'].append(row['Contract_number'])
             continue
 
         try:
@@ -88,15 +87,14 @@ def scrape_traverse(wd, control_unit, tables):
             if control_unit & 4:
                 ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'])
         except Exception as e:
-            print(e)
-            print(traceback.format_exc())
             print(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
+            tables['recover'].append(row['Contract_number'])
             error_count += 1
             # TODO: put error log in log file
-            # TODO: put the contract number list in a dataframe
+            # print(e)
+            # print(traceback.format_exc())
 
-    # TODO: Save error log in log file
-    # TODO: Save contract number list in a dataframe
+    # TODO: Save error log in log file (timestamp)
     # TODO: clean the related record in tables
     print("scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")

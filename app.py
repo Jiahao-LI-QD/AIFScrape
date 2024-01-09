@@ -1,4 +1,3 @@
-## control unit
 from datetime import datetime
 import os
 import sys
@@ -51,6 +50,7 @@ ia_wd = ia_scrap.ia_app(ia_parameters)
 
 # create dataframes for all the tables
 tables = ia_scrap.create_table(control_unit)
+
 
 tables['contracts'] = ia_contracts
 tables['recover'] = []
