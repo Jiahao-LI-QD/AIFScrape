@@ -83,3 +83,18 @@ def beneficiary_paths():
         }
 
     }
+
+def save_path():
+    return {
+        'mailbox_button': '//*[@id="mnSectExpAgence"]/a[2]',
+        'file_link': '//*[@id="inboxMessageTable"]/tbody/tr[1]/td[3]/span[3]/a',
+        'download_file': '//*[@id="Attachments"]/ul/li/a'
+    }
+
+def download_path():
+    return {
+        'myclient_button': '//*[@id="mnMesClients"]/a',
+        'download_option': '//*[@id="SearchCriteriaForm"]/div/div[5]/div/div[5]/label',
+        'search_button': '//*[@id="btnSearch"]',
+        'submit_button': '//*[@id="ia-ali-2c-floating-portlet-layout-container"]/div[3]/form/div[2]/input'
+    }
