@@ -49,7 +49,7 @@ def create_table(control_unit):
     return result
 
 
-def scrape_traverse(wd, control_unit, tables):
+def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     paths = ia_selectors.scrape_paths()
     error_count = 0
     error_contract_number = 0
@@ -61,41 +61,56 @@ def scrape_traverse(wd, control_unit, tables):
     tables['recover'].clear()
 
     # TODO: create error log file
-    for index, row in contracts.iterrows():
-        print(f"scrapping for contract number {row['Contract_number']}")
+    logfile = os.path.join(csvs, "error_log_" + iteration_time + ".txt")
+    with open(logfile, 'a') as log:
+        for index, row in contracts.iterrows():
+            print(f"scrapping for contract number {row['Contract_number']}")
 
-        try:
-            wd.find_element(By.XPATH, paths['myclient_button']).click()
+            try:
+                wd.find_element(By.XPATH, paths['myclient_button']).click()
 
-            wd.find_element(By.XPATH, paths['contract_number_input']).clear()
+                wd.find_element(By.XPATH, paths['contract_number_input']).clear()
 
-            wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(row['Contract_number'])
+                wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(row['Contract_number'])
 
-            wd.find_element(By.XPATH, paths['search_button']).click()
-        except Exception as e:
-            error_contract_number += 1
-            print(f"Error: Cannot found customer: {row['Contract_number']}")
-            # TODO: put error log in log file
-            tables['recover'].append(row['Contract_number'])
-            continue
+                wd.find_element(By.XPATH, paths['search_button']).click()
+            except Exception as e:
+                error_contract_number += 1
+                print(f"Error: Cannot found customer: {row['Contract_number']}")
 
-        try:
-            if control_unit & 1:
-                ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
-            if control_unit & 2:
-                ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
-            if control_unit & 4:
-                ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'])
-        except Exception as e:
-            print(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
-            tables['recover'].append(row['Contract_number'])
-            error_count += 1
-            # TODO: put error log in log file
-            # print(e)
-            # print(traceback.format_exc())
+                log.write(f"Error: Cannot found customer: {row['Contract_number']}")
+                log.write(str(e))
+                log.write(traceback.format_exc())
+                log.write("=============================================================")
 
-    # TODO: Save error log in log file (timestamp)
+                tables['recover'].append(row['Contract_number'])
+                continue
+
+            try:
+                if control_unit & 1:
+                    ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
+                if control_unit & 2:
+                    ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
+                if control_unit & 4:
+                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'])
+            except Exception as e:
+                print(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
+                tables['recover'].append(row['Contract_number'])
+                error_count += 1
+
+                log.write(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
+                log.write(str(e))
+                log.write(traceback.format_exc())
+                log.write("=============================================================")
+
+    # save recovery list after current traverse
+    recovery = os.path.join(csvs, "recovery_list_" + iteration_time + ".txt")
+    with open(recovery, 'a') as f:
+        for item in tables['recover']:
+            # write each item on a new line
+            f.write("%s\n" % item)
     # TODO: clean the related record in tables
+
     print("scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")
     print(f"Total error during scrape: {error_count}")
