@@ -61,29 +61,30 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     tables['recover'].clear()
 
     # TODO: create error log file
-    logfile = os.path.join(csvs, f"error_log_{iteration_time}.txt")
+    logfile = os.path.join(csvs, "error_log_" + str(iteration_time) + ".txt")
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
-            print(f"scrapping for contract number {row['Contract_number']}")
+            contract_number_ = row['Contract_number']
+            print(f"scrapping for contract number {contract_number_}")
 
             try:
                 wd.find_element(By.XPATH, paths['myclient_button']).click()
 
                 wd.find_element(By.XPATH, paths['contract_number_input']).clear()
 
-                wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(row['Contract_number'])
+                wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(contract_number_)
 
                 wd.find_element(By.XPATH, paths['search_button']).click()
             except Exception as e:
                 error_contract_number += 1
-                print(f"Error: Cannot found customer: {row['Contract_number']}")
+                print(f"Error: Cannot found customer: {contract_number_}")
 
-                log.write(f"Error: Cannot found customer: {row['Contract_number']}")
+                log.write(f"Error: Cannot found customer: {contract_number_}")
                 log.write(str(e))
                 log.write(traceback.format_exc())
                 log.write("=============================================================")
 
-                tables['recover'].append(row['Contract_number'])
+                tables['recover'].append(contract_number_)
                 continue
 
             try:
@@ -91,20 +92,20 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                     ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
                 if control_unit & 2:
                     ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
-                if control_unit & 4:
-                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'])
+                if control_unit & 4 or contract_number_ in tables['new_contracts']:
+                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'], contract_number_)
             except Exception as e:
-                print(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
-                tables['recover'].append(row['Contract_number'])
+                print(f"Error: Scrape interrupted on customer: {contract_number_}")
+                tables['recover'].append(contract_number_)
                 error_count += 1
 
-                log.write(f"Error: Scrape interrupted on customer: {row['Contract_number']}")
+                log.write(f"Error: Scrape interrupted on customer: {contract_number_}")
                 log.write(str(e))
                 log.write(traceback.format_exc())
                 log.write("=============================================================")
 
     # save recovery list after current traverse
-    recovery = os.path.join(csvs, f"recovery_list_{iteration_time}.txt")
+    recovery = os.path.join(csvs, "recovery_list_" + str(iteration_time) + ".txt")
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line
@@ -125,7 +126,7 @@ def save_table_into_csv(control_unit, tables, files):
         tables['saving'].to_csv(files['saving'])
     if control_unit & 2:
         tables['transaction'].to_csv(files['transaction'])
-    if control_unit & 4:
+    if control_unit & 4 or len(tables['new_contracts']) != 0:
         tables['client'].to_csv(files['client'])
         tables['beneficiary'].to_csv(files['beneficiary'])
         tables['participant'].to_csv(files['participant'])
@@ -135,7 +136,7 @@ def save_table_into_csv(control_unit, tables, files):
     print("=========================")
 
 
-def save_csv_to_db(control_unit, files):
+def save_csv_to_db(control_unit, files, new_contracts):
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -146,16 +147,19 @@ def save_csv_to_db(control_unit, files):
         print("Database connection successful!")
         batch_size = 1000
         ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract_history, batch_size)
+        if control_unit & 4 or new_contracts:
+            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
+            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
+            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
         if control_unit & 1:
             ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving_history, batch_size)
             ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund_history, batch_size)
         if control_unit & 2:
             ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
-        if control_unit & 4:
-            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
-    # TODO: Clear the current tables & insert current data
+
+        # TODO: Clear the current tables & insert current data
+
+        # TODO: don't clear client, participant, beneficiary tables when new_contracts == True
 
     print("Saving to Databases")
     print("=========================")
