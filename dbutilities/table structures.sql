@@ -6,7 +6,7 @@ CREATE TABLE Client_Current (
     Language varchar(255) NOT NULL,
     Birthday date NOT NULL,
     Address varchar(255) NOT NULL,
-    Address_line2 varchar(255),
+    AddressLine2 varchar(255),
     City varchar(255) NOT NULL,
     Province varchar(255) NOT NULL,
     Postal_Code varchar(255) NOT NULL,
@@ -16,14 +16,12 @@ CREATE TABLE Client_Current (
     Cell_Phone varchar(255),
     Primary_Email varchar(255) NOT NULL,
     Secondary_Email varchar(255),
+    Contract_number_as_owner varchar(255) UNIQUE NOT NULL,
     Snapshot_time datetime NOT NULL
 );
 
-CREATE CLUSTERED INDEX IX_Client_Current_name_birthday
-ON Client_Current (LastName,FirstName, Birthday);
-
 CREATE TABLE Contract_Current (
-    Contractinfo_id BIGINT PRIMARY KEY NONCLUSTERED IDENTITY(1,1) NOT NULL,
+    Contractinfo_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     Applicant_last_name varchar(255) NOT NULL,
     Applicant_first_name varchar(255) NOT NULL,
     City varchar(255) NOT NULL,
@@ -53,12 +51,8 @@ CREATE TABLE Contract_Current (
     U_S_ varchar(255) NOT NULL,
     Representative_status varchar(255) NOT NULL,
     Source varchar(255) NOT NULL,
-    Snapshot_time datetime NOT NULL,
-	CONSTRAINT UQ_Contract_Current_Contract_number UNIQUE (Contract_number)
+    Snapshot_time datetime NOT NULL
 );
-
-CREATE CLUSTERED INDEX IX_Contract_Current_Contract_number
-ON Contract_Current (Contract_number);
 
 CREATE TABLE Transaction_Current (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -70,7 +64,7 @@ CREATE TABLE Transaction_Current (
     Units real,
     Unit_value real,
     Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Saving_Current (
@@ -82,7 +76,7 @@ CREATE TABLE Saving_Current (
     Rate real NOT NULL,
     Balance money NOT NULL,
     Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Saving_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+    CONSTRAINT FK_Saving_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Fund_Current (
@@ -98,7 +92,7 @@ CREATE TABLE Fund_Current (
     Value money NOT NULL,
     ACB money,
     Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Fund_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+    CONSTRAINT FK_Fund_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Participant_Current (
@@ -108,7 +102,7 @@ CREATE TABLE Participant_Current (
     Name varchar(255) NOT NULL,
     Birthday DATE NOT NULL,
     Snapshot_time DATETIME NOT NULL,
-    CONSTRAINT FK_Participant_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+    CONSTRAINT FK_Participant_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Beneficiary_Current (
@@ -119,11 +113,11 @@ CREATE TABLE Beneficiary_Current (
     Relationship varchar(255) NOT NULL,
     Class varchar(255) NOT NULL,
     Snapshot_time DATETIME NOT NULL,
-    CONSTRAINT FK_Beneficiary_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
+    CONSTRAINT FK_Beneficiary_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Client_History (
-    Clientinfo_id BIGINT PRIMARY KEY NONCLUSTERED IDENTITY(1,1) NOT NULL,
+    Clientinfo_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     LastName varchar(255) NOT NULL,
     FirstName varchar(255) NOT NULL,
     Sex varchar(255) NOT NULL,
@@ -140,14 +134,15 @@ CREATE TABLE Client_History (
     Cell_Phone varchar(255),
     Primary_Email varchar(255) NOT NULL,
     Secondary_Email varchar(255),
+    Contract_number_as_owner varchar(255) NOT NULL,
     Snapshot_time datetime NOT NULL
 );
 
-CREATE CLUSTERED INDEX IX_Client_History_name_birthday
-ON Client_History (LastName,FirstName, Birthday);
+CREATE NONCLUSTERED INDEX IX_Client_History_name_birthday
+ON Client_History (LastName, FirstName, Birthday);
 
 CREATE TABLE Contract_History (
-    Contractinfo_id BIGINT PRIMARY KEY NONCLUSTERED IDENTITY(1,1) NOT NULL,
+    Contractinfo_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     Applicant_last_name varchar(255) NOT NULL,
     Applicant_first_name varchar(255) NOT NULL,
     City varchar(255) NOT NULL,
@@ -163,7 +158,7 @@ CREATE TABLE Contract_History (
     Applicant_email varchar(255) NOT NULL,
     Applicant_age int NOT NULL,
     Birthday date NOT NULL,
-    Contract_number varchar(255) unique NOT NULL,
+    Contract_number varchar(255) NOT NULL,
     Product varchar(255) NOT NULL,
     Type varchar(255) NOT NULL,
     Contract_start_date date NOT NULL,
@@ -177,13 +172,11 @@ CREATE TABLE Contract_History (
     U_S_ varchar(255) NOT NULL,
     Representative_status varchar(255) NOT NULL,
     Source varchar(255) NOT NULL,
-    Record_date Date NOT NULL,
-    Snapshot_time datetime NOT NULL,
-	CONSTRAINT UQ_Contract_History_Contract_number UNIQUE (Contract_number, Record_date)
+    Snapshot_time datetime NOT NULL
 );
 
-CREATE CLUSTERED INDEX IX_Contract_History_Contract_number_and_Record_date
-ON Contract_History (Contract_number, Record_date);
+CREATE NONCLUSTERED INDEX IX_Contract_History_Contract_number
+ON Contract_History (Contract_number);
 
 CREATE TABLE Transaction_History (
     Transactioninfo_ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -194,8 +187,7 @@ CREATE TABLE Transaction_History (
     Gross_amount money NOT NULL,
     Units real,
     Unit_value real,
-    Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Transaction_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_History (Contract_number)
+    Snapshot_time datetime NOT NULL
 );
 
 CREATE TABLE Saving_History (
@@ -206,8 +198,7 @@ CREATE TABLE Saving_History (
     Investment_type varchar(255) NOT NULL,
     Rate real NOT NULL,
     Balance money NOT NULL,
-    Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Saving_History_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_History (Contract_number)
+    Snapshot_time datetime NOT NULL
 );
 
 
@@ -223,8 +214,7 @@ CREATE TABLE Fund_History (
     Unit_value real NOT NULL,
     Value money NOT NULL,
     ACB money,
-    Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Fund_History_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_History (Contract_number)
+    Snapshot_time datetime NOT NULL
 );
 
 
@@ -234,8 +224,7 @@ CREATE TABLE Participant_History (
     Role varchar(255) NOT NULL,
     Name varchar(255) NOT NULL,
     Birthday DATE NOT NULL,
-    Snapshot_time DATETIME NOT NULL,
-    CONSTRAINT FK_Participant_History_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_History (Contract_number)
+    Snapshot_time DATETIME NOT NULL
 );
 
 CREATE TABLE Beneficiary_History (
@@ -245,10 +234,8 @@ CREATE TABLE Beneficiary_History (
     Allocation real NOT NULL,
     Relationship varchar(255) NOT NULL,
     Class varchar(255) NOT NULL,
-    Snapshot_time DATETIME NOT NULL,
-    CONSTRAINT FK_Beneficiary_History_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_History (Contract_number)
+    Snapshot_time DATETIME NOT NULL
 );
-
 -- drop table Beneficiary_Current, Beneficiary_History, Client_Current, Client_History, Fund_Current, Fund_History, Participant_Current, Participant_History,
 -- Saving_Current, Saving_History, Transaction_Current, Transaction_History;
 -- drop table Contract_Current, Contract_History;
