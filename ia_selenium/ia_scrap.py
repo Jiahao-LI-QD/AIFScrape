@@ -61,7 +61,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     tables['recover'].clear()
 
     # TODO: create error log file
-    logfile = os.path.join(csvs, "error_log_" + iteration_time + ".txt")
+    logfile = os.path.join(csvs, f"error_log_{iteration_time}.txt")
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
             print(f"scrapping for contract number {row['Contract_number']}")
@@ -104,7 +104,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 log.write("=============================================================")
 
     # save recovery list after current traverse
-    recovery = os.path.join(csvs, "recovery_list_" + iteration_time + ".txt")
+    recovery = os.path.join(csvs, f"recovery_list_{iteration_time}.txt")
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line

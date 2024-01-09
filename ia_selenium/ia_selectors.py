@@ -48,6 +48,7 @@ def transactions_path():
         'next_page': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tfoot/tr/td/a/span'
     }
 
+
 def client_paths():
     return {
         'contract_specifications': '//*[@id="Specifications"]/a',
