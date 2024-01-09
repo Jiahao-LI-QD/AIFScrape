@@ -2,7 +2,7 @@ saving_columns = ["Statement_Date", "Contract_number", "Account_type", "Investme
 
 client_columns = ["LastName", "FirstName", "Sex", "Language", "Birthday", "Address", "Address_line2", "City",
                   "Province",
-                  "Postal_Code", "Main_Phone", "Office_Phone", "Fax", "Cell_Phone", "Primary_Email", "Secondary_Email"]
+                  "Postal_Code", "Main_Phone", "Office_Phone", "Fax", "Cell_Phone", "Primary_Email", "Secondary_Email", "Contract_number_as_owner"]
 
 contract_columns = ["Applicant_last_name", "Applicant_first_name", "City", "Address", "Postal_code", "Province",
                     "Country", "Address_validity", "Latest_change_of_address", "Main_phone", "Office_phone",

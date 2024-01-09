@@ -64,7 +64,7 @@ DBCC CHECKIDENT ('Client_Current', reseed,0);
 
 
 def save_client(cursor, values):
-    cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())",
+    cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
                        values)
     cursor.commit()
 
@@ -302,7 +302,7 @@ DBCC CHECKIDENT ('Client_History', reseed,0);
 
 
 def save_client_history(cursor, values):
-    cursor.executemany("insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, getdate())",
+    cursor.executemany("insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
                        values)
     cursor.commit()
 
@@ -357,7 +357,7 @@ DBCC CHECKIDENT ('Contract_History', reseed,0);
 def save_contract_history(cursor, values):
     cursor.executemany("insert into Contract_History values "
                        "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-                       "CAST( GETDATE() AS Date ), getdate())",
+                       "getdate())",
                        values)
     cursor.commit()
 
