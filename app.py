@@ -42,7 +42,7 @@ except Exception as e:
 
 # TODO: read contract from today's contract list
 # get contract numbers for ia company
-ia_contracts = pd.read_excel(os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], 'contracts.XLSX')).iloc[2:]
+ia_contracts = pd.read_excel(os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], 'contracts_test.XLSX')).iloc[2:]
 ia_contracts.columns = dbColumns.contract_columns
 
 # start the ia company scrapy process
