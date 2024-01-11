@@ -51,7 +51,8 @@ CREATE TABLE Contract_Current (
     U_S_ varchar(255) NOT NULL,
     Representative_status varchar(255) NOT NULL,
     Source varchar(255) NOT NULL,
-    Snapshot_time datetime NOT NULL
+    Snapshot_time datetime NOT NULL,
+    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Transaction_Current (
@@ -64,7 +65,7 @@ CREATE TABLE Transaction_Current (
     Units real,
     Unit_value real,
     Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
+    CONSTRAINT FK_Transaction_Contract_number FOREIGN KEY (Contract_number) REFERENCES Client_Current (Contract_number_as_owner)
 );
 
 CREATE TABLE Saving_Current (
