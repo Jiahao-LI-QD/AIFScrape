@@ -41,9 +41,10 @@ except Exception as e:
     print(f"The directory {ia_parameters['csv_path']}\\{date_today} already exist!")
 
 # start the ia company scrapy process
-ia_wd = ia_scrap.ia_app(ia_parameters)
+ia_wd = ia_scrap.driver_setup(ia_parameters)
+ia_scrap.ia_app(ia_wd, ia_parameters)
 
-contract_file = ia_scrap.save_contract_list(ia_wd, ia_parameters)
+contract_file = ia_scrap.save_contract_list(ia_wd, ia_parameters, date_today)
 # get contract numbers for ia company
 ia_contracts = pd.read_excel(os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], contract_file)).iloc[2:]
 ia_contracts.columns = dbColumns.contract_columns

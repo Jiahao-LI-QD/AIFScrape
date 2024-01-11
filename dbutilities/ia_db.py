@@ -64,8 +64,9 @@ DBCC CHECKIDENT ('Client_Current', reseed,0);
 
 
 def save_client(cursor, values):
-    cursor.executemany("insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
-                       values)
+    cursor.executemany(
+        "insert into Client_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
+        values)
     cursor.commit()
 
 
@@ -302,8 +303,9 @@ DBCC CHECKIDENT ('Client_History', reseed,0);
 
 
 def save_client_history(cursor, values):
-    cursor.executemany("insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
-                       values)
+    cursor.executemany(
+        "insert into Client_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, getdate())",
+        values)
     cursor.commit()
 
 
@@ -477,6 +479,10 @@ DBCC CHECKIDENT ('Beneficiary_History', reseed,0);
 def save_beneficiary_history(cursor, values):
     cursor.executemany("insert into Beneficiary_History values (?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
+
+
+def delete_current_transaction(cursor):
+    cursor.execute("exec Delete_Current_Transaction")
 
 
 def save_data_into_db(db_cursor, file_name, db_method, batch_size):

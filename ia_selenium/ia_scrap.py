@@ -17,13 +17,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
 
-
-def ia_app(parameters):
+def driver_setup(parameters):
     # start web driver
-    wd = webdriver.Chrome()
-
+    chrome_options = webdriver.ChromeOptions()
+    prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
+    chrome_options.add_experimental_option('prefs', prefs)
+    wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
+    return wd
 
+def ia_app(wd, parameters):
+    # get the url and login
     wd.get(parameters['web_url'])
 
     ia_login.login(wd, parameters['username'], parameters['password'])
@@ -34,8 +38,6 @@ def ia_app(parameters):
     wait.until(
         EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
     ).click()
-
-    return wd
 
 
 def create_table(control_unit):
@@ -60,7 +62,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     if len(tables['recover']) == 0:
         contracts = tables['contracts']
     else:
-        contracts = tables['contracts'][tables['contracts']['contract_number'].isin(tables['recover'])]
+        contracts = tables['contracts'][tables['contracts']['Contract_number'].isin(tables['recover'])]
     # clean the recover list
     tables['recover'].clear()
 
@@ -197,12 +199,12 @@ def save_contract_list(wd, parameters, date_today):
             print(f"File {old_name} does not exist")
 
     # Provide the old and new file names
-    filename = date_today + '_contract.XLSX'
+    result = date_today + '_contract.XLSX'
     new_filename = os.path.join(parameters['csv_path'], parameters['contracts'],
-                                filename)  # Replace with the desired new file name
+                                result)  # Replace with the desired new file name
     old_file = os.path.join(parameters['csv_path'], parameters['contracts'], filename)
 
     rename_downloaded_file(old_file, new_filename)
 
     print('Rename file passed')
-    return filename
+    return result
