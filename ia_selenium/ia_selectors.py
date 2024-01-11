@@ -73,12 +73,15 @@ def participant_paths():
 def beneficiary_paths():
     return{
         'contract_number':'//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
+        'beneficiary_Category':'//*[@id="content"]/div[3]/div[2]/p',
         'table_beneficiary':{
             'main_beneficiary': '//*[@id="content"]/div[3]/div[2]/table/tbody/tr',
-            'name_beneficiary': './td[1]',
-            'allocation_beneficiary': './td[2]',
-            'relationship_beneficiary': './td[3]',
-            'class_beneficiary': './td[4]'
+            'items_beneficiary':'.//*'
+            # 'name_beneficiary': './td[1]',
+            # 'allocation_beneficiary': './td[2]',
+            # 'birthday_beneficiary':'./td[3]',
+            # 'relationship_beneficiary': './td[3]',
+            # 'class_beneficiary': './td[4]'
 
         }
 
