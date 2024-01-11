@@ -66,6 +66,8 @@ while iteration_time < 4:
         break
     iteration_time += 1
 
+tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
+
 # record file names
 files = {
     'contracts': os.path.join(csvs, 'contracts.csv'),
