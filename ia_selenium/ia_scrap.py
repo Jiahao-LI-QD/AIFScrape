@@ -64,7 +64,6 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     # clean the recover list
     tables['recover'].clear()
 
-    # TODO: create error log file
     logfile = os.path.join(csvs, "error_log_" + str(iteration_time) + ".txt")
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
@@ -86,7 +85,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 log.write(f"Error: Cannot found customer: {contract_number_}")
                 log.write(str(e))
                 log.write(traceback.format_exc())
-                log.write("=============================================================")
+                log.write("=============================================================\n")
 
                 tables['recover'].append(contract_number_)
                 continue
@@ -97,7 +96,8 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 if control_unit & 2:
                     ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
                 if control_unit & 4 or contract_number_ in tables['new_contracts']:
-                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'], contract_number_)
+                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
+                                     contract_number_)
             except Exception as e:
                 print(f"Error: Scrape interrupted on customer: {contract_number_}")
                 tables['recover'].append(contract_number_)
@@ -106,7 +106,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 log.write(f"Error: Scrape interrupted on customer: {contract_number_}")
                 log.write(str(e))
                 log.write(traceback.format_exc())
-                log.write("=============================================================")
+                log.write("=============================================================\n")
 
     # save recovery list after current traverse
     recovery = os.path.join(csvs, "recovery_list_" + str(iteration_time) + ".txt")
@@ -169,7 +169,6 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
 
 def click_contract_list(wd):
-    # TODO: click new contract list
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['download_option']).click()
@@ -179,10 +178,7 @@ def click_contract_list(wd):
     pass
 
 
-
-
-def save_contract_list(wd):
-    # TODO: download contract list file and move to destination & rename it with current date
+def save_contract_list(wd, parameters, date_today):
     paths = ia_selectors.save_path()
 
     wd.find_element(By.XPATH, paths['mailbox_button']).click()
@@ -190,12 +186,6 @@ def save_contract_list(wd):
     wd.find_element(By.XPATH, paths['download_file']).click()
     filename = wd.find_element(By.XPATH, paths['download_file']).text
     time.sleep(3)
-
-    try:
-        ia_parameters = keys.ia_account()
-    except Exception as e:
-        print(e)
-        exit()
 
     def rename_downloaded_file(old_name, new_name):
         # Check if the file exists
@@ -207,11 +197,12 @@ def save_contract_list(wd):
             print(f"File {old_name} does not exist")
 
     # Provide the old and new file names
-    date_today = "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
-    new_filename = os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'],
-                                date_today + 'contract.XLSX')  # Replace with the desired new file name
-    old_file = os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], filename)
+    filename = date_today + '_contract.XLSX'
+    new_filename = os.path.join(parameters['csv_path'], parameters['contracts'],
+                                filename)  # Replace with the desired new file name
+    old_file = os.path.join(parameters['csv_path'], parameters['contracts'], filename)
 
     rename_downloaded_file(old_file, new_filename)
+
     print('Rename file passed')
-    pass
+    return filename
