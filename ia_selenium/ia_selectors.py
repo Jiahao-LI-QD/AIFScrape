@@ -44,8 +44,11 @@ def transactions_path():
         'issue_date': '//*[@id="Debut"]',
         'refresh_Button': '//*[@id="rechercheTransactions"]',
         'contract_number_account_type': '//*[@id="content"]/div[1]/div[1]/div/span',
-        'row_data': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr'
+        'table_header': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/thead/tr/th[6]',
+        'row_data': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr',
+        'next_page': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tfoot/tr/td/a/span'
     }
+
 
 def client_paths():
     return {
