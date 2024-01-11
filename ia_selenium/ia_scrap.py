@@ -42,20 +42,16 @@ def ia_app(wd, parameters):
 
 def create_table(control_unit):
     # create pointers
-    result = {}
-    if control_unit & 1:
-        result['saving'] = pd.DataFrame(columns=dbColumns.saving_columns)
-        result['fund'] = pd.DataFrame(columns=dbColumns.fund_columns)
-    if control_unit & 2:
-        result['transaction'] = pd.DataFrame(columns=dbColumns.transaction_columns)
-    if control_unit & 4:
-        result['beneficiary'] = pd.DataFrame(columns=dbColumns.beneficiary_columns)
-        result['participant'] = pd.DataFrame(columns=dbColumns.participant_columns)
-        result['client'] = pd.DataFrame(columns=dbColumns.client_columns)
+    result = {'saving': pd.DataFrame(columns=dbColumns.saving_columns),
+              'fund': pd.DataFrame(columns=dbColumns.fund_columns),
+              'transaction': pd.DataFrame(columns=dbColumns.transaction_columns),
+              'beneficiary': pd.DataFrame(columns=dbColumns.beneficiary_columns),
+              'participant': pd.DataFrame(columns=dbColumns.participant_columns),
+              'client': pd.DataFrame(columns=dbColumns.client_columns)}
     return result
 
 
-def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
+def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
     paths = ia_selectors.scrape_paths()
     error_count = 0
     error_contract_number = 0
@@ -69,6 +65,8 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     logfile = os.path.join(csvs, "error_log_" + str(iteration_time) + ".txt")
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
+            if len(wd.find_elements(By.XPATH, "/html/body/div[1]/ee-header-fullpage/div/div[1]/span/div[1]/div")) != 0:
+                ia_app(wd, parameters)
             contract_number_ = row['Contract_number']
             print(f"scrapping for contract number {contract_number_}")
 
@@ -115,9 +113,8 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line
-            f.write(item)
-    # TODO: clean the related record in tables
-    # df1 = df1[~df1['ContractNumber'].isin(recover_df)]
+            f.write(item + '\n')
+
     if control_unit & 1:
         tables['saving'] = tables['saving'][~tables['saving']['Contract_number'].isin(tables['recover'])]
         tables['fund'] = tables['fund'][~tables['fund']['Contract_number'].isin(tables['recover'])]
@@ -127,13 +124,6 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
         tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
         tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
         tables['client'] = tables['client'][~tables['client']['Contract_number'].isin(tables['recover'])]
-
-
-
-
-
-
-
 
     print("scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")
@@ -225,16 +215,14 @@ def check_new_clients(tables):
 
         # Query & saving the SQL table into a pd dataframe.
         # conn = connection.connect_db().
-        contract_current_query = 'SELECT * FROM Contract_Current'
-        contract_sql_df = pd.read_sql_query(contract_current_query, cursor)
+        ia_db.read_clients(cursor)
+        clients = [client[-2] for client in cursor.fetchall()]
 
         # keeping only the unique contract number row.
-        csv_contract_unique_df = tables['contracts'].drop_duplicates(subset=['Contract_number'], keep='first',
-                                                                     inplace=True)
-
+        csv_contract_unique_df = tables['contracts'].drop_duplicates(subset=['Contract_number'], keep='first')
         # creating new dataframe with only the new client and getting the list of contract number.
         new_client_df = csv_contract_unique_df[
-            ~csv_contract_unique_df['Contract_number'].isin(contract_sql_df['Contract_number'])]
+            ~csv_contract_unique_df['Contract_number'].isin(clients)]
         tables['new_contracts'] = new_client_df['Contract_number'].tolist()
 
         cursor.close()

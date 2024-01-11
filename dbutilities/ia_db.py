@@ -1,6 +1,8 @@
 # CURRENT SAVING TABLE CREATION
 import csv
 
+import pandas as pd
+
 """
 CREATE TABLE Saving_Current (
     HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -508,3 +510,7 @@ def save_data_into_db(db_cursor, file_name, db_method, batch_size):
 
     for i in range(-(len(data) // -batch_size)):
         db_method(db_cursor, data[i * batch_size:(i + 1) * batch_size])
+
+
+def read_clients(db_cursor):
+    db_cursor.execute( "SELECT * FROM Client_Current")

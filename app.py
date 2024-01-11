@@ -56,12 +56,18 @@ tables = ia_scrap.create_table(control_unit)
 
 tables['contracts'] = ia_contracts
 tables['recover'] = []
+
 ia_scrap.check_new_clients(tables)
+print("=========================")
+print("New contract numbers:")
+for cn in tables["new_contracts"]:
+    print(cn)
+print("=========================")
 
 # do - while loop to traverse through the contract numbers until no exception
 iteration_time = 1
 while iteration_time < 4:
-    ia_scrap.scrape_traverse(ia_wd, control_unit, tables, csvs, iteration_time)
+    ia_scrap.scrape_traverse(ia_wd, control_unit, tables, csvs, iteration_time, ia_parameters)
     if len(tables['recover']) == 0:
         break
     iteration_time += 1
