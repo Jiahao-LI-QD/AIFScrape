@@ -55,9 +55,7 @@ tables = ia_scrap.create_table(control_unit)
 
 tables['contracts'] = ia_contracts
 tables['recover'] = []
-
-# TODO : read database clients to find new contract numbers
-tables['new_contracts'] = []
+ia_scrap.check_new_clients(tables)
 
 # do - while loop to traverse through the contract numbers until no exception
 iteration_time = 1

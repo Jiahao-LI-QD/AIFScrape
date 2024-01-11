@@ -164,8 +164,37 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
         # TODO: don't clear client, participant, beneficiary tables when new_contracts == True
 
+        cursor.close()
+
     print("Saving to Databases")
     print("=========================")
+
+
+## fetch contracts_current table from SQL Server to compare with newly downloaded contract excel file.
+def check_new_clients(tables):
+    try:
+        cursor = connection.connect_db().cursor()
+    except Exception as e:
+        print(e)
+        print("Database connection failed!")
+    else:
+        print("Database connection successful!")
+
+        # Query & saving the SQL table into a pd dataframe.
+        # conn = connection.connect_db().
+        contract_current_query = 'SELECT * FROM Contract_Current'
+        contract_sql_df = pd.read_sql_query(contract_current_query, cursor)
+
+        # keeping only the unique contract number row.
+        csv_contract_unique_df = tables['contracts'].drop_duplicates(subset=['Contract_number'], keep='first',
+                                                                     inplace=True)
+
+        # creating new dataframe with only the new client and getting the list of contract number.
+        new_client_df = csv_contract_unique_df[
+            ~csv_contract_unique_df['Contract_number'].isin(contract_sql_df['Contract_number'])]
+        tables['new_contracts'] = new_client_df['Contract_number'].tolist()
+
+        cursor.close()
 
 
 def click_contract_list(wd):
