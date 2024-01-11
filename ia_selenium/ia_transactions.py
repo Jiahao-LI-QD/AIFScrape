@@ -60,3 +60,7 @@ def scrape_transaction(wd, transaction, issue_date):
             Unit_Value = cell.find_element(By.XPATH, './td[6]').text
             transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
                                                  Unit_Value]
+
+## waiting for "Sorry!" to show up for elements
+##
+##
