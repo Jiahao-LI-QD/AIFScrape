@@ -84,7 +84,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 error_contract_number += 1
                 print(f"Error: Cannot found customer: {contract_number_}")
 
-                log.write(f"Error: Cannot found customer: {contract_number_}")
+                log.write(f"Error: Cannot found customer: {contract_number_}\n")
                 log.write(str(e))
                 log.write(traceback.format_exc())
                 log.write("=============================================================\n")
@@ -105,7 +105,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
                 tables['recover'].append(contract_number_)
                 error_count += 1
 
-                log.write(f"Error: Scrape interrupted on customer: {contract_number_}")
+                log.write(f"Error: Scrape interrupted on customer: {contract_number_}\n")
                 log.write(str(e))
                 log.write(traceback.format_exc())
                 log.write("=============================================================\n")
@@ -152,19 +152,43 @@ def save_csv_to_db(control_unit, files, new_contracts):
         print("Database connection successful!")
         batch_size = 1000
         ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract_history, batch_size)
-        if control_unit & 4 or new_contracts:
-            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
+        ia_db.delete_current_contract(cursor)
+
         if control_unit & 1:
+            # delete current table of fund & saving for later insertion
+            ia_db.delete_current_fund_saving(cursor)
+
+            # save saving & fund history
             ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving_history, batch_size)
             ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund_history, batch_size)
         if control_unit & 2:
+            # delete current table of transaction for later insertion
+            ia_db.delete_current_transaction(cursor)
+
+            # save transaction history
             ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
+        if control_unit & 4 or new_contracts:
+            # delete current client information related tables for later insertion
+            # if there is no new contracts
+            # otherwise just extend the table
+            if not new_contracts:
+                ia_db.delete_current_participant_beneficiary(cursor)
+                ia_db.delete_current_client(cursor)
+            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
+            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
+            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
 
-        # TODO: Clear the current tables & insert current data
-
-        # TODO: don't clear client, participant, beneficiary tables when new_contracts == True
+        # save current tables accordingly
+        if control_unit & 4 or new_contracts:
+            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
+            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant, batch_size)
+            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary, batch_size)
+        if control_unit & 1:
+            ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving, batch_size)
+            ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund, batch_size)
+        if control_unit & 2:
+            ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction, batch_size)
+        ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract, batch_size)
 
     print("Saving to Databases")
     print("=========================")
