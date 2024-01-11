@@ -117,6 +117,23 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time):
             # write each item on a new line
             f.write(item)
     # TODO: clean the related record in tables
+    # df1 = df1[~df1['ContractNumber'].isin(recover_df)]
+    if control_unit & 1:
+        tables['saving'] = tables['saving'][~tables['saving']['Contract_number'].isin(tables['recover'])]
+        tables['fund'] = tables['fund'][~tables['fund']['Contract_number'].isin(tables['recover'])]
+    if control_unit & 2:
+        tables['transaction'] = tables['transaction'][~tables['transaction']['Contract_number'].isin(tables['recover'])]
+    if control_unit & 4 or contract_number_ in tables['new_contracts']:
+        tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
+        tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
+        tables['client'] = tables['client'][~tables['client']['Contract_number'].isin(tables['recover'])]
+
+
+
+
+
+
+
 
     print("scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")
