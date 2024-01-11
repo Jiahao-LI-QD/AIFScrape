@@ -480,6 +480,15 @@ def save_beneficiary_history(cursor, values):
     cursor.executemany("insert into Beneficiary_History values (?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
+def delete_current_participant_beneficiary(cursor):
+    cursor.executemany("exec Delete_Current_Participant_Beneficiary")
+def delete_current_contract(cursor):
+    cursor.executemany("exec Delete_Current_Contract")
+
+def delete_current_fund_saving(cursor):
+    cursor.executemany("exec Delete_Current_Fund_Saving")
+def delete_current_client(cursor):
+    cursor.executemany("exec Delete_Current_Client")
 
 def delete_current_transaction(cursor):
     cursor.execute("exec Delete_Current_Transaction")
