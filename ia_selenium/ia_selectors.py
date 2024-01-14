@@ -65,9 +65,10 @@ def participant_paths():
         'contract_number': '//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
         'table_participant':{
             'main_participant': '//*[@id="content"]/div[1]/div[1]/table/tbody/tr',
-            'role_participant': './td[1]',
-            'name_participant':'./td[2]',
-            'birthday_participant':'./td[3]'
+            'items_participant': './/*'
+            # 'role_participant': './td[1]',
+            # 'name_participant':'./td[2]',
+            # 'birthday_participant':'./td[3]'
         }
     }
 def beneficiary_paths():
