@@ -36,7 +36,6 @@ def scrape_transaction(wd, transaction, issue_date):
         new_row = [contract_number]
         new_row.extend(result)
         transaction.loc[len(transaction)] = new_row
-        print(transaction)
 
     # for "Next" button when there is more than one page of transactions
     while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
@@ -58,7 +57,6 @@ def scrape_transaction(wd, transaction, issue_date):
 
             entire_row = [contract_number].extend(result)
             transaction.loc[len(transaction)] = entire_row
-            print(transaction)
 
         # row = wd.find_elements(By.XPATH, paths['row_data'])
         # for cell in row:
