@@ -1,5 +1,6 @@
 import time
 
+import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -26,11 +27,16 @@ def scrape_transaction(wd, transaction, issue_date):
     contract_number = text.split(' - ')[1]
 
     # grab contents of the transaction table
-    row = wd.find_elements(By.XPATH, paths['row_data'])
-    for cell in row:
-        cells = cell.find_elements(By.XPATH, ".//*")
-        result = [b.text for b in cells]
-        transaction.loc[len(transaction)] = [contract_number].extend(result)
+    table = wd.find_elements(By.XPATH, paths['table_data'])
+
+    for row in table:
+        rows = row.find_elements(By.XPATH, ".//*")
+        result = [cell.text for cell in rows]
+
+        new_row = [contract_number]
+        new_row.extend(result)
+        transaction.loc[len(transaction)] = new_row
+        print(transaction)
 
     # for "Next" button when there is more than one page of transactions
     while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
@@ -45,11 +51,14 @@ def scrape_transaction(wd, transaction, issue_date):
         wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
         time.sleep(1)
 
-        row = wd.find_elements(By.XPATH, paths['row_data'])
-        for cell in row:
-            cells = cell.find_elements(By.XPATH, ".//*")
-            result = [b.text for b in cells]
-            transaction.loc[len(transaction)] = [contract_number].extend(result)
+        table = wd.find_elements(By.XPATH, paths['table_data'])
+        for row in table:
+            rows = row.find_elements(By.XPATH, ".//*")
+            result = [cell.text for cell in rows]
+
+            entire_row = [contract_number].extend(result)
+            transaction.loc[len(transaction)] = entire_row
+            print(transaction)
 
         # row = wd.find_elements(By.XPATH, paths['row_data'])
         # for cell in row:
