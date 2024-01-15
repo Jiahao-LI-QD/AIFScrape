@@ -44,8 +44,8 @@ except Exception as e:
 ia_wd = ia_scrap.driver_setup(ia_parameters)
 ia_scrap.ia_app(ia_wd, ia_parameters)
 
-contract_file = ia_scrap.save_contract_list(ia_wd, ia_parameters, date_today)
-
+# contract_file = ia_scrap.save_contract_list(ia_wd, ia_parameters, date_today)
+contract_file = "test100.XLSX"
 # get contract numbers for ia company
 ia_contracts = pd.read_excel(os.path.join(ia_parameters['csv_path'], ia_parameters['contracts'], contract_file)).iloc[2:]
 ia_contracts.columns = dbColumns.contract_columns
@@ -57,12 +57,13 @@ tables = ia_scrap.create_table(control_unit)
 
 tables['contracts'] = ia_contracts
 tables['recover'] = []
-ia_scrap.check_new_clients(tables)
-print("=========================")
-print("New contract numbers:")
-for cn in tables["new_contracts"]:
-    print(cn)
-print("=========================")
+tables["new_contracts"] = []
+# ia_scrap.check_new_clients(tables)
+# print("=========================")
+# print("New contract numbers:")
+# for cn in tables["new_contracts"]:
+#     print(cn)
+# print("=========================")
 
 # do - while loop to traverse through the contract numbers until no exception
 iteration_time = 1
@@ -92,4 +93,4 @@ ia_scrap.save_table_into_csv(control_unit, tables, files)
 ia_scrap.save_csv_to_db(control_unit, files, len(tables['new_contracts']) != 0)
 
 # request contract numbers
-ia_scrap.click_contract_list(ia_wd)
+# ia_scrap.click_contract_list(ia_wd)

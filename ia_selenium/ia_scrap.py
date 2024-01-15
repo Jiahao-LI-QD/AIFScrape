@@ -66,7 +66,9 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
             if len(wd.find_elements(By.XPATH, "/html/body/div[1]/ee-header-fullpage/div/div[1]/span/div[1]/div")) != 0:
-                ia_app(wd, parameters)
+                print("Error happens: Website crash")
+                time.sleep(5)
+                wd.get(parameters['web_url'])
             contract_number_ = row['Contract_number']
             print(f"scrapping for contract number {contract_number_}")
 
