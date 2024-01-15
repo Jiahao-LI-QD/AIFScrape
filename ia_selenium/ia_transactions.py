@@ -1,5 +1,7 @@
 import time
+from locale import atof
 
+import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -26,22 +28,21 @@ def scrape_transaction(wd, transaction, issue_date):
     contract_number = text.split(' - ')[1]
 
     # grab contents of the transaction table
-    row = wd.find_elements(By.XPATH, paths['row_data'])
-    for cell in row:
-        Date = cell.find_element(By.XPATH, './td[1]').text
-        Transaction = cell.find_element(By.XPATH, './td[2]').text
-        Fund = cell.find_element(By.XPATH, './td[3]').text
-        Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-        Units = cell.find_element(By.XPATH, './td[5]').text.replace(',', '')
-        Unit_Value = cell.find_element(By.XPATH, './td[6]').text.replace(',', '')
-        transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                             Unit_Value]
+    table = wd.find_elements(By.XPATH, paths['table_data'])
+
+    for row in table:
+        rows = row.find_elements(By.XPATH, ".//*")
+        result = [cell.text for cell in rows]
+
+        new_row = [contract_number]
+        new_row.extend(result)
+        new_row[-1] = atof(new_row[-1].replace(',', ''))
+        new_row[-2] = atof(new_row[-2].replace(',', ''))
+        transaction.loc[len(transaction)] = new_row
 
     # for "Next" button when there is more than one page of transactions
-    while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
-        next_page_button = wd.find_element(By.XPATH, paths['next_page'])
-        if 'Next' not in next_page_button.get_attribute("outerHTML"):
-            break
+    while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
+        next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
         print('There is another page of transactions')
         next_page_button.click()
 
@@ -50,17 +51,14 @@ def scrape_transaction(wd, transaction, issue_date):
         wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
         time.sleep(1)
 
-        row = wd.find_elements(By.XPATH, paths['row_data'])
-        for cell in row:
-            Date = cell.find_element(By.XPATH, './td[1]').text
-            Transaction = cell.find_element(By.XPATH, './td[2]').text
-            Fund = cell.find_element(By.XPATH, './td[3]').text
-            Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-            Units = cell.find_element(By.XPATH, './td[5]').text
-            Unit_Value = cell.find_element(By.XPATH, './td[6]').text
-            transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                                 Unit_Value]
+        table = wd.find_elements(By.XPATH, paths['table_data'])
+        for row in table:
+            rows = row.find_elements(By.XPATH, ".//*")
+            result = [cell.text for cell in rows]
 
-## waiting for "Sorry!" to show up for elements
-##
-##
+            entire_row = [contract_number]
+            entire_row.extend(result)
+            entire_row[-1] = atof(entire_row[-1].replace(',', ''))
+            entire_row[-2] = atof(entire_row[-2].replace(',', ''))
+            transaction.loc[len(transaction)] = entire_row
+
