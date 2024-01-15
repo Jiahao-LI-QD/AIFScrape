@@ -11,9 +11,12 @@ def saving_paths():
 
 def fund_paths():
     return {
-        'table_body':{
+        'investment_type': '//*[@id="content"]/div[4]/div[1]/div/div[1]',
+        'title': '//*[@id="content"]/div[1]/div[1]/div/span',
+        'statement_date': '//*[@id="content"]/div[3]',
+        'table_body': {
             'main_body': '//*[@id="content"]/div[4]/div[2]/table/tbody/*',
-            'table_rows':  ".//*"
+            'table_rows': ".//*"
         }
     }
 
@@ -34,7 +37,8 @@ def scrape_paths():
         'myclient_button': '//*[@id="mnMesClients"]/a',
         'contract_number_input': '//*[@id="ContractNumber"]',
         'search_button': '//*[@id="btnSearch"]',
-        'cookie_button': '/html/body/div[2]/div[2]/a[1]'
+        'cookie_button': '/html/body/div[2]/div[2]/a[1]',
+        'error_page': "/html/body/div[1]/ee-header-fullpage/div/div[1]/span/div[1]/div"
     }
 
 
@@ -55,16 +59,17 @@ def client_paths():
     return {
         'contract_specifications': '//*[@id="Specifications"]/a',
         'personal_information': '//*[@id="content"]/div[3]/table[2]/tbody/tr[4]/td[2]/a',
-        'table_client':{
+        'table_client': {
             'main_client': '//*[@id="search_content"]/div/div[3]/table/tbody/tr',
             'row_client': './td[2]'
         }
     }
 
+
 def participant_paths():
-    return{
+    return {
         'contract_number': '//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
-        'table_participant':{
+        'table_participant': {
             'main_participant': '//*[@id="content"]/div[1]/div[1]/table/tbody/tr',
             'items_participant': './/*'
             # 'role_participant': './td[1]',
@@ -72,13 +77,15 @@ def participant_paths():
             # 'birthday_participant':'./td[3]'
         }
     }
+
+
 def beneficiary_paths():
-    return{
-        'contract_number':'//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
-        'beneficiary_Category':'//*[@id="content"]/div[3]/div[2]/p',
-        'table_beneficiary':{
+    return {
+        'contract_number': '//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
+        'beneficiary_Category': '//*[@id="content"]/div[3]/div[2]/p',
+        'table_beneficiary': {
             'main_beneficiary': '//*[@id="content"]/div[3]/div[2]/table/tbody/tr',
-            'items_beneficiary':'.//*'
+            'items_beneficiary': './/*'
             # 'name_beneficiary': './td[1]',
             # 'allocation_beneficiary': './td[2]',
             # 'birthday_beneficiary':'./td[3]',
@@ -89,12 +96,14 @@ def beneficiary_paths():
 
     }
 
+
 def save_path():
     return {
         'mailbox_button': '//*[@id="mnSectExpAgence"]/a[2]',
         'file_link': '//*[@id="inboxMessageTable"]/tbody/tr[1]/td[3]/span[3]/a',
         'download_file': '//*[@id="Attachments"]/ul/li/a'
     }
+
 
 def download_path():
     return {

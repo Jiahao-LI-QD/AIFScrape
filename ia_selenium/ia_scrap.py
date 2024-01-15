@@ -65,7 +65,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
     logfile = os.path.join(csvs, "error_log_" + str(iteration_time) + ".txt")
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
-            if len(wd.find_elements(By.XPATH, "/html/body/div[1]/ee-header-fullpage/div/div[1]/span/div[1]/div")) != 0:
+            if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
                 time.sleep(5)
                 wd.get(parameters['web_url'])
