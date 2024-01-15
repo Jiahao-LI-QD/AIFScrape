@@ -12,7 +12,7 @@ def scrape_transaction(wd, transaction, issue_date):
     wd.find_element(By.XPATH, paths['transaction_button']).click()
 
     # Wait until the entire page finishes loading
-    wait = WebDriverWait(wd, 30)
+    wait = WebDriverWait(wd, 40)
     wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
     time.sleep(1)
 
@@ -41,7 +41,7 @@ def scrape_transaction(wd, transaction, issue_date):
         next_page_button.click()
 
         # Wait until the entire page finishes loading
-        wait = WebDriverWait(wd, 30)
+        wait = WebDriverWait(wd, 40)
         wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
         time.sleep(1)
 
