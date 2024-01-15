@@ -19,4 +19,4 @@ fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment
 
 participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
 
-beneficiary_columns = ["Contract_number", "Name", "Allocation", "Relationship", "Class"]
+beneficiary_columns = ["Contract_number","BenefitCategory", "Name", "Allocation", "Relationship", "Class","Birthday"]

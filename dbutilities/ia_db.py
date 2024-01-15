@@ -237,7 +237,7 @@ DBCC CHECKIDENT ('Beneficiary_Current', reseed,0);
 
 
 def save_beneficiary(cursor, values):
-    cursor.executemany("insert into Beneficiary_Current values (?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Beneficiary_Current values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
@@ -478,7 +478,7 @@ DBCC CHECKIDENT ('Beneficiary_History', reseed,0);
 
 
 def save_beneficiary_history(cursor, values):
-    cursor.executemany("insert into Beneficiary_History values (?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Beneficiary_History values (?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 

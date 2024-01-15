@@ -125,7 +125,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
     if control_unit & 4 or contract_number_ in tables['new_contracts']:
         tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
         tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
-        tables['client'] = tables['client'][~tables['client']['Contract_number'].isin(tables['recover'])]
+        tables['client'] = tables['client'][~tables['client']['Contract_number_as_owner'].isin(tables['recover'])]
 
     print("scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")
