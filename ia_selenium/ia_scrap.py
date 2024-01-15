@@ -226,6 +226,8 @@ def check_new_clients(tables):
         new_client_df = csv_contract_unique_df[
             ~csv_contract_unique_df['Contract_number'].isin(clients)]
         tables['new_contracts'] = new_client_df['Contract_number'].tolist()
+        print('new_client_df')
+        print(tables['new_contracts'])
 
         cursor.close()
 

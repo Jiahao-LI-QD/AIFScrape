@@ -28,14 +28,9 @@ def scrape_transaction(wd, transaction, issue_date):
     # grab contents of the transaction table
     row = wd.find_elements(By.XPATH, paths['row_data'])
     for cell in row:
-        Date = cell.find_element(By.XPATH, './td[1]').text
-        Transaction = cell.find_element(By.XPATH, './td[2]').text
-        Fund = cell.find_element(By.XPATH, './td[3]').text
-        Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-        Units = cell.find_element(By.XPATH, './td[5]').text.replace(',', '')
-        Unit_Value = cell.find_element(By.XPATH, './td[6]').text.replace(',', '')
-        transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                             Unit_Value]
+        cells = cell.find_elements(By.XPATH, ".//*")
+        result = [b.text for b in cells]
+        transaction.loc[len(transaction)] = [contract_number].extend(result)
 
     # for "Next" button when there is more than one page of transactions
     while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
@@ -52,15 +47,18 @@ def scrape_transaction(wd, transaction, issue_date):
 
         row = wd.find_elements(By.XPATH, paths['row_data'])
         for cell in row:
-            Date = cell.find_element(By.XPATH, './td[1]').text
-            Transaction = cell.find_element(By.XPATH, './td[2]').text
-            Fund = cell.find_element(By.XPATH, './td[3]').text
-            Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-            Units = cell.find_element(By.XPATH, './td[5]').text
-            Unit_Value = cell.find_element(By.XPATH, './td[6]').text
-            transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                                 Unit_Value]
+            cells = cell.find_elements(By.XPATH, ".//*")
+            result = [b.text for b in cells]
+            transaction.loc[len(transaction)] = [contract_number].extend(result)
 
-## waiting for "Sorry!" to show up for elements
-##
-##
+        # row = wd.find_elements(By.XPATH, paths['row_data'])
+        # for cell in row:
+        #     Date = cell.find_element(By.XPATH, './td[1]').text
+        #     Transaction = cell.find_element(By.XPATH, './td[2]').text
+        #     Fund = cell.find_element(By.XPATH, './td[3]').text
+        #     Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
+        #     Units = cell.find_element(By.XPATH, './td[5]').text
+        #     Unit_Value = cell.find_element(By.XPATH, './td[6]').text
+        #     transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
+        #                                          Unit_Value]
+
