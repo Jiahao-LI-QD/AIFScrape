@@ -80,7 +80,7 @@ def contract_template(size):
         "IFAST"  # Source varchar(255) NOT NULL,
     ] for _ in range(size)]
 
-
+print(contract_template)
 # generate template for saving
 def saving_template(size):
     return [[
