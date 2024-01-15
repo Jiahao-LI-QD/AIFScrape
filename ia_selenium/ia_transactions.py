@@ -1,4 +1,5 @@
 import time
+from locale import atof
 
 import pandas as pd
 from selenium.webdriver.common.by import By
@@ -35,6 +36,8 @@ def scrape_transaction(wd, transaction, issue_date):
 
         new_row = [contract_number]
         new_row.extend(result)
+        new_row[-1] = atof(new_row[-1].replace(',', ''))
+        new_row[-2] = atof(new_row[-2].replace(',', ''))
         transaction.loc[len(transaction)] = new_row
 
     # for "Next" button when there is more than one page of transactions
@@ -55,5 +58,7 @@ def scrape_transaction(wd, transaction, issue_date):
 
             entire_row = [contract_number]
             entire_row.extend(result)
+            entire_row[-1] = atof(entire_row[-1].replace(',', ''))
+            entire_row[-2] = atof(entire_row[-2].replace(',', ''))
             transaction.loc[len(transaction)] = entire_row
 
