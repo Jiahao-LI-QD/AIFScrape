@@ -216,7 +216,7 @@ def check_new_clients(tables):
         print("Database connection successful!")
 
         # Query & saving the SQL table into a pd dataframe.
-        # conn = connection.connect_db().
+        # conn = connection.connect_db()
         ia_db.read_clients(cursor)
         clients = [client[-2] for client in cursor.fetchall()]
 
@@ -226,6 +226,8 @@ def check_new_clients(tables):
         new_client_df = csv_contract_unique_df[
             ~csv_contract_unique_df['Contract_number'].isin(clients)]
         tables['new_contracts'] = new_client_df['Contract_number'].tolist()
+        print('new_client_df')
+        print(tables['new_contracts'])
 
         cursor.close()
 
