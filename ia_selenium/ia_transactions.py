@@ -38,10 +38,8 @@ def scrape_transaction(wd, transaction, issue_date):
         transaction.loc[len(transaction)] = new_row
 
     # for "Next" button when there is more than one page of transactions
-    while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
-        next_page_button = wd.find_element(By.XPATH, paths['next_page'])
-        if 'Next' not in next_page_button.get_attribute("outerHTML"):
-            break
+    while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
+        next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
         print('There is another page of transactions')
         next_page_button.click()
 
@@ -55,17 +53,7 @@ def scrape_transaction(wd, transaction, issue_date):
             rows = row.find_elements(By.XPATH, ".//*")
             result = [cell.text for cell in rows]
 
-            entire_row = [contract_number].extend(result)
+            entire_row = [contract_number]
+            entire_row.extend(result)
             transaction.loc[len(transaction)] = entire_row
-
-        # row = wd.find_elements(By.XPATH, paths['row_data'])
-        # for cell in row:
-        #     Date = cell.find_element(By.XPATH, './td[1]').text
-        #     Transaction = cell.find_element(By.XPATH, './td[2]').text
-        #     Fund = cell.find_element(By.XPATH, './td[3]').text
-        #     Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-        #     Units = cell.find_element(By.XPATH, './td[5]').text
-        #     Unit_Value = cell.find_element(By.XPATH, './td[6]').text
-        #     transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-        #                                          Unit_Value]
 

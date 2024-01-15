@@ -46,7 +46,8 @@ def transactions_path():
         'contract_number_account_type': '//*[@id="content"]/div[1]/div[1]/div/span',
         'table_header': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/thead/tr/th[6]',
         'table_data': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr',
-        'next_page': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tfoot/tr/td/a/span'
+        'next_page': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tfoot/tr/td/a/span',
+        'CSS_next_page': '#TransactionsTrouveesDiv > div:nth-child(6) > table > tfoot > tr > td > a.suivant > span'
     }
 
 
