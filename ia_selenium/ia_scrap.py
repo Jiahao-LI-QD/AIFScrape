@@ -70,7 +70,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
                 time.sleep(5)
                 wd.get(parameters['web_url'])
             contract_number_ = row['Contract_number']
-            print(f"scrapping for contract number {contract_number_}")
+            print(f"{datetime.now()}: scrapping for contract number {contract_number_}")
 
             try:
                 wd.find_element(By.XPATH, paths['myclient_button']).click()
@@ -127,7 +127,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters):
         tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
         tables['client'] = tables['client'][~tables['client']['Contract_number_as_owner'].isin(tables['recover'])]
 
-    print("scrape traverse complete")
+    print(f"{datetime.now()}: scrape traverse complete")
     print(f"Total contract not found: {error_contract_number}")
     print(f"Total error during scrape: {error_count}")
     print("=========================")
@@ -146,7 +146,7 @@ def save_table_into_csv(control_unit, tables, files):
         tables['participant'].to_csv(files['participant'])
     tables['contracts'].to_csv(files['contracts'])
 
-    print("CSVs saved!")
+    print(f"{datetime.now()}: CSVs saved!")
     print("=========================")
 
 
@@ -182,14 +182,14 @@ def save_csv_to_db(control_unit, files, new_contracts):
             # otherwise just extend the table
             if not new_contracts:
                 ia_db.delete_current_participant_beneficiary(cursor)
-                ia_db.delete_current_client(cursor)
+                # ia_db.delete_current_client(cursor)
             ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
 
         # save current tables accordingly
         if control_unit & 4 or new_contracts:
-            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
+            # ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary, batch_size)
         if control_unit & 1:
@@ -201,7 +201,7 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
         cursor.close()
 
-    print("Saving to Databases")
+    print(f"{datetime.now()}: Saving to Databases")
     print("=========================")
 
 
@@ -211,9 +211,9 @@ def check_new_clients(tables):
         cursor = connection.connect_db().cursor()
     except Exception as e:
         print(e)
-        print("Database connection failed!")
+        print(f"{datetime.now()}: Database connection failed!")
     else:
-        print("Database connection successful!")
+        print(f"{datetime.now()}: Database connection successful!")
 
         # Query & saving the SQL table into a pd dataframe.
         # conn = connection.connect_db()
