@@ -62,3 +62,4 @@ def scrape_transaction(wd, transaction, issue_date):
             entire_row[-2] = atof(entire_row[-2].replace(',', ''))
             transaction.loc[len(transaction)] = entire_row
 
+    wd.execute_script("window.scrollTo(0, 0)")
