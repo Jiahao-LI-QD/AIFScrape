@@ -43,7 +43,6 @@ def scrape_transaction(wd, transaction, issue_date):
     # for "Next" button when there is more than one page of transactions
     while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
         next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
-        print('There is another page of transactions')
         next_page_button.click()
 
         # Wait until the entire page finishes loading
