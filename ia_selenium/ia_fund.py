@@ -39,12 +39,14 @@ def scrape(wd, fund, investment_type):
                 table_columns = [child.text for child in elements]
                 row = [formatted_date, contract_number, account_type, investment_type, category_type]
 
-                if account_type == 'NON-REGISTERED':
+                if category_type == 'Diversified Funds':
+                    row.extend(table_columns[0:4])
+                    row.append(None)
+                elif account_type == 'NON-REGISTERED':
                     row.extend(table_columns[1:6])
                 else:
                     row.extend(table_columns[1:5])
                     row.append(None)
-
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))
                 fund.loc[len(fund)] = row
