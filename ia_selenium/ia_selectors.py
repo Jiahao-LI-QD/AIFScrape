@@ -101,7 +101,9 @@ def beneficiary_paths():
 def save_path():
     return {
         'mailbox_button': '//*[@id="mnSectExpAgence"]/a[2]',
-        'file_link': '//*[@id="inboxMessageTable"]/tbody/tr[1]/td[3]/span[3]/a',
+        'file_link1': '//*[@id="inboxMessageTable"]/tbody/tr[1]/td[3]/span[3]/a',
+        'file_link2': '//*[@id="Attachments"]/ul/li/a',
+        'next_button': '//*[@id="PreviousNext"]/a[2]',
         'download_file': '//*[@id="Attachments"]/ul/li/a'
     }
 
@@ -109,7 +111,10 @@ def save_path():
 def download_path():
     return {
         'myclient_button': '//*[@id="mnMesClients"]/a',
-        'download_option': '//*[@id="SearchCriteriaForm"]/div/div[5]/div/div[5]/label',
+        'group': '//*[@id="HierarchyBtn"]',
+        'FV6_group': '//*[@id="hierarchy_treeview"]/div[2]/div[1]/span[2]',
+        'GK4_group': '//*[@id="hierarchy_treeview"]/div[2]/div[3]/span[2]',
+        'download_option': '//*[@id="SearchCriteriaForm"]/div/div[6]/div/div[6]/label',
         'search_button': '//*[@id="btnSearch"]',
         'submit_button': '//*[@id="ia-ali-2c-floating-portlet-layout-container"]/div[3]/form/div[2]/input'
     }
