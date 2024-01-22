@@ -21,7 +21,7 @@ def scrape(wd, fund, investment_type):
 
     if investment_type in ['TERMINATED', 'EMPTY']:
         row = [formatted_date, contract_number, account_type, investment_type]
-        row.extend([None] * 6)
+        row.extend([None] * 7)
         fund.loc[len(fund)] = row
     else:
         tb = wd.find_elements(By.XPATH, paths['table_body']['main_body'])
@@ -40,12 +40,15 @@ def scrape(wd, fund, investment_type):
                 row = [formatted_date, contract_number, account_type, investment_type, category_type]
 
                 if category_type == 'Diversified Funds':
-                    row.extend(table_columns[0:4])
+                    row.extend(table_columns[0].split(" - ", 2))
+                    row.extend(table_columns[1:4])
                     row.append(None)
                 elif account_type == 'NON-REGISTERED':
-                    row.extend(table_columns[1:6])
+                    row.extend(table_columns[1].split(" - ", 2))
+                    row.extend(table_columns[2:6])
                 else:
-                    row.extend(table_columns[1:5])
+                    row.extend(table_columns[1].split(" - ", 2))
+                    row.extend(table_columns[2:5])
                     row.append(None)
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))

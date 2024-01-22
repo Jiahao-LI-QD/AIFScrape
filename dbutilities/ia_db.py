@@ -183,7 +183,7 @@ DBCC CHECKIDENT ('Fund_Current', reseed,0);
 
 
 def save_fund(cursor, values):
-    cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Fund_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
@@ -424,7 +424,7 @@ DBCC CHECKIDENT ('Fund_History', reseed,0);
 
 
 def save_fund_history(cursor, values):
-    cursor.executemany("insert into Fund_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Fund_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
