@@ -27,38 +27,47 @@ def scrape_transaction(wd, transaction, issue_date):
     text = wd.find_element(By.XPATH, paths['contract_number_account_type']).text
     contract_number = text.split(' - ')[1]
 
-    # grab contents of the transaction table
-    table = wd.find_elements(By.XPATH, paths['table_data'])
-
-    for row in table:
-        rows = row.find_elements(By.XPATH, ".//*")
-        result = [cell.text for cell in rows]
-
-        new_row = [contract_number]
-        new_row.extend(result)
-        new_row[-1] = atof(new_row[-1].replace(',', ''))
-        new_row[-2] = atof(new_row[-2].replace(',', ''))
-        transaction.loc[len(transaction)] = new_row
-
-    # for "Next" button when there is more than one page of transactions
-    while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
-        next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
-        next_page_button.click()
-
-        # Wait until the entire page finishes loading
-        wait = WebDriverWait(wd, 30)
-        wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
-        time.sleep(1)
-
+    # If transaction is empty.
+    has_transaction = wd.find_element(By.XPATH, paths['has_transaction']).text
+    if 'transactions' not in has_transaction:
+        # grab contents of the transaction table
         table = wd.find_elements(By.XPATH, paths['table_data'])
         for row in table:
             rows = row.find_elements(By.XPATH, ".//*")
             result = [cell.text for cell in rows]
 
-            entire_row = [contract_number]
-            entire_row.extend(result)
-            entire_row[-1] = atof(entire_row[-1].replace(',', ''))
-            entire_row[-2] = atof(entire_row[-2].replace(',', ''))
-            transaction.loc[len(transaction)] = entire_row
+            new_row = [contract_number]
+            new_row.extend(result)
+            if new_row[-2] != "":
+                new_row[-1] = atof(new_row[-1].replace(',', ''))
+                new_row[-2] = atof(new_row[-2].replace(',', ''))
+            else:
+                new_row.pop(4)
+            # print(new_row[4], type(new_row[-2]), len(new_row))
+            transaction.loc[len(transaction)] = new_row
 
-    wd.execute_script("window.scrollTo(0, 0)")
+        # for "Next" button when there is more than one page of transactions
+        while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
+            next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
+            next_page_button.click()
+
+            # Wait until the entire page finishes loading
+            wait = WebDriverWait(wd, 30)
+            wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
+            time.sleep(1)
+
+            table = wd.find_elements(By.XPATH, paths['table_data'])
+            for row in table:
+                rows = row.find_elements(By.XPATH, ".//*")
+                result = [cell.text for cell in rows]
+
+                entire_row = [contract_number]
+                entire_row.extend(result)
+                if entire_row[-2] != "":
+                    entire_row[-1] = atof(entire_row[-1].replace(',', ''))
+                    entire_row[-2] = atof(entire_row[-2].replace(',', ''))
+                else:
+                    entire_row.pop(4)
+                transaction.loc[len(transaction)] = entire_row
+
+        wd.execute_script("window.scrollTo(0, 0)")
