@@ -1,4 +1,5 @@
 import os.path
+import sys
 import time
 import traceback
 
@@ -10,7 +11,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client
+from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client, keys
 from dbutilities import dbColumns, ia_db
 import pandas as pd
 from selenium.webdriver.support import expected_conditions as EC
@@ -42,7 +43,7 @@ def ia_app(wd, parameters):
     ).click()
 
 
-def create_table(control_unit):
+def create_table(control_unit, parameters, file):
     # create pointers
     result = {'saving': pd.DataFrame(columns=dbColumns.saving_columns),
               'fund': pd.DataFrame(columns=dbColumns.fund_columns),
@@ -50,6 +51,13 @@ def create_table(control_unit):
               'beneficiary': pd.DataFrame(columns=dbColumns.beneficiary_columns),
               'participant': pd.DataFrame(columns=dbColumns.participant_columns),
               'client': pd.DataFrame(columns=dbColumns.client_columns)}
+
+    # get contract numbers for ia company
+    ia_contracts = pd.read_excel(
+        os.path.join(parameters['csv_path'], parameters['contracts'], file)).iloc[2:]
+    ia_contracts.columns = dbColumns.contract_columns
+    result['contracts'] = ia_contracts
+    result['recover'] = []
     return result
 
 
@@ -228,8 +236,8 @@ def check_new_clients(tables):
         new_client_df = csv_contract_unique_df[
             ~csv_contract_unique_df['Contract_number'].isin(clients)]
         tables['new_contracts'] = new_client_df['Contract_number'].tolist()
-        print('new_client_df')
-        print(tables['new_contracts'])
+        # print('new_client_df')
+        # print(tables['new_contracts'])
 
         cursor.close()
 
@@ -274,3 +282,94 @@ def save_contract_list(wd, parameters, date_today):
 
     print('Rename file passed')
     return result
+
+
+def get_control(args):
+    control = 1
+    if len(args) > 1:
+        control = int(args[1])
+    if control not in range(1, 8):
+        print(f"The control model is not supported, will use default scrape mode")
+
+    if control & 1:
+        print("Task: Scrape Investments")
+    if control & 2:
+        print("Task: Scrape Transactions")
+    if control & 4:
+        print("Task: Scrape Clients Information")
+    print("======================")
+
+    max_iteration = 3
+    if len(args) > 2:
+        try:
+            max_iteration = int(args[2])
+            if max_iteration < 1 or max_iteration > 5:
+                raise Exception("The maximum number of iterations must be between 1 and 5")
+        except TypeError as e:
+            print("Max iteration setting is not a valid number between 1 and 5")
+        except Exception as e:
+            print(e)
+
+    file_name = None
+    if len(args) > 3:
+        file_name = args[3]
+
+    return control, max_iteration, file_name
+
+
+def get_csv_file_names(path):
+    return {
+        'contracts': os.path.join(path, 'contracts.csv'),
+        'fund': os.path.join(path, 'funds.csv'),
+        'saving': os.path.join(path, 'savings.csv'),
+        'client': os.path.join(path, 'clients.csv'),
+        'transaction': os.path.join(path, 'transactions.csv'),
+        'beneficiary': os.path.join(path, 'beneficiaries.csv'),
+        'participant': os.path.join(path, 'participants.csv')
+    }
+
+
+def ia_get_start():
+    # set up the control unit & recovery_file unit
+    control_unit, maximum_iteration, contract_file = get_control(sys.argv)
+
+    # Get required parameters for ia_app
+    try:
+        ia_parameters = keys.ia_account()
+    except Exception as e:
+        print(e)
+        exit()
+
+    date_today = "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
+
+    csvs = os.path.join(ia_parameters['csv_path'], date_today)
+
+    # make directory for current scarp process
+    try:
+        os.mkdir(csvs)
+        print(f"Create {ia_parameters['csv_path']}\\{date_today} directory!")
+    except Exception as e:
+        print(f"The directory {ia_parameters['csv_path']}\\{date_today} already exist!")
+
+    # start the ia company scrapy process
+    ia_wd = driver_setup(ia_parameters)
+    ia_app(ia_wd, ia_parameters)
+    if contract_file is None:
+        contract_file = save_contract_list(ia_wd, ia_parameters, date_today)
+
+    # create dataframes for all the tables
+    # and get contract numbers for ia company
+    tables = create_table(control_unit, ia_parameters, contract_file)
+
+    check_new_clients(tables)
+    print("=========================")
+    print("New contract numbers:")
+    for cn in tables["new_contracts"]:
+        print(cn)
+    print("=========================")
+    return ia_wd, maximum_iteration, control_unit, ia_parameters, tables, csvs
+
+
+def scrape_cleanup(ia_wd, tables):
+    ia_wd.close()
+    tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
