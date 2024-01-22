@@ -287,6 +287,7 @@ def save_contract_list(wd, parameters, date_today):
 
     df_total.to_excel(str(new_filename), index=False)
     print('File saved')
+    return result
 
 
 def get_control(args):
