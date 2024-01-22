@@ -14,8 +14,8 @@ contract_columns = ["Applicant_last_name", "Applicant_first_name", "City", "Addr
 transaction_columns = ["Contract_number", "Transaction_Date", "Transaction_type", "Fundcode", "Gross_amount", "Units",
                        "Unit_value"]
 
-fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_name",
-                "Units", "Unit_value", "Value", "ACB"]
+fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_code",
+                "Fund_name", "Units", "Unit_value", "Value", "ACB"]
 
 participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
 

@@ -17,6 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
 
+
 def driver_setup(parameters):
     # start web driver
     chrome_options = webdriver.ChromeOptions()
@@ -25,6 +26,7 @@ def driver_setup(parameters):
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
+
 
 def ia_app(wd, parameters):
     # get the url and login
@@ -165,14 +167,14 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            ia_db.delete_current_fund_saving(cursor)
+            # ia_db.delete_current_fund_saving(cursor)
 
             # save saving & fund history
             ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving_history, batch_size)
             ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            ia_db.delete_current_transaction(cursor)
+            # ia_db.delete_current_transaction(cursor)
 
             # save transaction history
             ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
@@ -180,16 +182,16 @@ def save_csv_to_db(control_unit, files, new_contracts):
             # delete current client information related tables for later insertion
             # if there is no new contracts
             # otherwise just extend the table
-            if not new_contracts:
-                ia_db.delete_current_participant_beneficiary(cursor)
-                # ia_db.delete_current_client(cursor)
+            # if not new_contracts:
+            # ia_db.delete_current_participant_beneficiary(cursor)
+            # ia_db.delete_current_client(cursor)
             ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
 
         # save current tables accordingly
         if control_unit & 4 or new_contracts:
-            # ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
+            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary, batch_size)
         if control_unit & 1:
@@ -233,6 +235,7 @@ def check_new_clients(tables):
 
 
 def click_contract_list(wd):
+    # TODO: click two buttons
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['download_option']).click()
@@ -243,6 +246,7 @@ def click_contract_list(wd):
 
 
 def save_contract_list(wd, parameters, date_today):
+    # TODO: Major account download 2 files
     paths = ia_selectors.save_path()
 
     wd.find_element(By.XPATH, paths['mailbox_button']).click()

@@ -74,7 +74,7 @@ while iteration_time < 4:
     iteration_time += 1
 
 tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
-csvs = os.path.join(ia_parameters['csv_path'], '2024_01_17_14_54_23')
+
 # record file names
 files = {
     'contracts': os.path.join(csvs, 'contracts.csv'),
