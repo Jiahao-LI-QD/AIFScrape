@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from ia_selenium import ia_selectors
 
 
-def scrape(wd, fund, investment_type):
+def scrape(wd, fund, investment_type, block):
     # ["Statement_Date", "Contract_number", "Account_type", "Investment_type"
     # "Category", "Fund_name", "Units", "Unit_value", "Value", "ACB"]
     paths = ia_selectors.fund_paths()
@@ -24,7 +24,7 @@ def scrape(wd, fund, investment_type):
         row.extend([None] * 7)
         fund.loc[len(fund)] = row
     else:
-        tb = wd.find_elements(By.XPATH, paths['table_body']['main_body'])
+        tb = block.find_elements(By.XPATH, paths['table_body']['main_body'])
         category_type = ""
         for t in tb:
             if t.get_attribute('style') == r'display: none;' or t.get_attribute('class') == 'footerRow':

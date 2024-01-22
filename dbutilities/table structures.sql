@@ -51,8 +51,8 @@ CREATE TABLE Contract_Current (
     US varchar(255),
     RepresentativeStatus varchar(255),
     Source varchar(255),
-    SnapshotTime datetime NOT NULL,
-    CONSTRAINT FKContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime datetime NOT NULL
+--  CONSTRAINT FKContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Transaction_Current (
@@ -64,8 +64,8 @@ CREATE TABLE Transaction_Current (
     GrossAmount money NOT NULL,
     Units real,
     UnitValue real,
-    SnapshotTime datetime NOT NULL,
-    CONSTRAINT FKTransactionContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime datetime NOT NULL
+--  CONSTRAINT FKTransactionContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Fund_Current (
@@ -81,8 +81,8 @@ CREATE TABLE Fund_Current (
     UnitValue real,
     Value money,
     ACB money,
-    SnapshotTime datetime NOT NULL,
-    CONSTRAINT FKFundContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime datetime NOT NULL
+--  CONSTRAINT FKFundContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Saving_Current (
@@ -93,8 +93,8 @@ CREATE TABLE Saving_Current (
     InvestmentType varchar(255) NOT NULL,
     Rate real NOT NULL,
     Balance money NOT NULL,
-    SnapshotTime datetime NOT NULL,
-    CONSTRAINT FKSavingContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime datetime NOT NULL
+--  CONSTRAINT FKSavingContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Participant_Current (
@@ -103,8 +103,8 @@ CREATE TABLE Participant_Current (
     Role varchar(255) NOT NULL,
     Name varchar(255) NOT NULL,
     Birthday DATE NOT NULL,
-    SnapshotTime DATETIME NOT NULL,
-    CONSTRAINT FKParticipantContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime DATETIME NOT NULL
+--  CONSTRAINT FKParticipantContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Beneficiary_Current (
@@ -116,8 +116,8 @@ CREATE TABLE Beneficiary_Current (
     Relationship varchar(255),
     Class varchar(255),
     Birthday varchar(255),
-    SnapshotTime DATETIME NOT NULL,
-    CONSTRAINT FKBeneficiaryContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
+    SnapshotTime DATETIME NOT NULL
+--  CONSTRAINT FKBeneficiaryContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
 
 CREATE TABLE Client_History (
