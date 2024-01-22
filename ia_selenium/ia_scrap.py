@@ -238,6 +238,16 @@ def click_contract_list(wd):
     # TODO: click two buttons
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
+    wd.find_element(By.XPATH, paths['group']).click()
+    time.sleep(3)
+    wd.find_element(By.XPATH, paths['FV6_group']).click()
+    wd.find_element(By.XPATH, paths['download_option']).click()
+    wd.find_element(By.XPATH, paths['search_button']).click()
+    wd.find_element(By.XPATH, paths['submit_button']).click()
+    wd.find_element(By.XPATH, paths['myclient_button']).click()
+    wd.find_element(By.XPATH, paths['group']).click()
+    time.sleep(3)
+    wd.find_element(By.XPATH, paths['GK4_group']).click()
     wd.find_element(By.XPATH, paths['download_option']).click()
     wd.find_element(By.XPATH, paths['search_button']).click()
     wd.find_element(By.XPATH, paths['submit_button']).click()
@@ -250,27 +260,22 @@ def save_contract_list(wd, parameters, date_today):
     paths = ia_selectors.save_path()
 
     wd.find_element(By.XPATH, paths['mailbox_button']).click()
-    wd.find_element(By.XPATH, paths['file_link']).click()
+    wd.find_element(By.XPATH, paths['file_link1']).click()
     wd.find_element(By.XPATH, paths['download_file']).click()
-    filename = wd.find_element(By.XPATH, paths['download_file']).text
+    filename1 = wd.find_element(By.XPATH, paths['download_file']).text
+    wd.find_element(By.XPATH, paths['next_button']).click()
+    time.sleep(3)
+    wd.find_element(By.XPATH, paths['file_link2']).click()
+    wd.find_element(By.XPATH, paths['download_file']).click()
+    time.sleep(3)
+    filename2 = wd.find_element(By.XPATH, paths['download_file']).text
     time.sleep(3)
 
-    def rename_downloaded_file(old_name, new_name):
-        # Check if the file exists
-        if os.path.exists(old_name):
-            # Rename the file
-            os.rename(old_name, new_name)
-            print(f"File {old_name} renamed to {new_name}")
-        else:
-            print(f"File {old_name} does not exist")
+    df1 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename1))
+    df2 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename2))
+    df_total = pd.concat([df1, df2], ignore_index=True)
+    result = date_today + '_contract.xlsx'
+    new_filename = os.path.join(parameters['csv_path'], parameters['contracts'], result)
 
-    # Provide the old and new file names
-    result = date_today + '_contract.XLSX'
-    new_filename = os.path.join(parameters['csv_path'], parameters['contracts'],
-                                result)  # Replace with the desired new file name
-    old_file = os.path.join(parameters['csv_path'], parameters['contracts'], filename)
-
-    rename_downloaded_file(old_file, new_filename)
-
-    print('Rename file passed')
-    return result
+    df_total.to_excel(str(new_filename), index=False)
+    print('File saved')

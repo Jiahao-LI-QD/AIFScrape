@@ -5,6 +5,7 @@ from ia_selenium import ia_fund, ia_saving, ia_selectors
 def scrape_investment(wd, fund, saving):
     paths = ia_selectors.fund_paths()
     wd.find_element(By.XPATH, '//*[@id="Placements"]/a').click()
+
     try:
         investment_type = wd.find_element(By.XPATH, paths['investment_type']).text
     except Exception as e:
