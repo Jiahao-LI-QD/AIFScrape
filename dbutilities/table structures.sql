@@ -91,7 +91,12 @@ CREATE TABLE Saving_Current (
     ContractNumber varchar(255) NOT NULL,
     AccountType varchar(255) NOT NULL,
     InvestmentType varchar(255) NOT NULL,
+    FundCode varchar(255) NULL,
+    InvestedDate DATE NULL,
+    MaturityDate DATE NULL,
+    Amount money NULL,
     Rate real NOT NULL,
+    Type varchar(255) NULL,
     Balance money NOT NULL,
     SnapshotTime datetime NOT NULL
 --  CONSTRAINT FKSavingContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
@@ -203,7 +208,12 @@ CREATE TABLE Saving_History (
     ContractNumber varchar(255) NOT NULL,
     AccountType varchar(255) NOT NULL,
     InvestmentType varchar(255) NOT NULL,
+    FundCode varchar(255) NULL,
+    InvestedDate DATE NULL,
+    MaturityDate DATE NULL,
+    Amount money NULL,
     Rate real NOT NULL,
+    Type varchar(255) NULL,
     Balance money NOT NULL,
     SnapshotTime datetime NOT NULL
 );
