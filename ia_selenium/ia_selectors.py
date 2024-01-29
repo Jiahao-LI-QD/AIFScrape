@@ -4,7 +4,11 @@ def saving_paths():
         'date_text': '//*[@id="content"]/div[3]',
         'contract_number_account_type': '//*[@id="content"]/div[1]/div[1]/div/span',
         'rate': './div[2]/table/tbody/tr[2]/td[1]',
-        'balance': './div[2]/table/tbody/tr[2]/td[2]'
+        'balance': './div[2]/table/tbody/tr[2]/td[2]',
+        'table_body': {
+            'main_body': './div[2]/table/tbody/*',
+            'table_rows': ".//*"
+        }
     }
 
 
