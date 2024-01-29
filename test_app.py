@@ -17,7 +17,7 @@ while iteration_time < maximum_iteration:
         break
     iteration_time += 1
 
-tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
+ia_scrap.scrape_cleanup(ia_wd, tables)
 
 # record file names
 files = ia_scrap.get_csv_file_names(csvs)
@@ -26,7 +26,7 @@ files = ia_scrap.get_csv_file_names(csvs)
 ia_scrap.save_table_into_csv(control_unit, tables, files)
 
 # save csv files into db
-ia_scrap.save_csv_to_db(control_unit, files, len(tables['new_contracts']) != 0)
+ia_scrap.save_csv_to_db(control_unit, files, tables)
 
 # request contract numbers
 # ia_scrap.click_contract_list(ia_wd)

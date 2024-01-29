@@ -258,6 +258,13 @@ CREATE TABLE Beneficiary_History (
 CREATE NONCLUSTERED INDEX IX_BeneficiaryHistoryContractNumber
 ON Beneficiary_History (ContractNumber);
 
+CREATE TABLE Error_contract_number_History (
+    EcnId BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    ContractNumber varchar(255) NOT NULL,
+    Type varchar(255),
+    SnapshotTime DATETIME NOT NULL
+);
+
 -- drop table Beneficiary_Current, Beneficiary_History, Client_Current, Client_History, Fund_Current, Fund_History, Participant_Current, Participant_History,
 -- Saving_Current, Saving_History, Transaction_Current, Transaction_History;
 -- drop table Contract_Current, Contract_History;

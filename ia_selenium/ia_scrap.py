@@ -160,7 +160,7 @@ def save_table_into_csv(control_unit, tables, files):
     print("=========================")
 
 
-def save_csv_to_db(control_unit, files, new_contracts):
+def save_csv_to_db(control_unit, files, tables):
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -170,6 +170,7 @@ def save_csv_to_db(control_unit, files, new_contracts):
     else:
         print("Database connection successful!")
         batch_size = 1000
+        ia_db.save_recover(cursor, zip(tables['recover'], [None] * len(tables['recover'])))
         ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract_history, batch_size)
         ia_db.delete_current_contract(cursor)
 
@@ -186,7 +187,7 @@ def save_csv_to_db(control_unit, files, new_contracts):
 
             # save transaction history
             ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
-        if control_unit & 4 or new_contracts:
+        if control_unit & 4 or len(tables['new']):
             # delete current client information related tables for later insertion
             # if there is no new contracts
             # otherwise just extend the table
@@ -198,7 +199,7 @@ def save_csv_to_db(control_unit, files, new_contracts):
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
 
         # save current tables accordingly
-        if control_unit & 4 or new_contracts:
+        if control_unit & 4:
             ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary, batch_size)
@@ -367,12 +368,12 @@ def ia_get_start():
     # and get contract numbers for ia company
     tables = create_table(control_unit, ia_parameters, contract_file)
 
-    check_new_clients(tables)
-    print("=========================")
-    print("New contract numbers:")
-    for cn in tables["new_contracts"]:
-        print(cn)
-    print("=========================")
+    # check_new_clients(tables)
+    # print("=========================")
+    # print("New contract numbers:")
+    # for cn in tables["new_contracts"]:
+    #     print(cn)
+    # print("=========================")
     return ia_wd, maximum_iteration, control_unit, ia_parameters, tables, csvs
 
 
