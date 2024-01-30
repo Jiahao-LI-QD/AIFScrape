@@ -78,8 +78,14 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
     tables['recover'].clear()
 
     logfile = os.path.join(csvs, "error_log_" + thread_name  + "_" + str(iteration_time) + ".txt")
+    loop_continuous_error = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
+            if loop_continuous_error > 3:
+                wd.close()
+                wd = driver_setup(parameters)
+                ia_app(wd, parameters)
+                loop_continuous_error = 0
             if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
                 time.sleep(5)
@@ -96,6 +102,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
 
                 wd.find_element(By.XPATH, paths['search_button']).click()
             except Exception as e:
+                loop_continuous_error += 1
                 error_contract_number += 1
                 print(f"{thread_name} Error: Cannot found customer: {contract_number_}")
 
@@ -115,7 +122,9 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
                 if control_unit & 4:
                     ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
                                      contract_number_)
+                loop_continuous_error = 0
             except Exception as e:
+                loop_continuous_error += 1
                 print(f"{thread_name} Error: Scrape interrupted on customer: {contract_number_}")
                 tables['recover'].append(contract_number_)
                 error_count += 1
@@ -126,7 +135,7 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
                 log.write("=============================================================\n")
 
     # save recovery list after current traverse
-    recovery = os.path.join(csvs, "recovery_list_" + str(iteration_time) + thread_name + ".txt")
+    recovery = os.path.join(csvs, "recovery_list_" + thread_name  + "_" + str(iteration_time) + ".txt")
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line
