@@ -30,18 +30,24 @@ def driver_setup(parameters):
     return wd
 
 
-def ia_app(wd, parameters):
+def ia_app(wd, parameters, recursive=0):
     # get the url and login
-    wd.get(parameters['web_url'])
+    try:
+        if recursive > 4:
+            return
+        wd.get(parameters['web_url'])
 
-    ia_login.login(wd, parameters['username'], parameters['password'])
-    paths = ia_selectors.scrape_paths()
-    # accept cookie
-    time.sleep(1)
-    wait = WebDriverWait(wd, 10)  # seconds want to wait
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
-    ).click()
+        ia_login.login(wd, parameters['username'], parameters['password'])
+        paths = ia_selectors.scrape_paths()
+        # accept cookie
+        time.sleep(1)
+        wait = WebDriverWait(wd, 10)  # seconds want to wait
+        wait.until(
+            EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
+        ).click()
+    except Exception as e:
+        print("Exception during login to IA, Will Try Again")
+        ia_app(wd, parameters, recursive + 1)
 
 
 def create_table(file_path, thread=False):
@@ -392,7 +398,7 @@ def ia_threading(confs, thread_name, contract_file):
     # start the ia company scrapy process
     ia_wd = driver_setup(confs['parameters'])
     ia_app(ia_wd, confs['parameters'])
-
+    # TODO: traverse doesn't hold the current wd -->  record it
     # create dataframes for all the tables
     # and get contract numbers for ia company
     tables = create_table(contract_file)
