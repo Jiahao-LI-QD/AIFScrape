@@ -22,16 +22,16 @@ def scrape(wd, saving, investment_type, block):
         for t in tb:
             if t.get_attribute('style') == r'display: none;' or t.get_attribute('class') == 'footerRow':
                 continue
-            table_body = t.find_elements(By.XPATH, paths['table_body']['table_rows']).text.split(' ')
+            table_body = t.text.split(' ')
             row = [formatted_date, contract_number, account_type, investment_type]
             row.extend(table_body)
-            saving.loc[len(saving)] = row
     else:
         row = [formatted_date, contract_number, account_type, investment_type]
         row.extend([None] * 4)
-        rate = block.find_element(By.XPATH, paths['rate']).text
-        row[8] = float(rate.strip('%')) * 0.01
-        row[9] = None
-        row[10] = block.find_element(By.XPATH, paths['balance']).text
-        saving.loc[len(saving)] = row
+        row.append(block.find_element(By.XPATH, paths['rate']).text)
+        row.append(None)
+        row.append(block.find_element(By.XPATH, paths['balance']).text)
+
+    row[8] = float(row[8].strip('%')) * 0.01
+    saving.loc[len(saving)] = row
 
