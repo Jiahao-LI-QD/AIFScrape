@@ -280,5 +280,5 @@ CREATE TABLE Error_contract_number_History (
 -- drop table Contract_Current, Contract_History;
 
 drop table Beneficiary_Current, Beneficiary_History, Client_Current, Client_History, Fund_Current, Fund_History, Participant_Current, Participant_History,
-Saving_Current, Saving_History, Transaction_Current, Transaction_History;
+Saving_Current, Saving_History, Transaction_Current, Transaction_History, Error_contract_number_History;
 drop table Contract_Current, Contract_History;

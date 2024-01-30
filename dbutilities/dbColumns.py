@@ -1,4 +1,6 @@
-saving_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Rate", "Balance"]
+saving_columns = ["Statement_Date", "Contract_number", "Account_type",
+                  "Investment_type", "FundCode", "InvestedDate",
+                  "MaturityDate", "Amount", "Rate", "Type", "Balance"]
 
 client_columns = ["LastName", "FirstName", "Sex", "Language", "Birthday", "Address", "Address_line2", "City",
                   "Province",
