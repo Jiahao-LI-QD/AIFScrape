@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 
@@ -9,7 +11,7 @@ def split_excel(file_path, folder_path, num_chunks):
     parts_size = (num_rows // num_chunks)
     remainder_row = num_rows % num_chunks
     parts = []
-
+    file_paths = []
     # separate the big dataframe into num_chunks amount of smaller dfs
     for i in range(num_chunks):
         start_index = i * parts_size
@@ -22,10 +24,8 @@ def split_excel(file_path, folder_path, num_chunks):
         parts[-1] = last_df
 
     for i in range(len(parts)):
-        file_name = '\contract_part_' + str(i + 1) + '.xlsx'
-        full_path = folder_path + file_name
+        file_name = 'contract_part_' + str(i + 1) + '.xlsx'
+        full_path = os.path.join(folder_path, file_name)
+        file_paths.append(full_path)
         parts[i].to_excel(full_path, index=False)
-
-path = "D:\ia_csvs\contracts\contracts_final_1.XLSX"
-folder = "D:\ia_csvs\contracts"
-split_excel(path, folder,4)
+    return file_paths

@@ -5,16 +5,19 @@ import pandas as pd
 
 """
 CREATE TABLE Saving_Current (
-    HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
-    Statement_Date DATE NOT NULL,
-    Contract_number varchar(255) NOT NULL,
-    Account_type varchar(255) NOT NULL,
-    Investment_type varchar(255) NOT NULL,
+    HiId BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    StatementDate DATE NOT NULL,
+    ContractNumber varchar(255) NOT NULL,
+    AccountType varchar(255) NOT NULL,
+    InvestmentType varchar(255) NOT NULL,
+    FundCode varchar(255) NULL,
+    InvestedDate DATE NULL,
+    MaturityDate DATE NULL,
+    Amount money NULL,
     Rate real NOT NULL,
+    Type varchar(255) NULL,
     Balance money NOT NULL,
-    Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Saving_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
-);
+    SnapshotTime datetime NOT NULL;
 
 drop table Saving_Current;
 
@@ -27,7 +30,7 @@ DBCC CHECKIDENT ('Saving_Current', reseed,0);
 
 
 def save_saving(cursor, values):
-    cursor.executemany("insert into Saving_Current values (?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Saving_Current values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
@@ -244,16 +247,19 @@ def save_beneficiary(cursor, values):
 # HISTORY SAVING TABLE CREATION
 """
 CREATE TABLE Saving_History (
-    HI_id BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
-    Statement_Date DATE NOT NULL,
-    Contract_number varchar(255) NOT NULL,
-    Account_type varchar(255) NOT NULL,
-    Investment_type varchar(255) NOT NULL,
+    HiId BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    StatementDate DATE NOT NULL,
+    ContractNumber varchar(255) NOT NULL,
+    AccountType varchar(255) NOT NULL,
+    InvestmentType varchar(255) NOT NULL,
+    FundCode varchar(255) NULL,
+    InvestedDate DATE NULL,
+    MaturityDate DATE NULL,
+    Amount money NULL,
     Rate real NOT NULL,
+    Type varchar(255) NULL,
     Balance money NOT NULL,
-    Snapshot_time datetime NOT NULL,
-    CONSTRAINT FK_Saving_Contract_number FOREIGN KEY (Contract_number) REFERENCES Contract_Current (Contract_number)
-);
+    SnapshotTime datetime NOT NULL;
 
 drop table Saving_History;
 
@@ -266,7 +272,7 @@ DBCC CHECKIDENT ('Saving_History', reseed,0);
 
 
 def save_saving_history(cursor, values):
-    cursor.executemany("insert into Saving_History values (?, ?, ?, ?, ?, ?, getdate())", values)
+    cursor.executemany("insert into Saving_History values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate())", values)
     cursor.commit()
 
 
