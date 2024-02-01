@@ -30,18 +30,24 @@ def driver_setup(parameters):
     return wd
 
 
-def ia_app(wd, parameters):
+def ia_app(wd, parameters, recursive=0):
     # get the url and login
-    wd.get(parameters['web_url'])
+    try:
+        if recursive > 4:
+            return
+        wd.get(parameters['web_url'])
 
-    ia_login.login(wd, parameters['username'], parameters['password'])
-    paths = ia_selectors.scrape_paths()
-    # accept cookie
-    time.sleep(1)
-    wait = WebDriverWait(wd, 10)  # seconds want to wait
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
-    ).click()
+        ia_login.login(wd, parameters['username'], parameters['password'])
+        paths = ia_selectors.scrape_paths()
+        # accept cookie
+        time.sleep(1)
+        wait = WebDriverWait(wd, 10)  # seconds want to wait
+        wait.until(
+            EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
+        ).click()
+    except Exception as e:
+        print("Exception during login to IA, Will Try Again")
+        ia_app(wd, parameters, recursive + 1)
 
 
 def create_table(file_path, thread=False):
@@ -58,7 +64,7 @@ def create_table(file_path, thread=False):
     if not thread:
         ia_contracts = pd.read_excel(
             file_path
-            )
+        )
         ia_contracts.columns = dbColumns.contract_columns
     else:
         ia_contracts = pd.DataFrame(columns=dbColumns.contract_columns)
@@ -66,7 +72,7 @@ def create_table(file_path, thread=False):
     return result
 
 
-def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, thread_name="Non-thread"):
+def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     paths = ia_selectors.scrape_paths()
     error_count = 0
     error_contract_number = 0
@@ -77,19 +83,20 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
     # clean the recover list
     tables['recover'].clear()
 
-    logfile = os.path.join(csvs, "error_log_" + thread_name  + "_" + str(iteration_time) + ".txt")
+    logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
     loop_continuous_error = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
             if loop_continuous_error > 3:
                 wd.close()
-                wd = driver_setup(parameters)
-                ia_app(wd, parameters)
+                wd = driver_setup(confs['parameters'])
+                confs['drives'][thread_name] = wd
+                ia_app(confs['drives'][thread_name], confs['parameters'])
                 loop_continuous_error = 0
-            if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
+            if len(confs['drives'][thread_name].find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
                 time.sleep(5)
-                wd.get(parameters['web_url'])
+                wd.get(confs['parameters']['web_url'])
             contract_number_ = row['Contract_number']
             print(f"{thread_name} - {datetime.now()}: scrapping for contract number {contract_number_}")
 
@@ -115,11 +122,11 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
                 continue
 
             try:
-                if control_unit & 1:
+                if confs['control_unit'] & 1:
                     ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
-                if control_unit & 2:
+                if confs['control_unit'] & 2:
                     ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
-                if control_unit & 4:
+                if confs['control_unit'] & 4:
                     ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
                                      contract_number_)
                 loop_continuous_error = 0
@@ -135,18 +142,18 @@ def scrape_traverse(wd, control_unit, tables, csvs, iteration_time, parameters, 
                 log.write("=============================================================\n")
 
     # save recovery list after current traverse
-    recovery = os.path.join(csvs, "recovery_list_" + thread_name  + "_" + str(iteration_time) + ".txt")
+    recovery = os.path.join(confs['csvs'], "recovery_list_" + thread_name + "_" + str(iteration_time) + ".txt")
     with open(recovery, 'a') as f:
         for item in tables['recover']:
             # write each item on a new line
             f.write(str(item) + '\n')
 
-    if control_unit & 1:
+    if confs['control_unit'] & 1:
         tables['saving'] = tables['saving'][~tables['saving']['Contract_number'].isin(tables['recover'])]
         tables['fund'] = tables['fund'][~tables['fund']['Contract_number'].isin(tables['recover'])]
-    if control_unit & 2:
+    if confs['control_unit'] & 2:
         tables['transaction'] = tables['transaction'][~tables['transaction']['Contract_number'].isin(tables['recover'])]
-    if control_unit & 4:
+    if confs['control_unit'] & 4:
         tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
         tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
         tables['client'] = tables['client'][~tables['client']['Contract_number_as_owner'].isin(tables['recover'])]
@@ -390,8 +397,8 @@ def ia_get_confs():
 
 def ia_threading(confs, thread_name, contract_file):
     # start the ia company scrapy process
-    ia_wd = driver_setup(confs['parameters'])
-    ia_app(ia_wd, confs['parameters'])
+    confs['drives'][thread_name] = driver_setup(confs['parameters'])
+    ia_app(confs['drives'][thread_name], confs['parameters'])
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
@@ -400,15 +407,28 @@ def ia_threading(confs, thread_name, contract_file):
     # do - while loop to traverse through the contract numbers until no exception
     iteration_time = 0
     while iteration_time < confs['maximum_iteration']:
-        scrape_traverse(ia_wd, confs['control_unit'], tables, confs['csvs'], iteration_time, confs['parameters'],
-                        thread_name)
+        scrape_traverse(confs, tables, iteration_time, thread_name)
         if len(tables['recover']) == 0:
             break
         iteration_time += 1
-    ia_wd.close()
+    confs['drives'][thread_name].close()
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
     confs['threading_tables'][thread_name] = tables
 
 
 def scrape_cleanup(tables):
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
+
+
+def merge_tables(confs):
+    tables = create_table(None, True)
+    for o in confs['threading_tables'].values():
+        tables['saving'] = pd.concat([tables['saving'], o['saving']], axis=0)
+        tables['fund'] = pd.concat([tables['fund'], o['fund']], axis=0)
+        tables['transaction'] = pd.concat([tables['transaction'], o['transaction']], axis=0)
+        tables['beneficiary'] = pd.concat([tables['beneficiary'], o['beneficiary']], axis=0)
+        tables['participant'] = pd.concat([tables['participant'], o['participant']], axis=0)
+        tables['client'] = pd.concat([tables['client'], o['client']], axis=0)
+        tables['contracts'] = pd.concat([tables['contracts'], o['contracts']], axis=0)
+        tables['recover'].extend(o['recover'])
+    return tables
