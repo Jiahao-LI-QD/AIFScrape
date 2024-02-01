@@ -41,9 +41,8 @@ def scrape_transaction(wd, transaction, issue_date):
             if new_row[-2] != "":
                 new_row[-1] = atof(new_row[-1].replace(',', ''))
                 new_row[-2] = atof(new_row[-2].replace(',', ''))
-            else:
+            elif len(new_row) == 8:
                 new_row.pop(4)
-            # print(new_row[4], type(new_row[-2]), len(new_row))
             transaction.loc[len(transaction)] = new_row
 
         # for "Next" button when there is more than one page of transactions
@@ -66,7 +65,7 @@ def scrape_transaction(wd, transaction, issue_date):
                 if entire_row[-2] != "":
                     entire_row[-1] = atof(entire_row[-1].replace(',', ''))
                     entire_row[-2] = atof(entire_row[-2].replace(',', ''))
-                else:
+                elif len(entire_row) == 8:
                     entire_row.pop(4)
                 transaction.loc[len(transaction)] = entire_row
 
