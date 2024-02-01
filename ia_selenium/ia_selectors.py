@@ -21,7 +21,8 @@ def fund_paths():
         'investment_page':'//*[@id="Placements"]/a',
         'table_body': {
             'main_body': './div[2]/table/tbody/*',
-            'table_rows': ".//*"
+            'table_rows': ".//*",
+            'table_data': ".//td"
         }
     }
 
@@ -76,7 +77,7 @@ def participant_paths():
     return {
         'contract_number': '//*[@id="content"]/div[3]/table[1]/tbody/tr[1]/td[2]',
         'table_participant': {
-            'main_participant': '//*[@id="content"]/div[1]/div[1]/table/tbody/tr',
+            'main_participant': '//*[@id="content"]/div[3]/div[1]/table/tbody/tr',
             'items_participant': './/*'
             # 'role_participant': './td[1]',
             # 'name_participant':'./td[2]',

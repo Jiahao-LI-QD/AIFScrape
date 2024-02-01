@@ -38,6 +38,7 @@ contract_files = split_excel(os.path.join(confs['parameters']['csv_path'], confs
                              confs['thread_number'])
 
 threads_list = []
+confs['drivers'] = {}
 
 for i in range(confs['thread_number']):
     thread_name = 'thread' + str(i)
@@ -62,4 +63,4 @@ ia_scrap.save_table_into_csv(confs['control_unit'], tables, files)
 ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)
 
 # request contract numbers
-ia_scrap.click_contract_list(ia_wd)
+# ia_scrap.click_contract_list()
