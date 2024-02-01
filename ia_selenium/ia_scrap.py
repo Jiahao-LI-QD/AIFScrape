@@ -82,7 +82,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
         contracts = tables['contracts'][tables['contracts']['Contract_number'].isin(tables['recover'])]
     # clean the recover list
     tables['recover'].clear()
-
+    wd = confs['drivers'][thread_name]
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
     loop_continuous_error = 0
     with open(logfile, 'a') as log:
@@ -90,10 +90,10 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
             if loop_continuous_error > 5:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
-                confs['drives'][thread_name] = wd
-                ia_app(confs['drives'][thread_name], confs['parameters'])
+                confs['drivers'][thread_name] = wd
+                ia_app(confs['drivers'][thread_name], confs['parameters'])
                 loop_continuous_error = 0
-            if len(confs['drives'][thread_name].find_elements(By.XPATH, paths['error_page'])) != 0:
+            if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
                 time.sleep(5)
                 wd.get(confs['parameters']['web_url'])
@@ -397,8 +397,8 @@ def ia_get_confs():
 
 def ia_threading(confs, thread_name, contract_file):
     # start the ia company scrapy process
-    confs['drives'][thread_name] = driver_setup(confs['parameters'])
-    ia_app(confs['drives'][thread_name], confs['parameters'])
+    confs['drivers'][thread_name] = driver_setup(confs['parameters'])
+    ia_app(confs['drivers'][thread_name], confs['parameters'])
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
@@ -411,7 +411,7 @@ def ia_threading(confs, thread_name, contract_file):
         if len(tables['recover']) == 0:
             break
         iteration_time += 1
-    confs['drives'][thread_name].close()
+    confs['drivers'][thread_name].close()
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
     confs['threading_tables'][thread_name] = tables
 
