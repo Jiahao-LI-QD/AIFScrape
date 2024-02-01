@@ -17,6 +17,7 @@ CREATE TABLE Client_Current (
     PrimaryEmail varchar(255),
     SecondaryEmail varchar(255),
     ContractNumberAsOwner varchar(255) UNIQUE NOT NULL,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -51,6 +52,7 @@ CREATE TABLE Contract_Current (
     US varchar(255),
     RepresentativeStatus varchar(255),
     Source varchar(255),
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 --  CONSTRAINT FKContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -64,6 +66,7 @@ CREATE TABLE Transaction_Current (
     GrossAmount money NOT NULL,
     Units real,
     UnitValue real,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 --  CONSTRAINT FKTransactionContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -81,6 +84,7 @@ CREATE TABLE Fund_Current (
     UnitValue real,
     Value money,
     ACB money,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 --  CONSTRAINT FKFundContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -98,6 +102,7 @@ CREATE TABLE Saving_Current (
     Rate real NOT NULL,
     Type varchar(255) NULL,
     Balance money NOT NULL,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 --  CONSTRAINT FKSavingContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -108,6 +113,7 @@ CREATE TABLE Participant_Current (
     Role varchar(255) NOT NULL,
     Name varchar(255) NOT NULL,
     Birthday DATE NOT NULL,
+    Company varchar(255),
     SnapshotTime DATETIME NOT NULL
 --  CONSTRAINT FKParticipantContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -121,6 +127,7 @@ CREATE TABLE Beneficiary_Current (
     Relationship varchar(255),
     Class varchar(255),
     Birthday varchar(255),
+    Company varchar(255),
     SnapshotTime DATETIME NOT NULL
 --  CONSTRAINT FKBeneficiaryContractNumber FOREIGN KEY (ContractNumber) REFERENCES Client_Current (ContractNumberAsOwner)
 );
@@ -144,6 +151,7 @@ CREATE TABLE Client_History (
     PrimaryEmail varchar(255),
     SecondaryEmail varchar(255),
     ContractNumberAsOwner varchar(255) NOT NULL,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -181,6 +189,7 @@ CREATE TABLE Contract_History (
     US varchar(255),
     RepresentativeStatus varchar(255),
     Source varchar(255),
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -196,6 +205,7 @@ CREATE TABLE Transaction_History (
     GrossAmount money NOT NULL,
     Units real,
     UnitValue real,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -215,6 +225,7 @@ CREATE TABLE Saving_History (
     Rate real NOT NULL,
     Type varchar(255) NULL,
     Balance money NOT NULL,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -234,6 +245,7 @@ CREATE TABLE Fund_History (
     UnitValue real,
     Value money,
     ACB money,
+    Company varchar(255),
     SnapshotTime datetime NOT NULL
 );
 
@@ -247,6 +259,7 @@ CREATE TABLE Participant_History (
     Role varchar(255) NOT NULL,
     Name varchar(255) NOT NULL,
     Birthday DATE NOT NULL,
+    Company varchar(255),
     SnapshotTime DATETIME NOT NULL
 );
 
@@ -262,6 +275,7 @@ CREATE TABLE Beneficiary_History (
     Relationship varchar(255),
     Class varchar(255),
     Birthday varchar(255),
+    Company varchar(255),
     SnapshotTime DATETIME NOT NULL
 );
 
@@ -272,6 +286,7 @@ CREATE TABLE Error_contract_number_History (
     EcnId BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
     ContractNumber varchar(255) NOT NULL,
     Type varchar(255),
+    Company varchar(255),
     SnapshotTime DATETIME NOT NULL
 );
 
