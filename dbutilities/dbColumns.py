@@ -1,4 +1,6 @@
-saving_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Rate", "Balance"]
+saving_columns = ["Statement_Date", "Contract_number", "Account_type",
+                  "Investment_type", "FundCode", "InvestedDate",
+                  "MaturityDate", "Amount", "Rate", "Type", "Balance"]
 
 client_columns = ["LastName", "FirstName", "Sex", "Language", "Birthday", "Address", "Address_line2", "City",
                   "Province",
@@ -14,9 +16,9 @@ contract_columns = ["Applicant_last_name", "Applicant_first_name", "City", "Addr
 transaction_columns = ["Contract_number", "Transaction_Date", "Transaction_type", "Fundcode", "Gross_amount", "Units",
                        "Unit_value"]
 
-fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_name",
-                "Units", "Unit_value", "Value", "ACB"]
+fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_code",
+                "Fund_name", "Units", "Unit_value", "Value", "ACB"]
 
 participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
 
-beneficiary_columns = ["Contract_number", "Name", "Allocation", "Relationship", "Class"]
+beneficiary_columns = ["Contract_number","BenefitCategory", "Name", "Allocation", "Relationship", "Class","Birthday"]

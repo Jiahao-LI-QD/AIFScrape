@@ -1,5 +1,7 @@
 import time
+from locale import atof
 
+import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,42 +27,46 @@ def scrape_transaction(wd, transaction, issue_date):
     text = wd.find_element(By.XPATH, paths['contract_number_account_type']).text
     contract_number = text.split(' - ')[1]
 
-    # grab contents of the transaction table
-    row = wd.find_elements(By.XPATH, paths['row_data'])
-    for cell in row:
-        Date = cell.find_element(By.XPATH, './td[1]').text
-        Transaction = cell.find_element(By.XPATH, './td[2]').text
-        Fund = cell.find_element(By.XPATH, './td[3]').text
-        Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-        Units = cell.find_element(By.XPATH, './td[5]').text.replace(',', '')
-        Unit_Value = cell.find_element(By.XPATH, './td[6]').text.replace(',', '')
-        transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                             Unit_Value]
+    # If transaction is empty.
+    has_transaction = wd.find_element(By.XPATH, paths['has_transaction']).text
+    if 'transactions' not in has_transaction:
+        # grab contents of the transaction table
+        table = wd.find_elements(By.XPATH, paths['table_data'])
+        for row in table:
+            rows = row.find_elements(By.XPATH, ".//*")
+            result = [cell.text for cell in rows]
 
-    # for "Next" button when there is more than one page of transactions
-    while len(wd.find_elements(By.XPATH, paths['next_page'])) > 0:
-        next_page_button = wd.find_element(By.XPATH, paths['next_page'])
-        if 'Next' not in next_page_button.get_attribute("outerHTML"):
-            break
-        print('There is another page of transactions')
-        next_page_button.click()
+            new_row = [contract_number]
+            new_row.extend(result)
+            if new_row[-2] != "":
+                new_row[-1] = atof(new_row[-1].replace(',', ''))
+                new_row[-2] = atof(new_row[-2].replace(',', ''))
+            elif len(new_row) == 8:
+                new_row.pop(4)
+            transaction.loc[len(transaction)] = new_row
 
-        # Wait until the entire page finishes loading
-        wait = WebDriverWait(wd, 30)
-        wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
-        time.sleep(1)
+        # for "Next" button when there is more than one page of transactions
+        while len(wd.find_elements(By.CSS_SELECTOR, paths['CSS_next_page'])) > 0:
+            next_page_button = wd.find_element(By.CSS_SELECTOR, paths['CSS_next_page'])
+            next_page_button.click()
 
-        row = wd.find_elements(By.XPATH, paths['row_data'])
-        for cell in row:
-            Date = cell.find_element(By.XPATH, './td[1]').text
-            Transaction = cell.find_element(By.XPATH, './td[2]').text
-            Fund = cell.find_element(By.XPATH, './td[3]').text
-            Gross_Amount = cell.find_element(By.XPATH, './td[4]').text
-            Units = cell.find_element(By.XPATH, './td[5]').text
-            Unit_Value = cell.find_element(By.XPATH, './td[6]').text
-            transaction.loc[len(transaction)] = [contract_number, Date, Transaction, Fund, Gross_Amount, Units,
-                                                 Unit_Value]
+            # Wait until the entire page finishes loading
+            wait = WebDriverWait(wd, 30)
+            wait.until(EC.visibility_of_element_located((By.XPATH, paths['table_header'])))
+            time.sleep(1)
 
-## waiting for "Sorry!" to show up for elements
-##
-##
+            table = wd.find_elements(By.XPATH, paths['table_data'])
+            for row in table:
+                rows = row.find_elements(By.XPATH, ".//*")
+                result = [cell.text for cell in rows]
+
+                entire_row = [contract_number]
+                entire_row.extend(result)
+                if entire_row[-2] != "":
+                    entire_row[-1] = atof(entire_row[-1].replace(',', ''))
+                    entire_row[-2] = atof(entire_row[-2].replace(',', ''))
+                elif len(entire_row) == 8:
+                    entire_row.pop(4)
+                transaction.loc[len(transaction)] = entire_row
+
+        wd.execute_script("window.scrollTo(0, 0)")
