@@ -351,13 +351,13 @@ def get_control(args):
 
 def get_csv_file_names(path):
     return {
-        'contracts': os.path.join(path, 'contracts.csv'),
-        'fund': os.path.join(path, 'funds.csv'),
-        'saving': os.path.join(path, 'savings.csv'),
-        'client': os.path.join(path, 'clients.csv'),
-        'transaction': os.path.join(path, 'transactions.csv'),
-        'beneficiary': os.path.join(path, 'beneficiaries.csv'),
-        'participant': os.path.join(path, 'participants.csv')
+        'contracts': os.path.join(path, 'ia_contracts.csv'),
+        'fund': os.path.join(path, 'ia_funds.csv'),
+        'saving': os.path.join(path, 'ia_savings.csv'),
+        'client': os.path.join(path, 'ia_clients.csv'),
+        'transaction': os.path.join(path, 'ia_transactions.csv'),
+        'beneficiary': os.path.join(path, 'ia_beneficiaries.csv'),
+        'participant': os.path.join(path, 'ia_participants.csv')
     }
 
 
