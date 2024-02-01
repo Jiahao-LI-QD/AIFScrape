@@ -59,7 +59,6 @@ def transactions_path():
         'has_transaction': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tbody/tr/td',
         'next_page': '//*[@id="TransactionsTrouveesDiv"]/div[3]/table/tfoot/tr/td/a/span',
         'CSS_next_page': '#TransactionsTrouveesDiv > div:nth-child(6) > table > tfoot > tr > td > a.suivant > span'
-        #bouton-avis > div
     }
 
 
