@@ -87,7 +87,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     loop_continuous_error = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
-            if loop_continuous_error > 3:
+            if loop_continuous_error > 5:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
                 confs['drives'][thread_name] = wd
