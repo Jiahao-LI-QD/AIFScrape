@@ -36,19 +36,20 @@ def scrape(wd, fund, investment_type, block):
                 continue
             else:
                 # fund_name, units, unit_value, value, acb = elements[:4]
+                elements = t.find_elements(By.XPATH, paths['table_body']['table_data'])
                 table_columns = [child.text for child in elements]
                 row = [formatted_date, contract_number, account_type, investment_type, category_type]
-
-                if category_type == 'Diversified Funds':
+                #
+                # if category_type == 'Diversified Funds':
+                #     row.extend(table_columns[0].split(" - ", 2))
+                #     row.extend(table_columns[1:4])
+                #     row.append(None)
+                if account_type == 'NON-REGISTERED':
+                    row.extend(table_columns[0].split(" - ", 2))
+                    row.extend(table_columns[1:5])
+                else:
                     row.extend(table_columns[0].split(" - ", 2))
                     row.extend(table_columns[1:4])
-                    row.append(None)
-                elif account_type == 'NON-REGISTERED':
-                    row.extend(table_columns[1].split(" - ", 2))
-                    row.extend(table_columns[2:6])
-                else:
-                    row.extend(table_columns[1].split(" - ", 2))
-                    row.extend(table_columns[2:5])
                     row.append(None)
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))

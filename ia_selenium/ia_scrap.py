@@ -82,7 +82,8 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
         contracts = tables['contracts'][tables['contracts']['Contract_number'].isin(tables['recover'])]
     # clean the recover list
     tables['recover'].clear()
-    wd = confs['drivers'][thread_name]
+    wd = driver_setup(confs['parameters'])
+    ia_app(wd, confs['parameters'])
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
     loop_continuous_error = 0
     with open(logfile, 'a') as log:
@@ -90,8 +91,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
             if loop_continuous_error > 5:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
-                confs['drivers'][thread_name] = wd
-                ia_app(confs['drivers'][thread_name], confs['parameters'])
+                ia_app(wd, confs['parameters'])
                 loop_continuous_error = 0
             if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
@@ -157,6 +157,8 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
         tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
         tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
         tables['client'] = tables['client'][~tables['client']['Contract_number_as_owner'].isin(tables['recover'])]
+
+    wd.close()
 
     print(f"{thread_name} {datetime.now()}: scrape traverse complete")
     print(f"{thread_name} Total contract not found: {error_contract_number}")
@@ -363,7 +365,7 @@ def get_csv_file_names(path):
 
 def ia_get_confs():
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
-
+    # TODO: if contract_file = NONE --> go get the new contract file
     # Get required parameters for ia_app
     try:
         ia_parameters = keys.ia_account()
@@ -397,8 +399,6 @@ def ia_get_confs():
 
 def ia_threading(confs, thread_name, contract_file):
     # start the ia company scrapy process
-    confs['drivers'][thread_name] = driver_setup(confs['parameters'])
-    ia_app(confs['drivers'][thread_name], confs['parameters'])
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
@@ -411,7 +411,7 @@ def ia_threading(confs, thread_name, contract_file):
         if len(tables['recover']) == 0:
             break
         iteration_time += 1
-    confs['drivers'][thread_name].close()
+
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
     confs['threading_tables'][thread_name] = tables
 
