@@ -24,28 +24,28 @@ def driver_setup(parameters):
     chrome_options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
-    chrome_options.add_argument('headless')
+    # chrome_options.add_argument('headless')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
 
 
-def ia_app(wd, parameters, recursive=0):
+def ia_app(wd, parameters, thread_name="Main", recursive=0):
     # get the url and login
     try:
-        if recursive > 4:
-            return
-        wd.get(parameters['web_url'])
-
-        ia_login.login(wd, parameters['username'], parameters['password'])
+        if recursive == 0:
+            wd.get(parameters['web_url'])
+            ia_login.login(wd, parameters['username'], parameters['password'])
         paths = ia_selectors.scrape_paths()
         # accept cookie
-        time.sleep(1)
-        if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
-            wd.find_element(By.XPATH, paths['cookie_button']).click()
+        time.sleep(3)
+        wait = WebDriverWait(wd, 10)  # seconds want to wait
+        wait.until(
+            EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
+        ).click()
     except Exception as e:
-        print("Exception during login to IA, Will Try Again")
-        ia_app(wd, parameters, recursive + 1)
+        print(f"{thread_name}: Exception during login to IA, Will Try Again")
+        ia_app(wd, parameters, recursive=(recursive + 1))
 
 
 def create_table(file_path, thread=False):
@@ -85,7 +85,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     # clean the recover list
     tables['recover'].clear()
     wd = driver_setup(confs['parameters'])
-    ia_app(wd, confs['parameters'])
+    ia_app(wd, confs['parameters'], thread_name)
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
     loop_continuous_error = 0
     driver_reset_count = 0
@@ -94,7 +94,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
             if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
-                ia_app(wd, confs['parameters'])
+                ia_app(wd, confs['parameters'], thread_name)
                 loop_continuous_error = 0
                 driver_reset_count = 0
             if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
@@ -273,7 +273,6 @@ def check_new_clients(tables):
 
 
 def click_contract_list(confs):
-    # TODO: click two buttons
     wd = driver_setup(confs['parameters'])
     ia_app(wd, confs['parameters'])
     paths = ia_selectors.download_path()
@@ -295,10 +294,10 @@ def click_contract_list(confs):
     pass
 
 
-def save_contract_list(wd, parameters, date_today):
-    # TODO: Major account download 2 files
+def save_contract_list(parameters, date_today):
     paths = ia_selectors.save_path()
-
+    wd = driver_setup(parameters)
+    ia_app(wd, parameters)
     wd.find_element(By.XPATH, paths['mailbox_button']).click()
     wd.find_element(By.XPATH, paths['file_link1']).click()
     wd.find_element(By.XPATH, paths['download_file']).click()
@@ -373,7 +372,6 @@ def get_csv_file_names(path):
 
 def ia_get_confs():
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
-    # TODO: if contract_file = NONE --> go get the new contract file
     # Get required parameters for ia_app
     try:
         ia_parameters = keys.ia_account()
@@ -395,7 +393,7 @@ def ia_get_confs():
     threading_tables = {}
 
     if contract_file is None:
-        # TODO: download file
+        contract_file = save_contract_list(ia_parameters, date_today)
         pass
 
     return {
