@@ -32,6 +32,8 @@ def login_paths():
         'sign_in_button': '//*[@id="eeCleanLoader"]/div/div[1]/div/div/div/div/div[2]/div[1]/div/div/div[1]/a',
         'username': '//*[@id="idp-discovery-username"]',
         'cookie_button': '/html/body/div[2]/div[2]/a[1]',
+        'cookie_consent': 'body > div.cc-window.cc-banner.cc-type-opt-in.cc-theme-classic.cc-bottom.cc-color-override'
+                          '-218275418',
         'submit_username': '//*[@id="idp-discovery-submit"]',
         'password': '//*[@id="okta-signin-password"]',
         'submit_password': '//*[@id="okta-signin-submit"]'

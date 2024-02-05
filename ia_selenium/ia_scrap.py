@@ -41,10 +41,8 @@ def ia_app(wd, parameters, recursive=0):
         paths = ia_selectors.scrape_paths()
         # accept cookie
         time.sleep(1)
-        wait = WebDriverWait(wd, 10)  # seconds want to wait
-        wait.until(
-            EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
-        ).click()
+        if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
+            wd.find_element(By.XPATH, paths['cookie_button']).click()
     except Exception as e:
         print("Exception during login to IA, Will Try Again")
         ia_app(wd, parameters, recursive + 1)
@@ -73,6 +71,10 @@ def create_table(file_path, thread=False):
 
 
 def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
+    # parameters setting
+    max_reset_count = 50
+    max_error_reset_count = 5
+
     paths = ia_selectors.scrape_paths()
     error_count = 0
     error_contract_number = 0
@@ -89,7 +91,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     driver_reset_count = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
-            if loop_continuous_error > 5 or driver_reset_count >= 200:
+            if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
                 ia_app(wd, confs['parameters'])
