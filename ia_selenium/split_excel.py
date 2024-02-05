@@ -2,11 +2,15 @@ import os
 
 import pandas as pd
 
+from dbutilities import dbColumns
+
 
 # function for loading excels into pd dataframe and splitting them into equal parts of parameter value.
 # file_path is the read_excel file path, folder_path is the folder we save the excels into.
 def split_excel(file_path, folder_path, num_chunks):
     df = pd.read_excel(file_path).iloc[2:]
+    df.columns = dbColumns.contract_columns
+    df.drop_duplicates(subset=['Contract_number'])
     num_rows = len(df)
     parts_size = (num_rows // num_chunks)
     remainder_row = num_rows % num_chunks

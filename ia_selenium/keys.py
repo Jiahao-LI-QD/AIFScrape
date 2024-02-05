@@ -3,7 +3,7 @@ import os
 
 def ia_account():
     with open(os.path.join(sys.path[1], r"confs\ia_conf")) as f:
-        l = [line.split("=") for line in f.readlines()]
+        l = [line.rstrip('\n').split("=", 2) for line in f.readlines()]
         d = {key.strip(): value.strip() for key, value in l}
     if "username" not in d or "password" not in d:
         raise Exception("IA account info not found. Please provide it in confs/ia_conf")

@@ -4,7 +4,6 @@ import time
 import traceback
 
 import os
-import shutil
 from datetime import datetime
 
 from selenium import webdriver
@@ -24,7 +23,7 @@ def driver_setup(parameters):
     chrome_options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
-    # chrome_options.add_argument('headless')
+    chrome_options.add_argument('headless')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
@@ -205,14 +204,14 @@ def save_csv_to_db(control_unit, files, tables):
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            # ia_db.delete_current_fund_saving(cursor)
+            ia_db.delete_current_fund_saving(cursor)
 
             # save saving & fund history
             ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving_history, batch_size)
             ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            # ia_db.delete_current_transaction(cursor)
+            ia_db.delete_current_transaction(cursor)
 
             # save transaction history
             ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
@@ -221,8 +220,8 @@ def save_csv_to_db(control_unit, files, tables):
             # if there is no new contracts
             # otherwise just extend the table
             # if not new_contracts:
-            # ia_db.delete_current_participant_beneficiary(cursor)
-            # ia_db.delete_current_client(cursor)
+            ia_db.delete_current_participant_beneficiary(cursor)
+            ia_db.delete_current_client(cursor)
             ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
             ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
             ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
