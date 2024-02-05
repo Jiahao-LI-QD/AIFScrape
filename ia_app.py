@@ -59,7 +59,7 @@ files = ia_scrap.get_csv_file_names(confs['csvs'])
 ia_scrap.save_table_into_csv(confs['control_unit'], tables, files)
 
 # save csv files into db
-# ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)
+ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)
 
 # request contract numbers
-# ia_scrap.click_contract_list(ia_wd)
+ia_scrap.click_contract_list(confs)

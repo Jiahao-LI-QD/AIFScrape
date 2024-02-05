@@ -86,13 +86,15 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     ia_app(wd, confs['parameters'])
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
     loop_continuous_error = 0
+    driver_reset_count = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
-            if loop_continuous_error > 5:
+            if loop_continuous_error > 5 or driver_reset_count >= 200:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
                 ia_app(wd, confs['parameters'])
                 loop_continuous_error = 0
+                driver_reset_count = 0
             if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
                 print("Error happens: Website crash")
                 time.sleep(5)
@@ -130,16 +132,18 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
                     ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
                                      contract_number_)
                 loop_continuous_error = 0
+                driver_reset_count += 1
             except Exception as e:
                 loop_continuous_error += 1
+                error_count += 1
                 print(f"{thread_name} Error: Scrape interrupted on customer: {contract_number_}")
                 tables['recover'].append(contract_number_)
-                error_count += 1
 
                 log.write(f"{thread_name} Error: Scrape interrupted on customer: {contract_number_}\n")
                 log.write(str(e))
                 log.write(traceback.format_exc())
                 log.write("=============================================================\n")
+
 
     # save recovery list after current traverse
     recovery = os.path.join(confs['csvs'], "recovery_list_" + thread_name + "_" + str(iteration_time) + ".txt")
@@ -266,8 +270,10 @@ def check_new_clients(tables):
         cursor.close()
 
 
-def click_contract_list(wd):
+def click_contract_list(confs):
     # TODO: click two buttons
+    wd = driver_setup(confs['parameters'])
+    ia_app(wd, confs['parameters'])
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['group']).click()
@@ -383,7 +389,12 @@ def ia_get_confs():
         print(f"Create {ia_parameters['csv_path']}\\{date_today} directory!")
     except Exception as e:
         print(f"The directory {ia_parameters['csv_path']}\\{date_today} already exist!")
+
     threading_tables = {}
+
+    if contract_file is None:
+        # TODO: download file
+        pass
 
     return {
         'csvs': csvs,
