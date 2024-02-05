@@ -6,7 +6,8 @@ from datetime import datetime
 import pandas as pd
 
 from ia_selenium import ia_scrap, keys
-from ia_selenium.ia_scrap import get_control, driver_setup, ia_app, create_table, ia_threading, merge_tables
+from ia_selenium.ia_scrap import get_control, driver_setup, ia_app, create_table, ia_threading, merge_tables, \
+    save_contract_list
 from ia_selenium.split_excel import split_excel
 
 # ia_wd : chrome driver
@@ -52,6 +53,7 @@ for t in threads_list:
 # merge tables from threads
 tables = merge_tables(confs)
 
+file = save_contract_list(wd, parameters, date_today)
 # record file names
 files = ia_scrap.get_csv_file_names(confs['csvs'])
 
