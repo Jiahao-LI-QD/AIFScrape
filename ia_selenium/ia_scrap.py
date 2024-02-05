@@ -271,7 +271,6 @@ def check_new_clients(tables):
 
 
 def click_contract_list(confs):
-    # TODO: click two buttons
     wd = driver_setup(confs['parameters'])
     ia_app(wd, confs['parameters'])
     paths = ia_selectors.download_path()
@@ -293,10 +292,10 @@ def click_contract_list(confs):
     pass
 
 
-def save_contract_list(wd, parameters, date_today):
-    # TODO: Major account download 2 files
+def save_contract_list(parameters, date_today):
     paths = ia_selectors.save_path()
-
+    wd = driver_setup(parameters)
+    ia_app(wd, parameters)
     wd.find_element(By.XPATH, paths['mailbox_button']).click()
     wd.find_element(By.XPATH, paths['file_link1']).click()
     wd.find_element(By.XPATH, paths['download_file']).click()
@@ -371,7 +370,6 @@ def get_csv_file_names(path):
 
 def ia_get_confs():
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
-    # TODO: if contract_file = NONE --> go get the new contract file
     # Get required parameters for ia_app
     try:
         ia_parameters = keys.ia_account()
@@ -393,7 +391,7 @@ def ia_get_confs():
     threading_tables = {}
 
     if contract_file is None:
-        # TODO: download file
+        contract_file = save_contract_list(ia_parameters, date_today)
         pass
 
     return {
