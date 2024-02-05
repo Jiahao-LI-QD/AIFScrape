@@ -373,6 +373,7 @@ def get_csv_file_names(path):
 def ia_get_confs():
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
     # Get required parameters for ia_app
+    # Get required parameters for ia_app
     try:
         ia_parameters = keys.ia_account()
     except Exception as e:
