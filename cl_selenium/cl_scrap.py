@@ -6,9 +6,7 @@ import time
 from datetime import datetime
 
 from selenium import webdriver
-from selenium.webdriver.chrome import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 
 from cl_selenium import cl_selectors
 
@@ -107,7 +105,7 @@ def driver_setup(parameters):
     chrome_options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
-    chrome_options.add_argument('headless')
+    # chrome_options.add_argument('headless')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(10)
     return wd
