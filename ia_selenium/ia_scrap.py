@@ -33,15 +33,13 @@ def driver_setup(parameters):
 def ia_app(wd, parameters, recursive=0):
     # get the url and login
     try:
-        if recursive > 4:
-            return
         wd.get(parameters['web_url'])
-
-        ia_login.login(wd, parameters['username'], parameters['password'])
+        if recursive == 0:
+            ia_login.login(wd, parameters['username'], parameters['password'])
         paths = ia_selectors.scrape_paths()
         # accept cookie
-        time.sleep(1)
-        if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
+        while len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
+            time.sleep(1)
             wd.find_element(By.XPATH, paths['cookie_button']).click()
     except Exception as e:
         print("Exception during login to IA, Will Try Again")
