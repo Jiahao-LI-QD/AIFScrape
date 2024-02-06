@@ -4,17 +4,14 @@ from ia_selenium import ia_selectors
 
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 def login(wd, user, password):
     paths = ia_selectors.login_paths()
 
-
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
-
-
 
     # accept cookies
     wd.find_element(By.XPATH, paths['cookie_button']).click()
-
 
     wd.find_element(By.XPATH, paths['username']).send_keys(user)
 
