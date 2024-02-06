@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from ia_selenium import keys
 from ia_selenium import ia_selectors
@@ -9,7 +11,7 @@ def login(wd, user, password):
     paths = ia_selectors.login_paths()
 
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
-
+    time.sleep(1)
     # accept cookies
     wd.find_element(By.XPATH, paths['cookie_button']).click()
 
