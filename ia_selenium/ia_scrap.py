@@ -18,12 +18,13 @@ from dbutilities import connection
 from ia_selenium import ia_selectors
 
 
-def driver_setup(parameters):
+def driver_setup(parameters, head=False):
     # start web driver
     chrome_options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
-    chrome_options.add_argument('headless')
+    # if not head:
+    #     chrome_options.add_argument('headless')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
@@ -32,8 +33,8 @@ def driver_setup(parameters):
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
     # get the url and login
     try:
+        wd.get(parameters['web_url'])
         if recursive == 0:
-            wd.get(parameters['web_url'])
             ia_login.login(wd, parameters['username'], parameters['password'])
         paths = ia_selectors.scrape_paths()
         # accept cookie
@@ -43,6 +44,8 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
             EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
         ).click()
     except Exception as e:
+        print(e)
+        print(traceback.format_exc())
         print(f"{thread_name}: Exception during login to IA, Will Try Again")
         ia_app(wd, parameters, recursive=(recursive + 1))
 
