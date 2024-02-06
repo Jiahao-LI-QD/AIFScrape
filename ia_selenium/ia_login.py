@@ -7,7 +7,7 @@ from ia_selenium import ia_selectors
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-def login(wd, user, password):
+def login(wd, user, password, thread='Main'):
     paths = ia_selectors.login_paths()
 
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
@@ -28,4 +28,4 @@ def login(wd, user, password):
     actions.move_to_element(password).perform()
     password.click()
 
-    print(f"user : {user} login successful!")
+    print(f"{thread} user : {user} login successful!")
