@@ -36,7 +36,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
         paths = ia_selectors.scrape_paths()
         wd.get(parameters['web_url'])
         if len(wd.find_elements(By.XPATH, paths['myclient_button'])) == 0:
-            ia_login.login(wd, parameters['username'], parameters['password'])
+            ia_login.login(wd, parameters['username'], parameters['password'], thread_name)
         # accept cookie
         time.sleep(2)
         if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
