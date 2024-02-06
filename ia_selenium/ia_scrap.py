@@ -38,7 +38,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
         if len(wd.find_elements(By.XPATH, paths['myclient_button'])) == 0:
             ia_login.login(wd, parameters['username'], parameters['password'])
         # accept cookie
-        time.sleep(1)
+        time.sleep(2)
         if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
             wait = WebDriverWait(wd, 10)  # seconds want to wait
             wait.until(
