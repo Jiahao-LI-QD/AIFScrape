@@ -33,21 +33,27 @@ def driver_setup(parameters, head=False):
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
     # get the url and login
     try:
-        wd.get(parameters['web_url'])
-        if recursive == 0:
-            ia_login.login(wd, parameters['username'], parameters['password'])
         paths = ia_selectors.scrape_paths()
+        wd.get(parameters['web_url'])
+        if len(wd.find_elements(By.XPATH, paths['myclient_button'])) == 0:
+            ia_login.login(wd, parameters['username'], parameters['password'])
         # accept cookie
-        time.sleep(3)
-        wait = WebDriverWait(wd, 10)  # seconds want to wait
-        wait.until(
-            EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
-        ).click()
+        time.sleep(1)
+        if len(wd.find_elements(By.CSS_SELECTOR, paths['cookie_consent'])) > 0:
+            wait = WebDriverWait(wd, 10)  # seconds want to wait
+            wait.until(
+                EC.element_to_be_clickable((By.XPATH, paths['cookie_button']))
+            ).click()
     except Exception as e:
-        print(e)
-        print(traceback.format_exc())
+        # print(e)
+        # print(traceback.format_exc())
         print(f"{thread_name}: Exception during login to IA, Will Try Again")
-        ia_app(wd, parameters, recursive=(recursive + 1))
+        if recursive < 5:
+            ia_app(wd, parameters, thread_name, recursive=(recursive + 1))
+        else:
+            wd.close()
+            wd = driver_setup(parameters)
+            ia_app(wd, parameters, thread_name)
 
 
 def create_table(file_path, thread=False):
