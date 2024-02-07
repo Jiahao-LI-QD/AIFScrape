@@ -1,5 +1,3 @@
-# TODO : login to cl
-
 import sys
 import os
 import time
@@ -14,7 +12,7 @@ from cl_selenium import cl_selectors
 # Read configs from cl_conf to get url, username, password, and folder paths
 def cl_account():
     with open(os.path.join(sys.path[1], r"confs\cl_conf")) as f:
-        l = [line.split("=") for line in f.readlines()]
+        l = [line.rstrip('\n').split("=", 1) for line in f.readlines()]
         d = {key.strip(): value.strip() for key, value in l}
     if "username" not in d or "password" not in d:
         raise Exception("CL account info not found. Please provide it in confs/cl_conf")
@@ -85,7 +83,7 @@ def cl_get_confs():
     threading_tables = {}
 
     if contract_file is None:
-        contract_file = save_contract_list(cl_parameters, date_today)
+        # contract_file = save_contract_list(cl_parameters, date_today)
         pass
 
     return {
