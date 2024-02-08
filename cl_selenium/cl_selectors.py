@@ -37,3 +37,28 @@ def transaction_paths():
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
     }
+
+
+def policies_paths():
+    return {
+        'filter_button': '//*[@id="report-00O5o000000XMr4EAG"]/div/div[1]/div[1]/div[1]/div[2]/div/div/div/div['
+                         '3]/div/div/button',
+        'clear_search': '#report-00O5o000000XMr4EAG > div > div.dashboard-container.with-header > '
+                        'div.dashboard-builder-body.dashboard-show-header > div > div > div '
+                        '> div > div > div > div.grid-layout > div > div > '
+                        'div.widget-container.widget-container_queryBuilder > div > div > div > '
+                        'div > div > div > div > div.sectionable-table-section-content > div >'
+                        'div.sectionable-table-group-content > ul > li:nth-child(4) > div > div '
+                        '> div > div > div > button',
+        'subtotal_button': '//*[@id="report-00O5o000000XMr4EAG"]/div/div[1]/'
+                           'div[2]/div/div/div/div/div/div/div[1]/div/div/div[1]/div/div/div/div'
+                           '/div[3]/div/div/div/div/div[3]/label/span[2]/span',
+        'grand_total_button': '//*[@id="report-00O5o000000XMr4EAG"]/div/div[1]/'
+                              'div[2]/div/div/div/div/div/div/div[1]/div/div/div[1]/div/div/div/div'
+                              '/div[3]/div/div/div/div/div[4]/label/span[2]/span',
+        'table': {'rows': "//div[@class='data-grid-table-ctr' and not(@aria-hidden='true')]/table/tbody/tr",
+                  'columns_of_row': './*/div/div',
+                  'account_name': './/a'
+                  }
+
+    }
