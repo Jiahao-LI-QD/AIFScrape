@@ -15,23 +15,27 @@ def scrape_transactions(wd, transactions):
     paths = cl_selectors.transaction_paths()
 
     # find the issue date from summary page
+    wd.find_element(By.XPATH, paths['summary_button']).click()
     input_date_string = wd.find_element(By.XPATH, paths['issue_date']).text
-    wd.find_element(By.XPATH, paths['Transactions_button']).click()
 
-    # Wait until the entire page finishes loading
+    # going to transactions page
+    wd.find_element(By.XPATH, paths['Transactions_button']).click()
     time.sleep(1)
 
-    # Inputting date range
+    # change the issue date to the right format
     input_format = '%b. %d, %Y'
     output_format = '%B %d, %Y'
-    parsed_date = datetime.strptime(input_date_string, input_format)
-    start_date = parsed_date.strftime(output_format)
-    wd.find_element(By.XPATH, paths['start_date']).send_keys(start_date)
+    try:
+        parsed_date = datetime.strptime(input_date_string, input_format)
+        start_date = parsed_date.strftime(output_format)
+    except ValueError:
+        start_date = input_date_string
 
+    # input dates and apply changes
+    wd.find_element(By.XPATH, paths['start_date']).send_keys(start_date)
     date_today = datetime.today().date()
     end_date = date_today.strftime("%B %d, %Y")
     wd.find_element(By.XPATH, paths['end_date']).send_keys(end_date)
-
     wd.find_element(By.XPATH, paths['date_apply']).click()
 
     # Scrap contract number and keep only the 10 digits between ' - '
@@ -43,19 +47,13 @@ def scrape_transactions(wd, transactions):
         rows = row.find_elements(By.XPATH, ".//*")
         result = [cell.text for cell in rows]
         unique_list = list(OrderedDict.fromkeys(result))
-        print(unique_list)
 
         new_row = [contract_number]
         new_row.extend(unique_list)
         new_row.pop()
-        print(new_row)
-        # if new_row[-2] != "":
-        #     new_row[-1] = atof(new_row[-1].replace(',', ''))
-        # new_row[-2] = atof(new_row[-2].replace(',', ''))
-        # elif len(new_row) == 8:
-        #     new_row.pop(4)
         transactions.loc[len(transactions)] = new_row
-    print(transactions)
+
+    return transactions
 
     # If transaction is empty.
     # has_transaction = wd.find_element(By.XPATH, paths['has_transaction']).text
