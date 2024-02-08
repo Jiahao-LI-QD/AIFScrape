@@ -19,8 +19,16 @@ from ia_selenium import ia_selectors
 
 
 def driver_setup(parameters, head=False):
+    """
+    setup the webdriver accordingly and return it
+    :param parameters: 'parameters' in confs which is returned by ia_get_config
+    :param head: does it need to be headless mode
+    :return: webdriver that is configured properly
+    """
     # start web driver
+    # Initializes Chrome options for the web driver.
     chrome_options = webdriver.ChromeOptions()
+    # set the default download directory to the contracts folder
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
     if not head:
@@ -31,6 +39,25 @@ def driver_setup(parameters, head=False):
 
 
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
+    """
+    Getting website, and logging in .
+
+    :param wd: represents webdriver
+    :param parameters:"parameters" is getting from in ia_conf
+    :param thread_name: Name of the thread (default is "Main").
+    :param recursive:Indicates the number of recursive attempts (default is 0).
+    :return:
+
+    Flow:
+    1. navigates to the specified web URL using the webdriver.
+    2.It checks if the login button is present on the page. If not, it means the user is already logged in.
+    3.If the login button is present, the function calls the ia_login function to perform the login process
+    4.After logging in, the function waits for the cookie consent button to be clickable and clicks it to accept the cookies.
+    5.If an exception occurs during the login process, the function will recursively try again up to 5 times.
+      If it still fails, the webdriver is closed and a new one is set up before retrying.
+    """
+
+
     # get the url and login
     try:
         paths = ia_selectors.scrape_paths()
@@ -57,6 +84,22 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
 
 
 def create_table(file_path, thread=False):
+    """
+    creating empty dataframes for different tables and initializing an empty list.
+    It also reads contract numbers from an Excel file if the thread parameter is True.
+
+    :param file_path: The path to the Excel file containing contract numbers.
+    :param thread: A boolean flag indicating whether the function is being called in a threaded context. Default is False.
+    :return: "contracts" table
+
+
+    Flow:
+    1.The function initializes an empty dictionary called result with keys representing different tables and the recover list.
+    2.If thread is False, the function reads contract numbers from the Excel file specified by file_path and assigns it to the ia_contracts variable.
+    3.The function creates empty dataframes for different tables using the pd.DataFrame constructor and assigns them to the corresponding keys in the result dictionary.
+    4.The contracts key in the result dictionary is assigned the value of ia_contracts.
+    5.The result dictionary is returned as the output of the function.
+    """
     # create pointers
     result = {'saving': pd.DataFrame(columns=dbColumns.saving_columns),
               'fund': pd.DataFrame(columns=dbColumns.fund_columns),
