@@ -9,7 +9,21 @@ from ia_selenium import ia_selectors
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
+
 def login(wd, user, password, thread='Main'):
+    """
+    performs the login process, also handles the acceptance of cookies if prompted.
+    :param wd: chrome webdriver set up in ia_scrap.driver_setup.
+    :param user: The username to be entered in the login form, saved in the dictionary 'parameters'.
+    :param password: The password to be entered in the login form, saved in the dictionary 'parameters'
+    :param thread: (Optional) The name of the thread, could be multiple printed on screen. Default is 'Main'.
+    :return: does not return any value.
+
+    1. Clicks on the "Sign In" button on the web page, if the cookie consent element and clicks on the "Accept" button.
+    2. Enters the username in the appropriate input field, moves the mouse cursor to the submit button and clicks on it.
+    3. Enters the password in the appropriate input field, moves the mouse cursor to the submit button and clicks on it.
+    4. Prints a success message indicating that the user has logged in.
+    """
     paths = ia_selectors.login_paths()
 
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
