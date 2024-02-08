@@ -88,4 +88,5 @@ def transaction_paths():
         'date_apply': '//*[@id="4"]/article/div[2]/div[1]/div/span[2]/button[1]',
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
+        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a'
     }
