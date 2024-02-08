@@ -25,9 +25,9 @@ sleep(2)
 wd.find_element(By.XPATH, traverse_paths['search_button']).click()
 sleep(5)
 
-# transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
-# test_transactions = cl_transactions.scrape_transactions(wd, transactions)
-# print(test_transactions)
+transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
+test_transactions = cl_transactions.scrape_transactions(wd, transactions)
+print(test_transactions)
 
 holdings = pd.DataFrame(columns=["Category", "Fund_code", "Fund_name", "Units", "Unit_value", "Value", "ACB"])
 test_holdings = cl_holdings.scrape_holdings(wd, holdings)
