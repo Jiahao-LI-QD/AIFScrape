@@ -38,7 +38,7 @@ beneficiary=pd.DataFrame(columns=dbColumns.beneficiary_columns)
 test_beneficiary=cl_beneficiary.scrape_beneficiary(wd,beneficiary)
 print(test_beneficiary)
 
-sleep(10)
+sleep(5)
 
 holdings = pd.DataFrame(columns=dbColumns.fund_columns)
 test_holdings = cl_holdings.scrape_holdings(wd, holdings)
