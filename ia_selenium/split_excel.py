@@ -10,7 +10,7 @@ from dbutilities import dbColumns
 def split_excel(file_path, folder_path, num_chunks):
     df = pd.read_excel(file_path).iloc[2:]
     df.columns = dbColumns.contract_columns
-    df.drop_duplicates(subset=['Contract_number'])
+    df = df.drop_duplicates(subset=['Contract_number'])
     num_rows = len(df)
     parts_size = (num_rows // num_chunks)
     remainder_row = num_rows % num_chunks
