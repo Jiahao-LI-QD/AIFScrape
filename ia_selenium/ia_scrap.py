@@ -23,8 +23,8 @@ def driver_setup(parameters, head=False):
     chrome_options = webdriver.ChromeOptions()
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
-    # if not head:
-    #     chrome_options.add_argument('headless')
+    if not head:
+        chrome_options.add_argument('headless')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
@@ -320,10 +320,15 @@ def save_contract_list(parameters, date_today):
 
     df1 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename1))
     df2 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename2))
-    df_total = pd.concat([df1, df2], ignore_index=True)
+    df_total = pd.concat([df1, df2[2:]], ignore_index=True)
     result = date_today + '_contract.xlsx'
     new_filename = os.path.join(parameters['csv_path'], parameters['contracts'], result)
-
+    os.remove(
+        os.path.join(parameters['csv_path'], parameters['contracts'], filename1)
+    )
+    os.remove(
+        os.path.join(parameters['csv_path'], parameters['contracts'], filename2)
+    )
     df_total.to_excel(str(new_filename), index=False)
     print('File saved')
     return result
