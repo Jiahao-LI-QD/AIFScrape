@@ -4,7 +4,8 @@ saving_columns = ["Statement_Date", "Contract_number", "Account_type",
 
 client_columns = ["LastName", "FirstName", "Sex", "Language", "Birthday", "Address", "Address_line2", "City",
                   "Province",
-                  "Postal_Code", "Main_Phone", "Office_Phone", "Fax", "Cell_Phone", "Primary_Email", "Secondary_Email", "Contract_number_as_owner"]
+                  "Postal_Code", "Main_Phone", "Office_Phone", "Fax", "Cell_Phone", "Primary_Email", "Secondary_Email",
+                  "Contract_number_as_owner","Company"]
 
 contract_columns = ["Applicant_last_name", "Applicant_first_name", "City", "Address", "Postal_code", "Province",
                     "Country", "Address_validity", "Latest_change_of_address", "Main_phone", "Office_phone",
@@ -19,6 +20,6 @@ transaction_columns = ["Contract_number", "Transaction_Date", "Transaction_type"
 fund_columns = ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category", "Fund_code",
                 "Fund_name", "Units", "Unit_value", "Value", "ACB"]
 
-participant_columns = ["Contract_number", "Role", "Name", "Birthday"]
+participant_columns = ["Contract_number", "Role", "Name", "Birthday","Company"]
 
-beneficiary_columns = ["Contract_number","BenefitCategory", "Name", "Allocation", "Relationship", "Class","Birthday"]
+beneficiary_columns = ["Contract_number","BenefitCategory", "Role","Name", "Allocation", "Relationship", "Class","Birthday","Company"]
