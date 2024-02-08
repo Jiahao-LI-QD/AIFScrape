@@ -1,7 +1,8 @@
 import sys
 import os
 
-def ia_account():
+
+def account():
     """
     reads a configuration file named ia_conf and extracts the account information, web URL, and file path for CSV files.
     :return: a dictionary containing the IA account information, web URL, and file path for CSV files.
@@ -16,8 +17,8 @@ def ia_account():
     """
 
     with open(os.path.join(sys.path[1], r"confs\ia_conf")) as f:
-        l = [line.rstrip('\n').split("=", 2) for line in f.readlines()]
-        d = {key.strip(): value.strip() for key, value in l}
+        lines = [line.rstrip('\n').split("=", 2) for line in f.readlines()]
+        d = {key.strip(): value.strip() for key, value in lines}
     if "username" not in d or "password" not in d:
         raise Exception("IA account info not found. Please provide it in confs/ia_conf")
     if "web_url" not in d:

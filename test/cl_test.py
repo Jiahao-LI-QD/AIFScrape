@@ -5,12 +5,13 @@ from selenium.webdriver.common.by import By
 
 from cl_selenium import cl_scrap, cl_selectors, cl_transactions, cl_holdings, cl_client, cl_participant, cl_beneficiary
 from dbutilities import dbColumns
+from utilities.web_driver import driver_setup
 
 # save cl_conf as parameters
 parameters = cl_scrap.cl_account()
 
 # set up Chrome driver
-wd = cl_scrap.driver_setup(parameters)
+wd = driver_setup(parameters)
 wd.get(parameters['web_url'])
 sleep(1)
 
