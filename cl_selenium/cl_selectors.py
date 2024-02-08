@@ -13,6 +13,46 @@ def traverse_paths():
         'search_button': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[2]',
         'holdings': '//*[@id="2__item"]',
     }
+def client_paths():
+    return {
+        'contract_number':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
+        'client_account':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/ul/li[1]/div/div/div',
+        'client_hide':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[1]/div[2]/div/div/span/lightning-helptext/div/lightning-button-icon/button',
+        'client_c1':{
+            'c1_main':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[1]',
+            'c1_row':'./div/div'
+        },
+        'client_c2':{
+            'c2_main':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[2]',
+            'c2_row':'./div/div'
+        },
+        'client_province':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[3]/div/div/div',
+        'client_address':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[5]/div[3]/div[1]/span',
+        'client_c3':{
+            'c3_main':'/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[4]',
+            'c3_row':'./div/div/div/div'
+        }
+
+    }
+
+def participant_paths():
+    return{
+        'contract_number':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
+        'participant_hide':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button',
+        'participant_table':{
+            'participant_main':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr',
+            'participant_row':'./td/div'
+        }
+    }
+
+def beneficiary_paths():
+    return {
+        'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
+        'beneficiary_table':{
+            'beneficiary_main':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[5]/div[2]/table/tbody/tr',
+            'beneficiary_row':'./td/div'
+        }
+    }
 
 
 def holdings_paths():
