@@ -8,8 +8,32 @@ from ia_selenium import ia_selectors
 
 
 def scrape(wd, fund, investment_type, block):
-    # ["Statement_Date", "Contract_number", "Account_type", "Investment_type"
-    # "Category", "Fund_name", "Units", "Unit_value", "Value", "ACB"]
+    """
+    If funds exist in investment page, extracts fund data from investment page storing it in the Fund DataFrame.
+    :param wd: chrome webdriver set up in ia_scrap.driver_setup.
+    :param fund: a Pandas Dataframe setup in ia_scrap.create_table to store the scraped data.
+    :param investment_type: a variable saved from ia_investment.scrape_investment to determine the investment type or
+                            defunct account.
+    :param block: a list of web elements on the top right of the page that contains name, account number & investment type.
+    :return: no return, update the transactions Dataframe with the scraped data.
+
+    Fund Dataframe structure: ["Statement_Date", "Contract_number", "Account_type", "Investment_type", "Category",
+    "Fund_name", "Units", "Unit_value", "Value", "ACB"]
+
+    Workflow:
+    1. Extract the statement date from the web page and format it as 'YYYY-MM-DD'.
+    2. Extract the contract number and account type from the web page.
+    3. If the investment type is 'TERMINATED' or 'EMPTY', add the empty row to the DataFrame.
+    4. If the investment type is not 'TERMINATED' or 'EMPTY', find the table body elements within the block.
+    5. Iterate over the table body elements and skip elements with style 'display: none;' or class 'footerRow'.
+    6. For each table body element, extract the table rows and check if the first element has class 'classificationfondfu'.
+    7. If the first element has class 'classificationfondfu', update the category type.
+    8. If the first element does not have class 'classificationfondfu', extract the table data elements and create a row.
+    9. If the account type is 'NON-REGISTERED', extend the row with the table columns from index 0 to 4.
+    10. If the account type is not 'NON-REGISTERED', extend the row with the table columns from index 0 to 3 and append None to the row.
+    11. Convert the last two elements of the row to float by removing commas and store the row in the DataFrame.
+    """
+
     paths = ia_selectors.fund_paths()
 
     statement_date = wd.find_element(By.XPATH, paths['statement_date']).text.split(" ", 2)[2]
