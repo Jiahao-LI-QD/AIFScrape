@@ -8,6 +8,26 @@ from selenium.webdriver.support import expected_conditions as EC
 from ia_selenium import ia_selectors
 
 
+def process_transaction_row(row, contract_number):
+    """
+    takes a row element and a contract number as inputs.
+    :param row: The row element containing the cells to be processed.
+    :param contract_number: The contract number to be included in the new row.
+    :return: new_row (list): The processed row with the contract number and extracted text from the cells.
+    """
+    rows = row.find_elements(By.XPATH, ".//*")
+    result = [cell.text for cell in rows]
+
+    new_row = [contract_number]
+    new_row.extend(result)
+    if new_row[-2] != "":
+        new_row[-1] = atof(new_row[-1].replace(',', ''))
+        new_row[-2] = atof(new_row[-2].replace(',', ''))
+    elif len(new_row) == 8:
+        new_row.pop(4)
+    return new_row
+
+
 def scrape_transaction(wd, transactions, issue_date):
     """
     Defines a function named scrape_transaction that is used to scrape transaction data from a web page using Selenium.
@@ -51,16 +71,7 @@ def scrape_transaction(wd, transactions, issue_date):
         # grab contents of the transaction table
         table = wd.find_elements(By.XPATH, paths['table_data'])
         for row in table:
-            rows = row.find_elements(By.XPATH, ".//*")
-            result = [cell.text for cell in rows]
-
-            new_row = [contract_number]
-            new_row.extend(result)
-            if new_row[-2] != "":
-                new_row[-1] = atof(new_row[-1].replace(',', ''))
-                new_row[-2] = atof(new_row[-2].replace(',', ''))
-            elif len(new_row) == 8:
-                new_row.pop(4)
+            new_row = process_transaction_row(row, contract_number)
             transactions.loc[len(transactions)] = new_row
 
         # for "Next" button when there is more than one page of transactions
@@ -75,16 +86,7 @@ def scrape_transaction(wd, transactions, issue_date):
 
             table = wd.find_elements(By.XPATH, paths['table_data'])
             for row in table:
-                rows = row.find_elements(By.XPATH, ".//*")
-                result = [cell.text for cell in rows]
-
-                entire_row = [contract_number]
-                entire_row.extend(result)
-                if entire_row[-2] != "":
-                    entire_row[-1] = atof(entire_row[-1].replace(',', ''))
-                    entire_row[-2] = atof(entire_row[-2].replace(',', ''))
-                elif len(entire_row) == 8:
-                    entire_row.pop(4)
-                transactions.loc[len(transactions)] = entire_row
+                new_row = process_transaction_row(row, contract_number)
+                transactions.loc[len(transactions)] = new_row
 
         wd.execute_script("window.scrollTo(0, 0)")
