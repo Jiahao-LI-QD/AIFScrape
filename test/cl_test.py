@@ -23,11 +23,8 @@ sleep(1)
 wd.find_element(By.XPATH, traverse_paths['search_field']).send_keys(310127600)
 sleep(2)
 wd.find_element(By.XPATH, traverse_paths['search_button']).click()
-sleep(5)
+sleep(10)
 
-transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
-test_transactions = cl_transactions.scrape_transactions(wd, transactions)
-print(test_transactions)
 
 client=pd.DataFrame(columns=dbColumns.client_columns)
 test_client=cl_client.scrape_client(wd,client)
@@ -41,12 +38,17 @@ beneficiary=pd.DataFrame(columns=dbColumns.beneficiary_columns)
 test_beneficiary=cl_beneficiary.scrape_beneficiary(wd,beneficiary)
 print(test_beneficiary)
 
+sleep(10)
 
 holdings = pd.DataFrame(columns=dbColumns.fund_columns)
 test_holdings = cl_holdings.scrape_holdings(wd, holdings)
+print(test_holdings)
+
+transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
+test_transactions = cl_transactions.scrape_transactions(wd, transactions)
+print(test_transactions)
 # pd.set_option('display.max_columns', None)
 # print(test_holdings.head())
-print(test_holdings)
 # wd.find_element(By.XPATH, paths['holdings']).click()
 # sleep(5)
 

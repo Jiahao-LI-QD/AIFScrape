@@ -12,4 +12,7 @@ def scrape_beneficiary(wd,beneficiary):
         result = [contract_number, None, row[0], row[1], row[-1], row[2], row[3], None, 'CL']
         # print(result)
         beneficiary.loc[len(beneficiary)]=result
+
+    wd.execute_script("window.scrollTo(0, 0)")
+
     return beneficiary
