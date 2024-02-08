@@ -1,67 +1,38 @@
-from datetime import datetime
 from time import sleep
+import pandas as pd
 
 from selenium.webdriver.common.by import By
 
-from cl_selenium import cl_scrap, cl_selectors
+from cl_selenium import cl_scrap, cl_selectors, cl_transactions, cl_holdings
+from dbutilities import dbColumns
 
 # save cl_conf as parameters
 parameters = cl_scrap.cl_account()
-print(parameters)
 
 # set up Chrome driver
 wd = cl_scrap.driver_setup(parameters)
 wd.get(parameters['web_url'])
+sleep(1)
 
 # testing for log in function
 cl_scrap.login(wd, parameters['username'], parameters['password'])
-sleep(5)
+
 # Going to an account for testing
-paths = cl_selectors.traverse_paths()
-wd.find_element(By.XPATH, paths['search_field']).send_keys(410529465)
-sleep(10)
-wd.find_element(By.XPATH, paths['search_button']).click()
+traverse_paths = cl_selectors.traverse_paths()
+sleep(1)
+wd.find_element(By.XPATH, traverse_paths['search_field']).send_keys(310127600)
+sleep(2)
+wd.find_element(By.XPATH, traverse_paths['search_button']).click()
 sleep(5)
 
-# TODO: Eva's code here
+# transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
+# test_transactions = cl_transactions.scrape_transactions(wd, transactions)
+# print(test_transactions)
 
+holdings = pd.DataFrame(columns=["Category", "Fund_code", "Fund_name", "Units", "Unit_value", "Value", "ACB"])
+test_holdings = cl_holdings.scrape_holdings(wd, holdings)
+print(test_holdings)
 
-# TODO: Christina's code here
-paths = cl_selectors.fund_paths()
-statement_date = wd.find_element(By.XPATH, paths['statement_date']).text
-formatted_date = datetime.strptime(statement_date, '%b. %d, %Y').strftime('%Y-%m-%d')
-contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
-holdings = wd.find_element(By.XPATH, paths['holdings_button']).click()
-text = wd.find_element(By.XPATH, paths['text']).text.split(' (', 1)
-account_type = text[0]
-investment_type = text[1][:-1]
-#
-result = [formatted_date, contract_number, account_type, investment_type]
-# input()
-# category = wd.find_elements(By.XPATH, '//*[@id="2"]')
-# n = category[0].find_elements(By.XPATH, './*')
-# print(len(wd.find_elements(By.TAG_NAME, 'article')))
+# wd.find_element(By.XPATH, paths['holdings']).click()
+# sleep(5)
 
-#TODO: each row data need to have separate list
-table_xpath = '//*[@id="2"]/article/div[2]/div[5]/table/tbody'
-table_element = wd.find_elements(By.XPATH, table_xpath)
-
-temp = []
-final = []
-for row in table_element[0].find_elements(By.XPATH, ".//tr"):
-
-    if row.find_elements(By.XPATH, ".//th"):
-        Category = row.text
-        temp.append(result)
-
-    else:
-        columns = row.find_elements(By.XPATH, ".//td")
-        for column in columns:
-            temp.append(column.text)
-            final.append(temp)
-            del temp[4:]
-        del temp
-
-
-
-print(final)
