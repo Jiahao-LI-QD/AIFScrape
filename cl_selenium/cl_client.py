@@ -4,11 +4,29 @@ from cl_selenium import cl_selectors,cl_participant,cl_beneficiary
 from time import sleep
 
 def scrape_client(wd, client):
+    """
+    Defines a function named scrape that is used to scrape "client" data from a web page using Selenium.
+    :param wd: chrome webdriver set up in cl_scrap.driver_setup.
+    :param client: a Pandas Dataframe setup in cl_scrap.create_table to store the scraped data.
+    :return: update the client Dataframe with the scraped data.
+
+    Workflow:
+    1.Get the XPaths for the elements to be scraped using cl_selectors.client_paths().
+    2.Extract the contract number from the web page.
+    3.Click on the client account element.
+    4.Wait for 5 seconds.
+    5.Click on the client hide element.
+    6.Extract the client data from the web page
+    7.Create a result list with the extracted data.
+    8.Add the result list to the client DataFrame.
+    9.Go back to the previous page.
+    10.Return the updated client DataFrame.
+    """
     paths = cl_selectors.client_paths()
     contract_number=wd.find_element(By.XPATH,paths['contract_number']).text
 
     wd.find_element(By.XPATH, paths['client_account']).click()
-    sleep(10)
+    sleep(5)
 
     wd.find_element(By.XPATH, paths['client_hide']).click()
     c_item1 = wd.find_elements(By.XPATH, paths['client_c1']['c1_main'])

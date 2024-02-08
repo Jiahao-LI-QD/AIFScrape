@@ -34,7 +34,7 @@ def scrape_transaction(wd, transactions, issue_date):
     :param wd: chrome webdriver set up in ia_scrap.driver_setup.
     :param transactions: a Pandas Dataframe setup in ia_scrap.create_table to store the scraped data.
     :param issue_date: contract issue date from the Excel file to get all transactions for the client.
-    :return: no return, update the transactions Dataframe with the scraped data..
+    :return:no return, update the transactions Dataframe with the scraped data..
 
     Workflow:
     1. Click on the transaction button on the web page.
