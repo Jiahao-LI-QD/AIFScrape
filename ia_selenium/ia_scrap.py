@@ -19,8 +19,16 @@ from ia_selenium import ia_selectors
 
 
 def driver_setup(parameters, head=False):
+    """
+    setup the webdriver accordingly and return it
+    :param parameters: 'parameters' in confs which is returned by ia_get_config
+    :param head: does it need to be headless mode
+    :return: webdriver that is configured properly
+    """
     # start web driver
+    # Initializes Chrome options for the web driver.
     chrome_options = webdriver.ChromeOptions()
+    # set the default download directory to the contracts folder
     prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
     chrome_options.add_experimental_option('prefs', prefs)
     if not head:
@@ -31,6 +39,25 @@ def driver_setup(parameters, head=False):
 
 
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
+    """
+    Getting website, and logging in .
+
+    :param wd: represents webdriver
+    :param parameters:"parameters" is getting from in ia_conf
+    :param thread_name: Name of the thread (default is "Main").
+    :param recursive:Indicates the number of recursive attempts (default is 0).
+    :return:
+
+    Flow:
+    1. navigates to the specified web URL using the webdriver.
+    2.It checks if the login button is present on the page. If not, it means the user is already logged in.
+    3.If the login button is present, the function calls the ia_login function to perform the login process
+    4.After logging in, the function waits for the cookie consent button to be clickable and clicks it to accept the cookies.
+    5.If an exception occurs during the login process, the function will recursively try again up to 5 times.
+      If it still fails, the webdriver is closed and a new one is set up before retrying.
+    """
+
+
     # get the url and login
     try:
         paths = ia_selectors.scrape_paths()
@@ -57,6 +84,22 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
 
 
 def create_table(file_path, thread=False):
+    """
+    creating empty dataframes for different tables and initializing an empty list.
+    It also reads contract numbers from an Excel file if the thread parameter is True.
+
+    :param file_path: The path to the Excel file containing contract numbers.
+    :param thread: A boolean flag indicating whether the function is being called in a threaded context. Default is False.
+    :return: "contracts" table
+
+
+    Flow:
+    1.The function initializes an empty dictionary called result with keys representing different tables and the recover list.
+    2.If thread is False, the function reads contract numbers from the Excel file specified by file_path and assigns it to the ia_contracts variable.
+    3.The function creates empty dataframes for different tables using the pd.DataFrame constructor and assigns them to the corresponding keys in the result dictionary.
+    4.The contracts key in the result dictionary is assigned the value of ia_contracts.
+    5.The result dictionary is returned as the output of the function.
+    """
     # create pointers
     result = {'saving': pd.DataFrame(columns=dbColumns.saving_columns),
               'fund': pd.DataFrame(columns=dbColumns.fund_columns),
@@ -281,12 +324,31 @@ def check_new_clients(tables):
 
 
 def click_contract_list(confs):
+    """
+    This method request downloads of contract list for different groups
+    :param confs: ia_confs loaded at the start of ia_app
+    :return: nothing
+
+    Workflow:
+    1.Set up the web driver using the parameters from confs.
+    2.Call the ia_app function to log into the IA website.
+    3.Get the paths for various elements on the website.
+    4.Click on the "My Client" button --> "Group" button.
+    5.Wait for the website response and select the first group.
+    6.Click on the "Download" option --> "Search" button --> "Submit" button
+    7.Click on the "My Client" button --> "Group" button.
+    8.Wait for the website response and select the second group.
+    9.Repeat Step 6
+    10.Print a success message.
+
+    """
     wd = driver_setup(confs['parameters'])
     ia_app(wd, confs['parameters'])
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['group']).click()
     time.sleep(3)
+    # waiting website response, selecting the first group
     wd.find_element(By.XPATH, paths['FV6_group']).click()
     wd.find_element(By.XPATH, paths['download_option']).click()
     wd.find_element(By.XPATH, paths['search_button']).click()
@@ -294,15 +356,37 @@ def click_contract_list(confs):
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['group']).click()
     time.sleep(3)
+    # waiting website response, selecting the second group
     wd.find_element(By.XPATH, paths['GK4_group']).click()
     wd.find_element(By.XPATH, paths['download_option']).click()
     wd.find_element(By.XPATH, paths['search_button']).click()
     wd.find_element(By.XPATH, paths['submit_button']).click()
-    print('Download successfully submitted')
+    print('Download request successfully submitted')
     pass
 
 
 def save_contract_list(parameters, date_today):
+    """
+    This method downloads the contract lists from website,
+    combines them as a single file and renames to today's date,
+    old files are removed at the end
+    :param parameters: dictionary generated from ia_conf
+    :param date_today: timestamp of today's date in format 'YYYY_MM_DD_HH_MM_SS'
+    :return: files are combined and  renamed to format as 'date_today' +  '_contracts.xlsx'
+
+    Workflow:
+    1.Set up the web driver using the driver_setup function.
+    2.Call the ia_app function to log in to the website.
+    3.Click on the mailbox button --> first file link --> download file button.
+    4.Get the filename of the downloaded file.
+    5.Click on the next button --> second file link --> download file button.
+    6.Get the filename of the downloaded file.
+    7.Read the contents of the downloaded files using pd.read_excel.
+    8.Concatenate the dataframes and ignore the first two rows of the second dataframe.
+    9.Generate the new filename by combining the date_today and '_contract.xlsx'.
+    10.Remove the old downloaded files.
+    11.Save the concatenated dataframe to the new filename as an Excel file.
+    """
     paths = ia_selectors.save_path()
     wd = driver_setup(parameters)
     ia_app(wd, parameters)
@@ -335,6 +419,39 @@ def save_contract_list(parameters, date_today):
 
 
 def get_control(args):
+    """
+    This method
+    1: mixed control modes for app, default mode is 1
+    mode 1: scraping investments only
+    mode 2: scraping transactions only
+    mode 4: scraping clients only
+    or combine 3 modes arbitrarily
+    2:number of iteration
+    set up default iteration to 3, range from 1-5
+    3:number of thread
+    set up default thread to 1, when filename is not defined
+    4: filename(Excel file)
+    :param args: system arguments
+    :return: control mode, iteration times, thread number and filename
+
+    Workflow:
+    1.Set the default control mode to 1.
+    2.If the length of args is greater than 1, set the control mode to be the first argument.
+    3.If control is not in the range of 1 to 8, print a message indicating that the control mode is not supported
+    and use the default scrape mode.
+    4.If control mode set to 1, print a message indicating that the task is to scrape investments only.
+    5.If control mode set to 2, print a message indicating that the task is to scrape transactions only.
+    6.If control mode set to 4, print a message indicating that the task is to scrape clients information only.
+    7.control mode can be mixed up scrape for all or two of the tasks
+    8.Set the default maximum iteration to 3.
+    9.If the length of args is greater than 2, set the maximum iteration to be the second argument.
+    10.If max_iteration is less than 1 or greater than 5, raise an exception indicating that the maximum number of
+    iterations must be between 1 and 5.
+    11.Set the default thread number to 1.
+    12.If the length of args is greater than 3, set the thread number to be the third argument.
+    13.If the length of args is greater than 4, assign the fourth argument to file_name.
+    14.Return the values of control, max_iteration, thread_number, and file_name as a tuple.
+    """
     control = 1
     if len(args) > 1:
         control = int(args[1])
@@ -385,7 +502,6 @@ def get_csv_file_names(path):
 
 def ia_get_confs():
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
-    # Get required parameters for ia_app
     # Get required parameters for ia_app
     try:
         ia_parameters = keys.ia_account()
