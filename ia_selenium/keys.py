@@ -7,12 +7,12 @@ def ia_account():
     :return: a dictionary containing the IA account information, web URL, and file path for CSV files.
 
     workflow:
-    # 1. Open the ia_conf file using open and os.path.join.
-    # 2. Read lines and create key-value pairs.
-    # 3. Convert the list to a dictionary, removing whitespaces.
-    # 4. Ensure the dictionary contains “username” and “password”.
-    # 5. Verify the presence of “web_url” and “csv_path”.
-    # 6. Return the dictionary if all keys are present.
+    1. Open the ia_conf file using open and os.path.join.
+    2. Read lines and create key-value pairs.
+    3. Convert the list to a dictionary, removing whitespaces.
+    4. Ensure the dictionary contains “username” and “password”.
+    5. Verify the presence of “web_url” and “csv_path”.
+    6. Return the dictionary if all keys are present.
     """
 
     with open(os.path.join(sys.path[1], r"confs\ia_conf")) as f:
