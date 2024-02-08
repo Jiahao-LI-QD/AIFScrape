@@ -46,18 +46,22 @@ result = [formatted_date, contract_number, account_type, investment_type]
 table_xpath = '//*[@id="2"]/article/div[2]/div[5]/table/tbody'
 table_element = wd.find_elements(By.XPATH, table_xpath)
 
+temp = []
+final = []
 for row in table_element[0].find_elements(By.XPATH, ".//tr"):
 
-        # Check if the row has <td> elements
     if row.find_elements(By.XPATH, ".//th"):
         Category = row.text
-        result.append(Category)
-        print(Category)  # Debugging print statement
+        temp.append(result)
 
     else:
         columns = row.find_elements(By.XPATH, ".//td")
         for column in columns:
-            result.append(column.text)
+            temp.append(column.text)
+            final.append(temp)
+            del temp[4:]
+        del temp
 
 
-print(result)
+
+print(final)
