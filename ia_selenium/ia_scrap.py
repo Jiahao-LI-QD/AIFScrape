@@ -558,10 +558,29 @@ def ia_threading(confs, thread_name, contract_file):
 
 
 def scrape_cleanup(tables):
+    """
+    removes rows from the 'contracts' table on the 'Contract_number' column that are present in the 'recover' table.
+    :param tables: a dictionary containing the 'contracts' and 'recover' tables
+    :return: None, updated the 'contracts' table.
+    """
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
 
 
 def merge_tables(confs):
+    """
+    defines a function called merge_tables that merges multiple tables into a single table. tables from threads
+    :param confs: A dictionary containing multiple tables to be merged. Each table is represented by a key-value pair,
+                    where the key is the table name and the value is a dictionary containing the table data.
+    :return: A dictionary containing the merged tables and the combined recover list.
+
+    Workflow:
+    1. The function initializes an empty dictionary called tables by calling the create_table function with
+        None as the file_path argument and True as the thread argument.
+    2. For each table in the confs['threading_tables'] dictionary, the function concatenates the corresponding table
+        data with the existing data in the tables dictionary using the pd.concat function.
+    3. The merged tables are assigned back to the tables' dictionary.
+    4. The recover list from each table in the dictionary is extended to the recover list in the tables' dictionary.
+    """
     tables = create_table(None, True)
     for o in confs['threading_tables'].values():
         tables['saving'] = pd.concat([tables['saving'], o['saving']], axis=0)
