@@ -30,7 +30,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
     :return:
 
     Flow:
-    1. navigates to the specified web URL using the webdriver.
+    1.Navigates to the specified web URL using the webdriver.
     2.It checks if the login button is present on the page. If not, it means the user is already logged in.
     3.If the login button is present, the function calls the ia_login function to perform the login process
     4.After logging in, the function waits for the cookie consent button to be clickable and clicks it to accept the cookies.
@@ -173,18 +173,18 @@ def save_csv_to_db(control_unit, files, tables, company):
         batch_size = 1000
         db_method.save_recover(cursor, company, zip(tables['recover'], [None] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
-        db_method.delete_current_contract(cursor)
+        db_method.delete_current_contract(cursor, companies['iA'])
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            db_method.delete_current_fund_saving(cursor)
+            db_method.delete_current_fund_saving(cursor, companies['iA'])
 
             # save saving & fund history
             db_method.save_data_into_db(cursor, files['saving'], db_method.save_saving_history, batch_size)
             db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            db_method.delete_current_transaction(cursor)
+            db_method.delete_current_transaction(cursor, companies['iA'])
 
             # save transaction history
             db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction_history, batch_size)
@@ -193,8 +193,8 @@ def save_csv_to_db(control_unit, files, tables, company):
             # if there is no new contracts
             # otherwise just extend the table
             # if not new_contracts:
-            db_method.delete_current_participant_beneficiary(cursor)
-            db_method.delete_current_client(cursor)
+            db_method.delete_current_participant_beneficiary(cursor, companies['iA'])
+            db_method.delete_current_client(cursor, companies['iA'])
             db_method.save_data_into_db(cursor, files['client'], db_method.save_client_history, batch_size)
             db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant_history, batch_size)
             db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary_history, batch_size)
