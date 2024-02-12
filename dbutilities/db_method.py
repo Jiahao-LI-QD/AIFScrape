@@ -94,24 +94,24 @@ def save_beneficiary_history(cursor, values):
     cursor.commit()
 
 
-def delete_current_participant_beneficiary(cursor):
-    cursor.execute("exec Delete_Current_Participant_Beneficiary")
+def delete_current_participant_beneficiary(cursor, company):
+    cursor.execute(f"exec Delete_Current_Participant_Beneficiary {company}")
 
 
-def delete_current_contract(cursor):
-    cursor.execute("exec Delete_Current_Contract")
+def delete_current_contract(cursor, company):
+    cursor.execute(f"exec Delete_Current_Contract {company}")
 
 
-def delete_current_fund_saving(cursor):
-    cursor.execute("exec Delete_Current_Fund_Saving")
+def delete_current_fund_saving(cursor, company):
+    cursor.execute(f"exec Delete_Current_Fund_Saving {company}")
 
 
-def delete_current_client(cursor):
-    cursor.execute("exec Delete_Current_Client")
+def delete_current_client(cursor, company):
+    cursor.execute(f"exec Delete_Current_Client {company}")
 
 
-def delete_current_transaction(cursor):
-    cursor.execute("exec Delete_Current_Transaction")
+def delete_current_transaction(cursor, company):
+    cursor.execute(f"exec Delete_Current_Transaction {company}")
 
 
 def save_data_into_db(db_cursor, file_name, db_method, batch_size):

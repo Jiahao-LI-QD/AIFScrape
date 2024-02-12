@@ -27,27 +27,27 @@ policies = adjust_dataframe(policies)
 
 # split contract file into n part according to thread number
 split_policies = split_dataframe(policies, confs['thread_number'])
-
+print(policies)
 
 # TODO create thread
 # 1. cl_threading
 # 2. scrape_traverse for cl?
-
-# list for store threads
-threads_list = []
-
-# for loop generate threads
-for i in range(confs['thread_number']):
-    thread_name = 'thread' + str(i)
-    # threads_list.append(threading.Thread(target=ia_threading,
-    #                                      args=()))
-
-# start and join threads
-for t in threads_list:
-    t.start()
-for t in threads_list:
-    t.join()
-
+#
+# # list for store threads
+# threads_list = []
+#
+# # for loop generate threads
+# for i in range(confs['thread_number']):
+#     thread_name = 'thread' + str(i)
+#     # threads_list.append(threading.Thread(target=ia_threading,
+#     #                                      args=()))
+#
+# # start and join threads
+# for t in threads_list:
+#     t.start()
+# for t in threads_list:
+#     t.join()
+#
 # # merge tables from threads
 # tables = merge_tables(confs, 'CL')
 #
