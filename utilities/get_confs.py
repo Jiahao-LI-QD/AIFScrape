@@ -15,7 +15,14 @@ def get_confs(company):
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
     # Get required parameters for ia_app
     try:
-        parameters = account("ia_conf")
+        match company:
+            case 'IA':
+                parameters = account("ia_conf")
+            case 'CL':
+                parameters = account("cl_conf")
+            case _:
+                print("No Such Company！ Will Exit!")
+                exit()
     except Exception as e:
         print(e)
         exit()
