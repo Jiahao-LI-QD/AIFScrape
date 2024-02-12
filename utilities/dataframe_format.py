@@ -22,4 +22,3 @@ def adjust_dataframe(df):
 
     return new_df
 
-
