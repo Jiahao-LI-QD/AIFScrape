@@ -64,39 +64,49 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
 
 def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     # parameters setting
-    max_reset_count = 50
-    max_error_reset_count = 5
 
     paths = ia_selectors.scrape_paths()
-    error_count = 0
-    error_contract_number = 0
+    # keep contracts number if there is exception in the previous loop
     if len(tables['recover']) == 0:
         contracts = tables['contracts']
     else:
         contracts = tables['contracts'][tables['contracts']['Contract_number'].isin(tables['recover'])]
     # clean the recover list
     tables['recover'].clear()
+
+    # set up the driver and start IA page
     wd = driver_setup(confs['parameters'])
     ia_app(wd, confs['parameters'], thread_name)
+
+    # generate the log file name to record the exceptions
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
+
+    # set uo the max reset count
+    max_reset_count = 50
+    max_error_reset_count = 5
+    # initialize the counters
     loop_continuous_error = 0
     driver_reset_count = 0
+    error_count = 0
     with open(logfile, 'a') as log:
         for index, row in contracts.iterrows():
+            # if the counter exceed the max values, restart the web driver
             if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
                 wd.close()
                 wd = driver_setup(confs['parameters'])
                 ia_app(wd, confs['parameters'], thread_name)
                 loop_continuous_error = 0
                 driver_reset_count = 0
+            # if the website is in error page, get to the root url
             if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
-                print("Error happens: Website crash")
+                print(f"{thread_name} Error happens: Website crash")
                 time.sleep(5)
                 wd.get(confs['parameters']['web_url'])
             contract_number_ = row['Contract_number']
             print(f"{thread_name} - {datetime.now()}: scrapping for contract number {contract_number_}")
 
             try:
+                # go to clients and search for contract number
                 wd.find_element(By.XPATH, paths['myclient_button']).click()
 
                 wd.find_element(By.XPATH, paths['contract_number_input']).clear()
@@ -104,20 +114,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
                 wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(contract_number_)
 
                 wd.find_element(By.XPATH, paths['search_button']).click()
-            except Exception as e:
-                loop_continuous_error += 1
-                error_contract_number += 1
-                print(f"{thread_name} Error: Cannot found customer: {contract_number_}")
 
-                log.write(f"{thread_name} Error: Cannot found customer: {contract_number_}\n")
-                log.write(str(e))
-                log.write(traceback.format_exc())
-                log.write("=============================================================\n")
-
-                tables['recover'].append(contract_number_)
-                continue
-
-            try:
                 if confs['control_unit'] & 1:
                     ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
                 if confs['control_unit'] & 2:
@@ -145,6 +142,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
             # write each item on a new line
             f.write(str(item) + '\n')
 
+    # remove records that there are exceptions
     if confs['control_unit'] & 1:
         tables['saving'] = tables['saving'][~tables['saving']['Contract_number'].isin(tables['recover'])]
         tables['fund'] = tables['fund'][~tables['fund']['Contract_number'].isin(tables['recover'])]
@@ -158,7 +156,6 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     wd.close()
 
     print(f"{thread_name} {datetime.now()}: scrape traverse complete")
-    print(f"{thread_name} Total contract not found: {error_contract_number}")
     print(f"{thread_name} Total error during scrape: {error_count}")
     print("=========================")
 
