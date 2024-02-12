@@ -17,7 +17,7 @@ from utilities.tables_utilities import merge_tables
 #         'threading_tables': threading_tables,
 #         'thread_number': thread_number
 #  }
-confs = get_confs('IA')
+confs = get_confs('iA')
 
 contract_files = read_excel(confs['contract_path'],
                             confs['csvs'],
@@ -36,16 +36,16 @@ for t in threads_list:
     t.join()
 
 # merge tables from threads
-tables = merge_tables(confs, 'IA')
+tables = merge_tables(confs, 'iA')
 
 # record file names
 files = get_csv_file_names(confs['csvs'])
 
 # save tables into csv files
-save_table_into_csv(confs['control_unit'], tables, files, "IA")
+save_table_into_csv(confs['control_unit'], tables, files, 'iA')
 
 # save csv files into db
-ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)
+ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, 'iA')
 
 # request contract numbers
 # click_contract_list(confs)

@@ -49,7 +49,7 @@ files = get_csv_file_names(confs['csvs'])
 save_table_into_csv(confs['control_unit'], tables, files, 'IA')
 
 # save csv files into db
-ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)
+ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, 'iA')
 
 # request contract list for next time
 click_contract_list(confs)
