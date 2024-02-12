@@ -34,7 +34,9 @@ def login_paths():
         'cookie_button': '/html/body/div[2]/div[2]/a[1]',
         'submit_username': '//*[@id="idp-discovery-submit"]',
         'password': '//*[@id="okta-signin-password"]',
-        'submit_password': '//*[@id="okta-signin-submit"]'
+        'submit_password': '//*[@id="okta-signin-submit"]',
+        'cookie_consent': 'body > div.cc-window.cc-banner.cc-type-opt-in.cc-theme-classic.cc-bottom.cc-color-override'
+                          '-218275418',
     }
 
 
@@ -44,6 +46,8 @@ def scrape_paths():
         'contract_number_input': '//*[@id="ContractNumber"]',
         'search_button': '//*[@id="btnSearch"]',
         'cookie_button': '/html/body/div[2]/div[2]/a[1]',
+        'cookie_consent': 'body > div.cc-window.cc-banner.cc-type-opt-in.cc-theme-classic.cc-bottom.cc-color-override'
+                          '-218275418',
         'error_page': "/html/body/div[1]/ee-header-fullpage/div/div[1]/span/div[1]/div"
     }
 
