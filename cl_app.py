@@ -3,6 +3,7 @@ import threading
 from cl_selenium.cl_policies import get_serial_number
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
+from utilities.split_excel import split_dataframe
 from utilities.tables_utilities import merge_tables
 
 # {
@@ -20,7 +21,7 @@ confs = get_confs('CL')
 # get dataframe with policies
 policies = get_serial_number(confs)
 # split contract file into n part according to thread number
-# TODO : split <policies> into n parts
+split_policies = split_dataframe(policies, confs['thread_number'])
 
 
 # TODO create thread

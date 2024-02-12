@@ -62,7 +62,7 @@ def get_serial_number(confs):
     # remove grand totals
     wd.find_element(By.XPATH, paths['grand_total_button']).click()
     # At the beginning of loop there is no last-serial number
-    policies = pd.DataFrame(columns=['Name', 'police_number', 'fund_name', 'account_type', 'advisor'])
+    policies = pd.DataFrame(columns=['Name', 'policy_number', 'fund_name', 'account_type', 'advisor'])
     last_serial = ''
     while True:
         # while ended, jump out of loop
