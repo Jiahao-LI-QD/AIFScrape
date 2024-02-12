@@ -3,6 +3,7 @@ import sys
 from datetime import datetime
 
 from ia_selenium.ia_contract_list import save_contract_list
+from utilities.companys import companies
 from utilities.get_account import account
 
 
@@ -16,7 +17,7 @@ def get_confs(company):
     # Get required parameters for ia_app
     try:
         match company:
-            case 'IA':
+            case 'iA':
                 parameters = account("ia_conf")
             case 'CL':
                 parameters = account("cl_conf")
@@ -29,7 +30,7 @@ def get_confs(company):
 
     date_today, csvs = generate_date_csv_confs(parameters, company)
 
-    if company == 'IA' and contract_file is None:
+    if company == companies['iA'] and contract_file is None:
         contract_file = save_contract_list(parameters, date_today)
 
     result = {
@@ -42,7 +43,7 @@ def get_confs(company):
         'thread_number': thread_number
     }
 
-    if company == 'IA':
+    if company == companies['iA']:
         result['contract_file'] = contract_file
         result['contract_path'] = os.path.join(parameters['csv_path'], parameters['contracts'], contract_file)
     return result

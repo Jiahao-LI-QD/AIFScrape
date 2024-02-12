@@ -5,6 +5,7 @@ import pandas as pd
 from dbutilities import dbColumns
 from selenium.webdriver.common.by import By
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 
 
 def scrape(wd, fund, investment_type, block):
@@ -77,6 +78,6 @@ def scrape(wd, fund, investment_type, block):
                     row.append(None)
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))
-                row.append('IA')
+                row.append(companies['iA'])
                 fund.loc[len(fund)] = row
 

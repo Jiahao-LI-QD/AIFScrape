@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from cl_selenium import cl_selectors
+from utilities.companys import companies
+
 
 def scrape_holdings(wd, holdings):
     category = ''
@@ -45,7 +47,7 @@ def scrape_holdings(wd, holdings):
                 row_data.append(column.text)
             row_data.append(None)
             final = result + row_data
-            final.append('CL')
+            final.append(companies['CL'])
             holdings.loc[len(holdings)] = final
             row_data = [category]
 

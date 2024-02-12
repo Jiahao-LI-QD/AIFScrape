@@ -14,6 +14,7 @@ from dbutilities import db_method
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 from utilities.tables_utilities import create_table
 from utilities.web_driver import driver_setup
 
@@ -248,7 +249,7 @@ def ia_threading(confs, thread_name, contract_file):
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
-    tables = create_table(contract_file, 'iA', True)
+    tables = create_table(contract_file, companies['iA'], True)
     # do - while loop to traverse through the contract numbers until no exception
     iteration_time = 0
     while iteration_time < confs['maximum_iteration']:
