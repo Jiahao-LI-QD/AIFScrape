@@ -1,5 +1,7 @@
+import os
 import time
 
+import pandas as pd
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -11,16 +13,14 @@ from cl_selenium.cl_utilities import split_investment_type
 from utilities.web_driver import driver_setup
 
 
-def get_serial_number(parameters):
+def get_serial_number(confs):
     """
     This code defines a function named get_serial_number that retrieves serial numbers from a web page using
     Selenium. It sets up the web driver, logs in to the website, and performs actions to filter and scrape data from
     the policies table.
 
-    :param parameters: parameters (dict): A dictionary containing the necessary parameters for
-    the function, including the path to the CSV file, the contracts folder, the URL of the policies page,
-    the username, and the password.
-    :return: None
+    :param confs: A dictionary containing the confs
+    :return: tables
 
     Flow
     1. The function sets up the web driver using the driver_setup function.
@@ -33,11 +33,12 @@ def get_serial_number(parameters):
     8. It removes subtotals and grand totals from the table.
     9. It enters a loop to scrape the serial numbers from the table.
     10. It scrolls down to load more rows and continues scraping until all rows have been processed.
+    11. Save the policies table to csv file and return it
     """
     # setup driver and login to the policies table
-    wd = driver_setup(parameters)
-    wd.get(parameters['policies_url'])
-    login(wd, parameters['username'], parameters['password'])
+    wd = driver_setup(confs['parameters'])
+    wd.get(confs['parameters']['policies_url'])
+    login(wd, confs['parameters']['username'], confs['parameters']['password'])
     paths = policies_paths()
 
     # clear filter
@@ -61,20 +62,25 @@ def get_serial_number(parameters):
     # remove grand totals
     wd.find_element(By.XPATH, paths['grand_total_button']).click()
     # At the beginning of loop there is no last-serial number
+    policies = pd.DataFrame(columns=['Name', 'police_number', 'fund_name', 'account_type', 'advisor'])
     last_serial = ''
     while True:
         # while ended, jump out of loop
-        last_serial, ended = loop_list(wd, paths, last_serial)
+        last_serial, ended = loop_list(wd, paths, policies, last_serial)
         if ended:
             break
+    policies.to_csv(os.path.join(confs['csvs'], "cl_policies.csv"))
+    wd.close()
+    return policies
 
 
-def loop_list(wd, paths, last_serial=''):
+def loop_list(wd, paths, policies, last_serial=''):
     """
     The loop_list function is responsible for scraping data from a table on a web page using Selenium. It loops
     through the rows of the table, extracts the necessary information, and performs certain actions based on the
     extracted data.
 
+    :param policies: dataframe for recording the policies
     :param wd: webdriver instance
     :param paths: the css or Xpath paths
     :param last_serial: the last serial number of the previous loop
@@ -142,8 +148,7 @@ def loop_list(wd, paths, last_serial=''):
             invest, i_type = split_investment_type(texts[2])
             texts[2] = invest
             texts.insert(3, i_type)
-            print(texts)
-            # TODO: add the row to the df in the future
+            policies.loc[len(policies)] = texts
             last_serial = texts[1]
         if not new_row and texts[2] == last_serial:
             new_row = True

@@ -2,11 +2,12 @@ import os
 from datetime import datetime
 
 
-def save_table_into_csv(control_unit, tables, files):
+def save_table_into_csv(control_unit, tables, files, company):
     print("Saving to CSVS")
     if control_unit & 1:
         tables['fund'].to_csv(files['fund'])
-        tables['saving'].to_csv(files['saving'])
+        if company == 'IA':
+            tables['saving'].to_csv(files['saving'])
     if control_unit & 2:
         tables['transaction'].to_csv(files['transaction'])
     if control_unit & 4:

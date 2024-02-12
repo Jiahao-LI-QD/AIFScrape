@@ -32,13 +32,13 @@ def create_table(file_path, company_name, thread=False):
 
     contracts = None
     match company_name:
-        case 'ia':
+        case 'IA':
             if thread:
                 contracts = pd.read_excel(file_path)
                 contracts.columns = dbColumns.contract_columns
             else:
                 contracts = pd.DataFrame(columns=dbColumns.contract_columns)
-        case 'cl':
+        case 'CL':
             # TODO
             pass
         case _:
