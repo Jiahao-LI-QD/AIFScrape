@@ -20,7 +20,7 @@ confs = get_confs('CL')
 # get dataframe with policies
 policies = get_serial_number(confs)
 # split contract file into n part according to thread number
-# TODO: split <policies> into n parts
+# TODO : split <policies> into n parts
 
 
 # TODO create thread

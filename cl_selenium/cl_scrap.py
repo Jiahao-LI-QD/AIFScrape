@@ -7,8 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from cl_selenium import cl_selectors
 
 
-
-
 # Login for Canada Life Advisor Workspace
 def login(wd, user, password):
     paths = cl_selectors.login_paths()
