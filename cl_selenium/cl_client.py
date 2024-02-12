@@ -3,6 +3,9 @@ from cl_selenium import cl_beneficiary, cl_participant
 from cl_selenium import cl_selectors,cl_participant,cl_beneficiary
 from time import sleep
 
+from utilities.companys import companies
+
+
 def scrape_client(wd, client):
     """
     Defines a function named scrape that is used to scrape "client" data from a web page using Selenium.
@@ -47,7 +50,7 @@ def scrape_client(wd, client):
         c3 = [c.text for c in c_item.find_elements(By.XPATH, paths['client_c3']['c3_row'])]
         # print(c3)
     result = [c1[0], None, None, c2[0], c1[-1], address, None, None, province, None, c3[2], c3[-1], None, c3[1], c3[0],
-              None,contract_number,'CL']
+              None,contract_number, companies['CL']]
 
     # print(result)
     client.loc[len(client)] = result

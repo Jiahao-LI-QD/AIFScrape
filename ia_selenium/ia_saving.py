@@ -1,6 +1,7 @@
 from datetime import datetime
 from selenium.webdriver.common.by import By
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 
 
 def scrape(wd, saving, investment_type, block):
@@ -55,6 +56,6 @@ def scrape(wd, saving, investment_type, block):
 
     # convert number from percentage to decimal
     row[8] = float(row[8].strip('%')) * 0.01
-    row.append('IA')
+    row.append(companies['iA'])
     saving.loc[len(saving)] = row
 

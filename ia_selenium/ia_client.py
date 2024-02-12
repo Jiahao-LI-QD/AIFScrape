@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from ia_selenium import ia_beneficiary, ia_participant
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 
 
 def scrape(wd, client, beneficiary, participant, contract_number):
@@ -35,6 +36,6 @@ def scrape(wd, client, beneficiary, participant, contract_number):
     Client_list = wd.find_elements(By.XPATH, paths['table_client']['main_client'])
     client_ = [Client_row.find_element(By.XPATH, paths['table_client']['row_client']).text for Client_row in Client_list]
     client_.append(contract_number)
-    client_.append('IA')
+    client_.append(companies['iA'])
     client.loc[len(client)] = client_
 
