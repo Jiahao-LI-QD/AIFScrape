@@ -173,45 +173,45 @@ def save_csv_to_db(control_unit, files, tables):
     else:
         print("Database connection successful!")
         batch_size = 1000
-        ia_db.save_recover(cursor, zip(tables['recover'], [None] * len(tables['recover'])))
-        ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract_history, batch_size)
-        ia_db.delete_current_contract(cursor)
+        db_method.save_recover(cursor, zip(tables['recover'], [None] * len(tables['recover'])))
+        db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
+        db_method.delete_current_contract(cursor)
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            ia_db.delete_current_fund_saving(cursor)
+            db_method.delete_current_fund_saving(cursor)
 
             # save saving & fund history
-            ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund_history, batch_size)
+            db_method.save_data_into_db(cursor, files['saving'], db_method.save_saving_history, batch_size)
+            db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            ia_db.delete_current_transaction(cursor)
+            db_method.delete_current_transaction(cursor)
 
             # save transaction history
-            ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction_history, batch_size)
+            db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction_history, batch_size)
         if control_unit & 4:
             # delete current client information related tables for later insertion
             # if there is no new contracts
             # otherwise just extend the table
             # if not new_contracts:
-            ia_db.delete_current_participant_beneficiary(cursor)
-            ia_db.delete_current_client(cursor)
-            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant_history, batch_size)
-            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary_history, batch_size)
+            db_method.delete_current_participant_beneficiary(cursor)
+            db_method.delete_current_client(cursor)
+            db_method.save_data_into_db(cursor, files['client'], db_method.save_client_history, batch_size)
+            db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant_history, batch_size)
+            db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary_history, batch_size)
 
         # save current tables accordingly
         if control_unit & 4:
-            ia_db.save_data_into_db(cursor, files['client'], ia_db.save_client, batch_size)
-            ia_db.save_data_into_db(cursor, files['participant'], ia_db.save_participant, batch_size)
-            ia_db.save_data_into_db(cursor, files['beneficiary'], ia_db.save_beneficiary, batch_size)
+            db_method.save_data_into_db(cursor, files['client'], db_method.save_client, batch_size)
+            db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant, batch_size)
+            db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary, batch_size)
         if control_unit & 1:
-            ia_db.save_data_into_db(cursor, files['saving'], ia_db.save_saving, batch_size)
-            ia_db.save_data_into_db(cursor, files['fund'], ia_db.save_fund, batch_size)
+            db_method.save_data_into_db(cursor, files['saving'], db_method.save_saving, batch_size)
+            db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund, batch_size)
         if control_unit & 2:
-            ia_db.save_data_into_db(cursor, files['transaction'], ia_db.save_transaction, batch_size)
-        ia_db.save_data_into_db(cursor, files['contracts'], ia_db.save_contract, batch_size)
+            db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction, batch_size)
+        db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract, batch_size)
 
         cursor.close()
 
@@ -231,7 +231,7 @@ def check_new_clients(tables):
 
         # Query & saving the SQL table into a pd dataframe.
         # conn = connection.connect_db()
-        ia_db.read_clients(cursor)
+        db_method.read_clients(cursor)
         clients = [client[-2] for client in cursor.fetchall()]
 
         # keeping only the unique contract number row.
