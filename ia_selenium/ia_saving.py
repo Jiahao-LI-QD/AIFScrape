@@ -55,5 +55,6 @@ def scrape(wd, saving, investment_type, block):
 
     # convert number from percentage to decimal
     row[8] = float(row[8].strip('%')) * 0.01
+    row.append('IA')
     saving.loc[len(saving)] = row
 

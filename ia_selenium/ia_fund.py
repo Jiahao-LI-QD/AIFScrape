@@ -77,5 +77,6 @@ def scrape(wd, fund, investment_type, block):
                     row.append(None)
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))
+                row.append('IA')
                 fund.loc[len(fund)] = row
 

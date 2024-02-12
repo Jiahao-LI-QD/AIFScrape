@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from ia_selenium import ia_selectors
 
+
 def scrape(wd, beneficiary):
     """
     Defines a function named scrape that is used to scrape "beneficiary" data from a web page using Selenium.
@@ -22,16 +23,18 @@ def scrape(wd, beneficiary):
     """
     paths = ia_selectors.beneficiary_paths()
     Contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
-    Beneficiary_Category=wd.find_element(By.XPATH, paths['beneficiary_Category']).text
+    Beneficiary_Category = wd.find_element(By.XPATH, paths['beneficiary_Category']).text
     Beneficiary_list = wd.find_elements(By.XPATH, paths['table_beneficiary']['main_beneficiary'])
     for Beneficiary_row in Beneficiary_list:
-        items = [b.text for b in Beneficiary_row.find_elements(By.XPATH, paths['table_beneficiary']['items_beneficiary'])]
-
+        items = [b.text for b in
+                 Beneficiary_row.find_elements(By.XPATH, paths['table_beneficiary']['items_beneficiary'])]
 
         if 'RESP' in Beneficiary_Category:
-            result = [Contract_number, Beneficiary_Category, items[0], float(items[1].strip('%'))/100, None, None, items[-1]]
+            result = [Contract_number, Beneficiary_Category, None, items[0], float(items[1].strip('%')) / 100, None,
+                      None, items[-1], 'IA']
 
         else:
-            result = [Contract_number, Beneficiary_Category, items[0], float(items[1].strip('%')) / 100, items[2],
-                      items[-1], None]
+            result = [Contract_number, Beneficiary_Category, None, items[0], float(items[1].strip('%')) / 100, items[2],
+                      items[-1], None, 'IA']
+
         beneficiary.loc[len(beneficiary)] = result

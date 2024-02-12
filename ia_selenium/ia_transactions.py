@@ -72,6 +72,7 @@ def scrape_transaction(wd, transactions, issue_date):
         table = wd.find_elements(By.XPATH, paths['table_data'])
         for row in table:
             new_row = process_transaction_row(row, contract_number)
+            new_row.append('IA')
             transactions.loc[len(transactions)] = new_row
 
         # for "Next" button when there is more than one page of transactions
@@ -87,6 +88,7 @@ def scrape_transaction(wd, transactions, issue_date):
             table = wd.find_elements(By.XPATH, paths['table_data'])
             for row in table:
                 new_row = process_transaction_row(row, contract_number)
+                new_row.append('IA')
                 transactions.loc[len(transactions)] = new_row
 
         wd.execute_script("window.scrollTo(0, 0)")

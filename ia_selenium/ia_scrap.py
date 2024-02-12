@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client
-from dbutilities import ia_db
+from dbutilities import db_method
 
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
@@ -260,7 +260,6 @@ def ia_threading(confs, thread_name, contract_file):
             break
         iteration_time += 1
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
-    print(tables['contracts'])
     confs['threading_tables'][thread_name] = tables
 
 

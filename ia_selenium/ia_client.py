@@ -23,7 +23,6 @@ def scrape(wd, client, beneficiary, participant, contract_number):
     6.Extract the text from each client row and store it in a list.
     7.Append the contract number to the list of client data.
     8.Append the list to the client DataFrame.
-
     """
     paths = ia_selectors.client_paths()
 
@@ -36,5 +35,6 @@ def scrape(wd, client, beneficiary, participant, contract_number):
     Client_list = wd.find_elements(By.XPATH, paths['table_client']['main_client'])
     client_ = [Client_row.find_element(By.XPATH, paths['table_client']['row_client']).text for Client_row in Client_list]
     client_.append(contract_number)
+    client_.append('IA')
     client.loc[len(client)] = client_
 
