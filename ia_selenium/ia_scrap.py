@@ -266,4 +266,9 @@ def ia_threading(confs, thread_name, contract_file):
 
 
 def scrape_cleanup(tables):
+    """
+    removes rows from the 'contracts' table on the 'Contract_number' column that are present in the 'recover' table.
+    :param tables: a dictionary containing the 'contracts' and 'recover' tables
+    :return: None, updated the 'contracts' table.
+    """
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
