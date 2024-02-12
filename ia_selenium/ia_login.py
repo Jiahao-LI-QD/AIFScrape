@@ -3,7 +3,6 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import keys
 from ia_selenium import ia_selectors
 
 from selenium.webdriver.common.action_chains import ActionChains
@@ -12,17 +11,23 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def login(wd, user, password, thread='Main'):
     """
-    performs the login process, also handles the acceptance of cookies if prompted.
-    :param wd: chrome webdriver set up in ia_scrap.driver_setup.
-    :param user: The username to be entered in the login form, saved in the dictionary 'parameters'.
-    :param password: The password to be entered in the login form, saved in the dictionary 'parameters'
-    :param thread: (Optional) The name of the thread, could be multiple printed on screen. Default is 'Main'.
-    :return: does not return any value.
+    The function is responsible for logging in a user by interacting with the web page elements using Selenium.
 
-    1. Clicks on the "Sign In" button on the web page, if the cookie consent element and clicks on the "Accept" button.
-    2. Enters the username in the appropriate input field, moves the mouse cursor to the submit button and clicks on it.
-    3. Enters the password in the appropriate input field, moves the mouse cursor to the submit button and clicks on it.
-    4. Prints a success message indicating that the user has logged in.
+    :param wd: the web driver object used to interact with the web page
+    :param user: the username of the user to log in
+    :param password: the password of the user to log in.
+    :param thread: the name of the thread (default is "Main")
+    :return: None
+
+    Flow
+    1. The function retrieves the XPath selectors for various elements from the ia_selectors module.
+    2. It clicks on the "Sign In" button on the web page.
+    3. If a cookie consent message is displayed, it waits for the cookie button to be clickable and then clicks on it to accept the cookies.
+    4. It enters the username in the appropriate input field.
+    5. It moves the mouse cursor to the submit button and clicks on it.
+    6. It enters the password in the appropriate input field.
+    7. It moves the mouse cursor to the password submit button and clicks on it.
+    8. It prints a success message indicating that the user has been logged in.
     """
     paths = ia_selectors.login_paths()
 

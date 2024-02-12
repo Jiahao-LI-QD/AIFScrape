@@ -5,9 +5,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from cl_selenium.cl_scrap import driver_setup, login
+from cl_selenium.cl_scrap import login
 from cl_selenium.cl_selectors import policies_paths
 from cl_selenium.cl_utilities import split_investment_type
+from utilities.web_driver import driver_setup
 
 
 def get_serial_number(parameters):

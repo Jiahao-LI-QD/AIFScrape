@@ -49,5 +49,6 @@ def split_excel(file_path, folder_path, num_chunks):
         file_name = 'contract_part_' + str(i + 1) + '.xlsx'
         full_path = os.path.join(folder_path, file_name)
         file_paths.append(full_path)
+        print(full_path)
         parts[i].to_excel(full_path, index=False)
     return file_paths

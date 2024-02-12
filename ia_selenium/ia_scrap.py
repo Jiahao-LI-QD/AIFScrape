@@ -1,41 +1,21 @@
 import os.path
-import sys
 import time
 import traceback
 
 import os
 from datetime import datetime
 
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client, keys
-from dbutilities import dbColumns, ia_db
-import pandas as pd
+from ia_selenium import ia_login, ia_investment, ia_transactions, ia_client
+from dbutilities import ia_db
+
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
-
-
-def driver_setup(parameters, head=False):
-    """
-    setup the webdriver accordingly and return it
-    :param parameters: 'parameters' in confs which is returned by ia_get_config
-    :param head: does it need to be headless mode
-    :return: webdriver that is configured properly
-    """
-    # start web driver
-    # Initializes Chrome options for the web driver.
-    chrome_options = webdriver.ChromeOptions()
-    # set the default download directory to the contracts folder
-    prefs = {'download.default_directory': os.path.join(parameters['csv_path'], parameters['contracts'])}
-    chrome_options.add_experimental_option('prefs', prefs)
-    if not head:
-        chrome_options.add_argument('headless')
-    wd = webdriver.Chrome(chrome_options)
-    wd.implicitly_wait(15)
-    return wd
+from utilities.tables_utilities import create_table
+from utilities.web_driver import driver_setup
 
 
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
@@ -56,7 +36,6 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
     5.If an exception occurs during the login process, the function will recursively try again up to 5 times.
       If it still fails, the webdriver is closed and a new one is set up before retrying.
     """
-
 
     # get the url and login
     try:
@@ -81,44 +60,6 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
             wd.close()
             wd = driver_setup(parameters)
             ia_app(wd, parameters, thread_name)
-
-
-def create_table(file_path, thread=False):
-    """
-    creating empty dataframes for different tables and initializing an empty list.
-    It also reads contract numbers from an Excel file if the thread parameter is True.
-
-    :param file_path: The path to the Excel file containing contract numbers.
-    :param thread: A boolean flag indicating whether the function is being called in a threaded context. Default is False.
-    :return: "contracts" table
-
-
-    Flow:
-    1.The function initializes an empty dictionary called result with keys representing different tables and the recover list.
-    2.If thread is False, the function reads contract numbers from the Excel file specified by file_path and assigns it to the ia_contracts variable.
-    3.The function creates empty dataframes for different tables using the pd.DataFrame constructor and assigns them to the corresponding keys in the result dictionary.
-    4.The contracts key in the result dictionary is assigned the value of ia_contracts.
-    5.The result dictionary is returned as the output of the function.
-    """
-    # create pointers
-    result = {'saving': pd.DataFrame(columns=dbColumns.saving_columns),
-              'fund': pd.DataFrame(columns=dbColumns.fund_columns),
-              'transaction': pd.DataFrame(columns=dbColumns.transaction_columns),
-              'beneficiary': pd.DataFrame(columns=dbColumns.beneficiary_columns),
-              'participant': pd.DataFrame(columns=dbColumns.participant_columns),
-              'client': pd.DataFrame(columns=dbColumns.client_columns),
-              'recover': []}
-
-    # get contract numbers for ia company
-    if not thread:
-        ia_contracts = pd.read_excel(
-            file_path
-        )
-        ia_contracts.columns = dbColumns.contract_columns
-    else:
-        ia_contracts = pd.DataFrame(columns=dbColumns.contract_columns)
-    result['contracts'] = ia_contracts
-    return result
 
 
 def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
@@ -197,7 +138,6 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
                 log.write(traceback.format_exc())
                 log.write("=============================================================\n")
 
-
     # save recovery list after current traverse
     recovery = os.path.join(confs['csvs'], "recovery_list_" + thread_name + "_" + str(iteration_time) + ".txt")
     with open(recovery, 'a') as f:
@@ -220,23 +160,6 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     print(f"{thread_name} {datetime.now()}: scrape traverse complete")
     print(f"{thread_name} Total contract not found: {error_contract_number}")
     print(f"{thread_name} Total error during scrape: {error_count}")
-    print("=========================")
-
-
-def save_table_into_csv(control_unit, tables, files):
-    print("Saving to CSVS")
-    if control_unit & 1:
-        tables['fund'].to_csv(files['fund'])
-        tables['saving'].to_csv(files['saving'])
-    if control_unit & 2:
-        tables['transaction'].to_csv(files['transaction'])
-    if control_unit & 4:
-        tables['client'].to_csv(files['client'])
-        tables['beneficiary'].to_csv(files['beneficiary'])
-        tables['participant'].to_csv(files['participant'])
-    tables['contracts'].to_csv(files['contracts'])
-
-    print(f"{datetime.now()}: CSVs saved!")
     print("=========================")
 
 
@@ -323,228 +246,12 @@ def check_new_clients(tables):
         cursor.close()
 
 
-def click_contract_list(confs):
-    """
-    This method request downloads of contract list for different groups
-    :param confs: ia_confs loaded at the start of ia_app
-    :return: nothing
-
-    Workflow:
-    1.Set up the web driver using the parameters from confs.
-    2.Call the ia_app function to log into the IA website.
-    3.Get the paths for various elements on the website.
-    4.Click on the "My Client" button --> "Group" button.
-    5.Wait for the website response and select the first group.
-    6.Click on the "Download" option --> "Search" button --> "Submit" button
-    7.Click on the "My Client" button --> "Group" button.
-    8.Wait for the website response and select the second group.
-    9.Repeat Step 6
-    10.Print a success message.
-
-    """
-    wd = driver_setup(confs['parameters'])
-    ia_app(wd, confs['parameters'])
-    paths = ia_selectors.download_path()
-    wd.find_element(By.XPATH, paths['myclient_button']).click()
-    wd.find_element(By.XPATH, paths['group']).click()
-    time.sleep(3)
-    # waiting website response, selecting the first group
-    wd.find_element(By.XPATH, paths['FV6_group']).click()
-    wd.find_element(By.XPATH, paths['download_option']).click()
-    wd.find_element(By.XPATH, paths['search_button']).click()
-    wd.find_element(By.XPATH, paths['submit_button']).click()
-    wd.find_element(By.XPATH, paths['myclient_button']).click()
-    wd.find_element(By.XPATH, paths['group']).click()
-    time.sleep(3)
-    # waiting website response, selecting the second group
-    wd.find_element(By.XPATH, paths['GK4_group']).click()
-    wd.find_element(By.XPATH, paths['download_option']).click()
-    wd.find_element(By.XPATH, paths['search_button']).click()
-    wd.find_element(By.XPATH, paths['submit_button']).click()
-    print('Download request successfully submitted')
-    pass
-
-
-def save_contract_list(parameters, date_today):
-    """
-    This method downloads the contract lists from website,
-    combines them as a single file and renames to today's date,
-    old files are removed at the end
-    :param parameters: dictionary generated from ia_conf
-    :param date_today: timestamp of today's date in format 'YYYY_MM_DD_HH_MM_SS'
-    :return: files are combined and  renamed to format as 'date_today' +  '_contracts.xlsx'
-
-    Workflow:
-    1.Set up the web driver using the driver_setup function.
-    2.Call the ia_app function to log in to the website.
-    3.Click on the mailbox button --> first file link --> download file button.
-    4.Get the filename of the downloaded file.
-    5.Click on the next button --> second file link --> download file button.
-    6.Get the filename of the downloaded file.
-    7.Read the contents of the downloaded files using pd.read_excel.
-    8.Concatenate the dataframes and ignore the first two rows of the second dataframe.
-    9.Generate the new filename by combining the date_today and '_contract.xlsx'.
-    10.Remove the old downloaded files.
-    11.Save the concatenated dataframe to the new filename as an Excel file.
-    """
-    paths = ia_selectors.save_path()
-    wd = driver_setup(parameters)
-    ia_app(wd, parameters)
-    wd.find_element(By.XPATH, paths['mailbox_button']).click()
-    wd.find_element(By.XPATH, paths['file_link1']).click()
-    wd.find_element(By.XPATH, paths['download_file']).click()
-    filename1 = wd.find_element(By.XPATH, paths['download_file']).text
-    wd.find_element(By.XPATH, paths['next_button']).click()
-    time.sleep(3)
-    wd.find_element(By.XPATH, paths['file_link2']).click()
-    wd.find_element(By.XPATH, paths['download_file']).click()
-    time.sleep(3)
-    filename2 = wd.find_element(By.XPATH, paths['download_file']).text
-    time.sleep(3)
-
-    df1 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename1))
-    df2 = pd.read_excel(os.path.join(parameters['csv_path'], parameters['contracts'], filename2))
-    df_total = pd.concat([df1, df2[2:]], ignore_index=True)
-    result = date_today + '_contract.xlsx'
-    new_filename = os.path.join(parameters['csv_path'], parameters['contracts'], result)
-    os.remove(
-        os.path.join(parameters['csv_path'], parameters['contracts'], filename1)
-    )
-    os.remove(
-        os.path.join(parameters['csv_path'], parameters['contracts'], filename2)
-    )
-    df_total.to_excel(str(new_filename), index=False)
-    print('File saved')
-    return result
-
-
-def get_control(args):
-    """
-    This method
-    1: mixed control modes for app, default mode is 1
-    mode 1: scraping investments only
-    mode 2: scraping transactions only
-    mode 4: scraping clients only
-    or combine 3 modes arbitrarily
-    2:number of iteration
-    set up default iteration to 3, range from 1-5
-    3:number of thread
-    set up default thread to 1, when filename is not defined
-    4: filename(Excel file)
-    :param args: system arguments
-    :return: control mode, iteration times, thread number and filename
-
-    Workflow:
-    1.Set the default control mode to 1.
-    2.If the length of args is greater than 1, set the control mode to be the first argument.
-    3.If control is not in the range of 1 to 8, print a message indicating that the control mode is not supported
-    and use the default scrape mode.
-    4.If control mode set to 1, print a message indicating that the task is to scrape investments only.
-    5.If control mode set to 2, print a message indicating that the task is to scrape transactions only.
-    6.If control mode set to 4, print a message indicating that the task is to scrape clients information only.
-    7.control mode can be mixed up scrape for all or two of the tasks
-    8.Set the default maximum iteration to 3.
-    9.If the length of args is greater than 2, set the maximum iteration to be the second argument.
-    10.If max_iteration is less than 1 or greater than 5, raise an exception indicating that the maximum number of
-    iterations must be between 1 and 5.
-    11.Set the default thread number to 1.
-    12.If the length of args is greater than 3, set the thread number to be the third argument.
-    13.If the length of args is greater than 4, assign the fourth argument to file_name.
-    14.Return the values of control, max_iteration, thread_number, and file_name as a tuple.
-    """
-    control = 1
-    if len(args) > 1:
-        control = int(args[1])
-    if control not in range(1, 8):
-        print(f"The control model is not supported, will use default scrape mode")
-
-    if control & 1:
-        print("Task: Scrape Investments")
-    if control & 2:
-        print("Task: Scrape Transactions")
-    if control & 4:
-        print("Task: Scrape Clients Information")
-    print("======================")
-
-    max_iteration = 3
-    if len(args) > 2:
-        try:
-            max_iteration = int(args[2])
-            if max_iteration < 1 or max_iteration > 5:
-                raise Exception("The maximum number of iterations must be between 1 and 5")
-        except TypeError as e:
-            print("Max iteration setting is not a valid number between 1 and 5")
-        except Exception as e:
-            print(e)
-
-    thread_number = 1
-    file_name = None
-    if len(args) > 3:
-        thread_number = int(args[3])
-
-    if len(args) > 4:
-        file_name = args[4]
-
-    return control, max_iteration, thread_number, file_name
-
-
-def get_csv_file_names(path):
-    return {
-        'contracts': os.path.join(path, 'ia_contracts.csv'),
-        'fund': os.path.join(path, 'ia_funds.csv'),
-        'saving': os.path.join(path, 'ia_savings.csv'),
-        'client': os.path.join(path, 'ia_clients.csv'),
-        'transaction': os.path.join(path, 'ia_transactions.csv'),
-        'beneficiary': os.path.join(path, 'ia_beneficiaries.csv'),
-        'participant': os.path.join(path, 'ia_participants.csv')
-    }
-
-
-def ia_get_confs():
-    control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
-    # Get required parameters for ia_app
-    try:
-        ia_parameters = keys.ia_account()
-    except Exception as e:
-        print(e)
-        exit()
-
-    date_today = "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
-
-    csvs = os.path.join(ia_parameters['csv_path'], date_today)
-
-    # make directory for current scarp process
-    try:
-        os.mkdir(csvs)
-        print(f"Create {ia_parameters['csv_path']}\\{date_today} directory!")
-    except Exception as e:
-        print(f"The directory {ia_parameters['csv_path']}\\{date_today} already exist!")
-
-    threading_tables = {}
-
-    if contract_file is None:
-        contract_file = save_contract_list(ia_parameters, date_today)
-        pass
-
-    return {
-        'csvs': csvs,
-        'parameters': ia_parameters,
-        'control_unit': control_unit,
-        'maximum_iteration': maximum_iteration,
-        'contract_file': contract_file,
-        'date_today': date_today,
-        'threading_tables': threading_tables,
-        'thread_number': thread_number
-    }
-
-
 def ia_threading(confs, thread_name, contract_file):
     # start the ia company scrapy process
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
-    tables = create_table(contract_file)
-
+    tables = create_table(contract_file, 'ia', True)
     # do - while loop to traverse through the contract numbers until no exception
     iteration_time = 0
     while iteration_time < confs['maximum_iteration']:
@@ -552,8 +259,8 @@ def ia_threading(confs, thread_name, contract_file):
         if len(tables['recover']) == 0:
             break
         iteration_time += 1
-
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
+    print(tables['contracts'])
     confs['threading_tables'][thread_name] = tables
 
 
@@ -564,31 +271,3 @@ def scrape_cleanup(tables):
     :return: None, updated the 'contracts' table.
     """
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
-
-
-def merge_tables(confs):
-    """
-    defines a function called merge_tables that merges multiple tables into a single table. tables from threads
-    :param confs: A dictionary containing multiple tables to be merged. Each table is represented by a key-value pair,
-                    where the key is the table name and the value is a dictionary containing the table data.
-    :return: A dictionary containing the merged tables and the combined recover list.
-
-    Workflow:
-    1. The function initializes an empty dictionary called tables by calling the create_table function with
-        None as the file_path argument and True as the thread argument.
-    2. For each table in the confs['threading_tables'] dictionary, the function concatenates the corresponding table
-        data with the existing data in the tables dictionary using the pd.concat function.
-    3. The merged tables are assigned back to the tables' dictionary.
-    4. The recover list from each table in the dictionary is extended to the recover list in the tables' dictionary.
-    """
-    tables = create_table(None, True)
-    for o in confs['threading_tables'].values():
-        tables['saving'] = pd.concat([tables['saving'], o['saving']], axis=0)
-        tables['fund'] = pd.concat([tables['fund'], o['fund']], axis=0)
-        tables['transaction'] = pd.concat([tables['transaction'], o['transaction']], axis=0)
-        tables['beneficiary'] = pd.concat([tables['beneficiary'], o['beneficiary']], axis=0)
-        tables['participant'] = pd.concat([tables['participant'], o['participant']], axis=0)
-        tables['client'] = pd.concat([tables['client'], o['client']], axis=0)
-        tables['contracts'] = pd.concat([tables['contracts'], o['contracts']], axis=0)
-        tables['recover'].extend(o['recover'])
-    return tables
