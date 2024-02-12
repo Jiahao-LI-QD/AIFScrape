@@ -248,7 +248,7 @@ def ia_threading(confs, thread_name, contract_file):
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
-    tables = create_table(contract_file, 'ia', True)
+    tables = create_table(contract_file, 'IA', True)
     # do - while loop to traverse through the contract numbers until no exception
     iteration_time = 0
     while iteration_time < confs['maximum_iteration']:

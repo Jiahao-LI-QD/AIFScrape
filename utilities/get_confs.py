@@ -43,8 +43,8 @@ def get_confs(company):
     }
 
     if company == 'IA':
-        result['contract_file']: contract_file
-        result['contract_path']: os.path.join(parameters['csv_path'], parameters['contracts'], contract_file)
+        result['contract_file'] = contract_file
+        result['contract_path'] = os.path.join(parameters['csv_path'], parameters['contracts'], contract_file)
     return result
 
 

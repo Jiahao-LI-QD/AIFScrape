@@ -4,7 +4,7 @@ import pandas as pd
 from dbutilities import dbColumns
 
 
-def split_excel(file_path, folder_path, num_chunks):
+def read_excel(file_path, folder_path, num_chunks):
     """
     defines a function named split_excel that takes in a file path, a folder path, and the number of chunks as inputs.
     The function reads an Excel file, drops the first two rows, renames the columns, removes duplicate rows based on a
@@ -29,11 +29,38 @@ def split_excel(file_path, folder_path, num_chunks):
     df['Company'] = 'IA'
     df.columns = dbColumns.contract_columns
     df = df.drop_duplicates(subset=['Contract_number'])
+
+    split_dfs = split_dataframe(df, num_chunks)
+    file_paths = []
+
+    for i in range(len(split_dfs)):
+        file_name = 'contract_part_' + str(i + 1) + '.xlsx'
+        full_path = os.path.join(folder_path, file_name)
+        file_paths.append(full_path)
+        split_dfs[i].to_excel(full_path, index=False)
+    return file_paths
+
+
+def split_dataframe(df, num_chunks):
+    """
+    splits the DataFrame into smaller parts based on the specified number of chunks and returns a list of the split DataFrames.
+    :param df: The DataFrame to be split into smaller parts.
+    :param num_chunks: The number of smaller parts to split the DataFrame into.
+    :return: A list of DataFrames, each representing a split part of the original DataFrame.
+
+    Workflow:
+    1. Calculate the number of rows in the DataFrame and the size of each part.
+    2. Calculate the remainder row by taking the modulo of the number of rows and the number of chunks.
+    3. Initialize an empty list to store the split DataFrames.
+    4. Iterate over the number of chunks: Slice the DataFrame to extract the current start index and end index,
+                                            append the current part to the list of split DataFrames.
+    5. If there is a remainder row, concatenate the last part with the remaining rows from the original DataFrame.
+    6. Return the list of split DataFrames.
+    """
     num_rows = len(df)
     parts_size = (num_rows // num_chunks)
     remainder_row = num_rows % num_chunks
     parts = []
-    file_paths = []
 
     # separate the big dataframe into num_chunks amount of smaller dfs
     for i in range(num_chunks):
@@ -46,10 +73,4 @@ def split_excel(file_path, folder_path, num_chunks):
         last_df = pd.concat([parts[-1], df[(-remainder_row):]])
         parts[-1] = last_df
 
-    for i in range(len(parts)):
-        file_name = 'contract_part_' + str(i + 1) + '.xlsx'
-        full_path = os.path.join(folder_path, file_name)
-        file_paths.append(full_path)
-        print(full_path)
-        parts[i].to_excel(full_path, index=False)
-    return file_paths
+    return parts
