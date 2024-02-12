@@ -29,21 +29,23 @@ def get_confs(company):
 
     date_today, csvs = generate_date_csv_confs(parameters, company)
 
-    if company == 'ia' and contract_file is None:
+    if company == 'IA' and contract_file is None:
         contract_file = save_contract_list(parameters, date_today)
-        pass
 
-    return {
+    result = {
         'csvs': csvs,
         'parameters': parameters,
         'control_unit': control_unit,
         'maximum_iteration': maximum_iteration,
-        'contract_file': contract_file,
-        'contract_path': os.path.join(parameters['csv_path'], parameters['contracts'], contract_file),
         'date_today': date_today,
         'threading_tables': {},
         'thread_number': thread_number
     }
+
+    if company == 'IA':
+        result['contract_file']: contract_file
+        result['contract_path']: os.path.join(parameters['csv_path'], parameters['contracts'], contract_file)
+    return result
 
 
 def get_control(args):

@@ -19,7 +19,7 @@ from utilities.tables_utilities import merge_tables
 #         'threading_tables': threading_tables,
 #         'thread_number': thread_number
 #  }
-confs = get_confs('ia')
+confs = get_confs('IA')
 
 contract_files = split_excel(confs['contract_path'],
                              confs['csvs'],
@@ -38,13 +38,13 @@ for t in threads_list:
     t.join()
 
 # merge tables from threads
-tables = merge_tables(confs, 'ia')
+tables = merge_tables(confs, 'IA')
 
 # record file names
 files = get_csv_file_names(confs['csvs'])
 
 # save tables into csv files
-save_table_into_csv(confs['control_unit'], tables, files)
+save_table_into_csv(confs['control_unit'], tables, files, "IA")
 
 # save csv files into db
 ia_scrap.save_csv_to_db(confs['control_unit'], files, tables)

@@ -18,7 +18,6 @@ def account(filename):
 
     with open(os.path.join(sys.path[1], "confs", filename)) as f:
         lines = [line.rstrip('\n').split("=", 1) for line in f.readlines()]
-        print(lines)
         d = {key.strip(): value.strip() for key, value in lines}
     if "username" not in d or "password" not in d:
         raise Exception("IA account info not found. Please provide it in confs/ia_conf")
