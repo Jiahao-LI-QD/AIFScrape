@@ -15,7 +15,7 @@ def get_confs(company):
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
     # Get required parameters for ia_app
     try:
-        parameters = account()
+        parameters = account("ia_conf")
     except Exception as e:
         print(e)
         exit()

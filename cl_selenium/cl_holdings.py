@@ -45,6 +45,7 @@ def scrape_holdings(wd, holdings):
                 row_data.append(column.text)
             row_data.append(None)
             final = result + row_data
+            final.append('CL')
             holdings.loc[len(holdings)] = final
             row_data = [category]
 

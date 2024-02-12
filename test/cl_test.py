@@ -6,12 +6,13 @@ from selenium.webdriver.common.by import By
 from cl_selenium import cl_scrap, cl_selectors, cl_transactions, cl_holdings, cl_client, cl_participant, cl_beneficiary
 from dbutilities import dbColumns
 from utilities.web_driver import driver_setup
+from utilities import get_account
 
 # save cl_conf as parameters
-parameters = cl_scrap.cl_account()
+parameters = get_account.account("cl_conf")
 
 # set up Chrome driver
-wd = driver_setup(parameters)
+wd = driver_setup(parameters, True)
 wd.get(parameters['web_url'])
 sleep(1)
 
@@ -26,17 +27,16 @@ sleep(2)
 wd.find_element(By.XPATH, traverse_paths['search_button']).click()
 sleep(10)
 
-
-client=pd.DataFrame(columns=dbColumns.client_columns)
-test_client=cl_client.scrape_client(wd,client)
+client = pd.DataFrame(columns=dbColumns.client_columns)
+test_client = cl_client.scrape_client(wd, client)
 print(test_client)
 
-participant=pd.DataFrame(columns=dbColumns.participant_columns)
-test_participant= cl_participant.scrape_participant(wd,participant)
+participant = pd.DataFrame(columns=dbColumns.participant_columns)
+test_participant = cl_participant.scrape_participant(wd, participant)
 print(test_participant)
 
-beneficiary=pd.DataFrame(columns=dbColumns.beneficiary_columns)
-test_beneficiary=cl_beneficiary.scrape_beneficiary(wd,beneficiary)
+beneficiary = pd.DataFrame(columns=dbColumns.beneficiary_columns)
+test_beneficiary = cl_beneficiary.scrape_beneficiary(wd, beneficiary)
 print(test_beneficiary)
 
 sleep(5)
@@ -52,4 +52,3 @@ print(test_transactions)
 # print(test_holdings.head())
 # wd.find_element(By.XPATH, paths['holdings']).click()
 # sleep(5)
-
