@@ -26,6 +26,7 @@ def split_excel(file_path, folder_path, num_chunks):
     6. Save as separate Excel files.
     """
     df = pd.read_excel(file_path).iloc[2:]
+    df['Company'] = 'IA'
     df.columns = dbColumns.contract_columns
     df = df.drop_duplicates(subset=['Contract_number'])
     num_rows = len(df)

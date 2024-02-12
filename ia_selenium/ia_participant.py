@@ -25,6 +25,6 @@ def scrape(wd, participant):
     for Participant_row in Participant_list:
         items = [b.text for b in
                  Participant_row.find_elements(By.XPATH, paths['table_participant']['items_participant'])]
-        Participants = [Contract_number, items[0], items[1], items[-1]]
+        Participants = [Contract_number, items[0], items[1], items[-1], 'IA']
         participant.loc[len(participant)] = Participants
 

@@ -105,7 +105,7 @@ def loop_list(wd, paths, last_serial=''):
     # get row content
     rows = wd.find_elements(By.XPATH, paths['table']['rows'])
 
-    # The rows from table need to be sliced, setup the start and the end
+    # The rows from table need to be sliced, set up the start and the end
     slice_start = 0
     slice_end = -1
     # remove the first header row
