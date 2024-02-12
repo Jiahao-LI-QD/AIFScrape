@@ -50,7 +50,18 @@ def create_table(file_path, company_name, thread=False):
 
 
 def merge_tables(confs, company):
-    tables = create_table(confs['contract_path'], company, True)
+    """
+    The merge_tables function takes a dictionary of tables and a company name as inputs. It merges the tables from
+    the dictionary into a single table and returns the merged table
+
+    :param confs: The configuration generated at the start of the app.
+    :param company: The name of the company for which the tables are being merged.
+
+    :return: tables:A dictionary containing the merged tables. Each table is
+    represented by a key-value pair, where the key is the table name and the value is a pandas DataFrame. The recover
+    key in the dictionary contains a list of recover values.
+    """
+    tables = create_table(None, company)
     for o in confs['threading_tables'].values():
         tables['saving'] = pd.concat([tables['saving'], o['saving']], axis=0)
         tables['fund'] = pd.concat([tables['fund'], o['fund']], axis=0)

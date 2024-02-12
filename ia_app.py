@@ -38,7 +38,7 @@ for t in threads_list:
     t.join()
 
 # merge tables from threads
-tables = merge_tables(confs)
+tables = merge_tables(confs, 'ia')
 
 # record file names
 files = get_csv_file_names(confs['csvs'])

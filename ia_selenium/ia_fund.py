@@ -78,3 +78,4 @@ def scrape(wd, fund, investment_type, block):
                 row[-3] = atof(row[-3].replace(',', ''))
                 row[-4] = atof(row[-4].replace(',', ''))
                 fund.loc[len(fund)] = row
+
