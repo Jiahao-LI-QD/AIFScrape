@@ -1,10 +1,8 @@
-import os
 import threading
 
 from ia_selenium import ia_scrap
-from ia_selenium.ia_contract_list import click_contract_list
 from ia_selenium.ia_scrap import ia_threading
-from ia_selenium.split_excel import split_excel
+from utilities.split_excel import read_excel
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
 from utilities.tables_utilities import merge_tables
@@ -21,9 +19,9 @@ from utilities.tables_utilities import merge_tables
 #  }
 confs = get_confs('IA')
 
-contract_files = split_excel(confs['contract_path'],
-                             confs['csvs'],
-                             confs['thread_number'])
+contract_files = read_excel(confs['contract_path'],
+                            confs['csvs'],
+                            confs['thread_number'])
 
 threads_list = []
 
