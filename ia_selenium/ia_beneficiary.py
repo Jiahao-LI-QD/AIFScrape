@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 
 
 def scrape(wd, beneficiary):
@@ -31,10 +32,10 @@ def scrape(wd, beneficiary):
 
         if 'RESP' in Beneficiary_Category:
             result = [Contract_number, Beneficiary_Category, None, items[0], float(items[1].strip('%')) / 100, None,
-                      None, items[-1], 'IA']
+                      None, items[-1], companies['iA']]
 
         else:
             result = [Contract_number, Beneficiary_Category, None, items[0], float(items[1].strip('%')) / 100, items[2],
-                      items[-1], None, 'IA']
+                      items[-1], None, companies['iA']]
 
         beneficiary.loc[len(beneficiary)] = result

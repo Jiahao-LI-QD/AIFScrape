@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 from selenium.webdriver.common.by import By
 from cl_selenium import cl_selectors
+from utilities.companys import companies
 
 
 def scrape_transactions(wd, transactions):
@@ -61,7 +62,7 @@ def scrape_transactions(wd, transactions):
         new_row = [contract_number]
         new_row.extend(unique_list)
         new_row.pop()
-        new_row.append('CL')
+        new_row.append(companies['CL'])
         transactions.loc[len(transactions)] = new_row
 
     return transactions

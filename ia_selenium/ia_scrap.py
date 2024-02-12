@@ -14,6 +14,7 @@ from dbutilities import db_method
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
+from utilities.companys import companies
 from utilities.tables_utilities import create_table
 from utilities.web_driver import driver_setup
 
@@ -160,7 +161,7 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
     print("=========================")
 
 
-def save_csv_to_db(control_unit, files, tables):
+def save_csv_to_db(control_unit, files, tables, company):
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -170,7 +171,7 @@ def save_csv_to_db(control_unit, files, tables):
     else:
         print("Database connection successful!")
         batch_size = 1000
-        db_method.save_recover(cursor, zip(tables['recover'], [None] * len(tables['recover'])))
+        db_method.save_recover(cursor, company, zip(tables['recover'], [None] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
         db_method.delete_current_contract(cursor)
 
@@ -248,7 +249,7 @@ def ia_threading(confs, thread_name, contract_file):
 
     # create dataframes for all the tables
     # and get contract numbers for ia company
-    tables = create_table(contract_file, 'IA', True)
+    tables = create_table(contract_file, companies['iA'], True)
     # do - while loop to traverse through the contract numbers until no exception
     iteration_time = 0
     while iteration_time < confs['maximum_iteration']:

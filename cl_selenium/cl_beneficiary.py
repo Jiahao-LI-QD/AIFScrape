@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from cl_selenium import cl_selectors
+from utilities.companys import companies
 
-def scrape_beneficiary(wd,beneficiary):
+
+def scrape_beneficiary(wd, beneficiary):
     """
     Defines a function named scrape that is used to scrape "beneficiary" data from a web page using Selenium.
     :param wd: chrome webdriver set up in cl_scrap.driver_setup.
@@ -25,9 +27,9 @@ def scrape_beneficiary(wd,beneficiary):
 
     for b_row in b_item:
         row = [b.text for b in b_row.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_row'])]
-        result = [contract_number, None, row[0], row[1], row[-1], row[2], row[3], None, 'CL']
+        result = [contract_number, None, row[0], row[1], row[-1], row[2], row[3], None, companies['CL']]
 
-        beneficiary.loc[len(beneficiary)]=result
+        beneficiary.loc[len(beneficiary)] = result
 
     wd.execute_script("window.scrollTo(0, 0)")
 
