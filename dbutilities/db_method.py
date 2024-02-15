@@ -96,48 +96,112 @@ def save_participant(cursor, values):
 
 
 def save_beneficiary(cursor, values):
+    """
+    insert multiple rows of data into the "Beneficiary_Current" table in a database. It takes a cursor object and a list
+    of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times with
+    different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Beneficiary_Current" table.
+    :return: None. The rows of data specified in the values list are inserted into the "Beneficiary_Current" table.
+    """
     cursor.executemany("insert into Beneficiary_Current values (" + parameter_len(dbColumns.beneficiary_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_saving_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Saving_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Saving_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Saving_History" table.
+    """
     cursor.executemany("insert into Saving_History values (" + parameter_len(dbColumns.saving_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_client_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Client_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Client_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Client_History" table.
+    """
     cursor.executemany("insert into Client_History values (" + parameter_len(dbColumns.client_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_contract_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Contract_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Contract_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Contract_History" table.
+    """
     cursor.executemany("insert into Contract_History values (" + parameter_len(dbColumns.contract_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_transaction_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Transaction_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Transaction_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Transaction_History" table.
+    """
     cursor.executemany("insert into Transaction_History values (" + parameter_len(dbColumns.transaction_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_fund_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Fund_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Fund_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Fund_History" table.
+    """
     cursor.executemany("insert into Fund_History values (" + parameter_len(dbColumns.fund_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_participant_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Participant_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Participant_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Participant_History" table.
+    """
     cursor.executemany("insert into Participant_History values (" + parameter_len(dbColumns.participant_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_beneficiary_history(cursor, values):
+    """
+    used to insert multiple rows of data into a table called "Beneficiary_History" in a database. It takes a cursor object
+    and a list of values as inputs, and uses the executemany method to execute an SQL insert statement multiple times
+    with different sets of values. After all the insertions are completed, the changes are committed to the database.
+    :param cursor: cursor object that allows interaction with the database.
+    :param values: A list of tuples, each represents a row of data to be inserted into the "Beneficiary_History" table.
+    :return: The rows of data specified in the values list are inserted into the "Beneficiary_History" table.
+    """
     cursor.executemany("insert into Beneficiary_History values (" + parameter_len(dbColumns.beneficiary_columns) +
                        "getdate())", values)
     cursor.commit()
