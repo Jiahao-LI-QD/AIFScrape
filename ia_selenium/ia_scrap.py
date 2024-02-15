@@ -67,7 +67,7 @@ def save_csv_to_db(control_unit, files, tables, company):
     else:
         print("Database connection successful!")
         batch_size = 1000
-        db_method.save_recover(cursor, company,
+        db_method.save_recover(cursor,
                                zip(tables['recover'], [None] * len(tables['recover']),
                                    [company] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
