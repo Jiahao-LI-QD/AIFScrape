@@ -29,6 +29,7 @@ sleep(10)
 
 client = pd.DataFrame(columns=dbColumns.client_columns)
 test_client = cl_client.scrape_client(wd, client)
+pd.set_option('display.max_columns', None)
 print(test_client)
 
 participant = pd.DataFrame(columns=dbColumns.participant_columns)
@@ -43,7 +44,6 @@ sleep(5)
 
 holdings = pd.DataFrame(columns=dbColumns.fund_columns)
 test_holdings = cl_holdings.scrape_holdings(wd, holdings)
-pd.set_option('display.max_columns', None)
 print(test_holdings)
 
 transactions = pd.DataFrame(columns=dbColumns.transaction_columns)

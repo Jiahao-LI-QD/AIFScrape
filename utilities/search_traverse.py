@@ -62,7 +62,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # set up the driver and start IA page
             ia_app(wd, confs['parameters'], thread_name)
         case 'CL':
-            # TODO: initialize the ia_web and selenium paths
+            # TODO: initialize the cl_web and selenium paths, finish log in and go to client page.
             pass
 
     # generate the log file name to record the exceptions
