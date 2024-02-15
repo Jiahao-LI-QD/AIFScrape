@@ -162,6 +162,32 @@ def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
 
 
 def save_csv_to_db(control_unit, files, tables, company):
+    """
+    This code defines a function that saves data from CSV files into a database.
+    The function takes in control unit, files, tables, and company as inputs.
+    :param control_unit: an integer representing the control unit for determining which data to save
+    :param files: a dictionary containing the file paths for different tables
+    :param tables: a dictionary containing the table names for different dataframes containing data
+                   scraped from website
+    :param company: a string representing the company name
+    :return: nothing return but current and history tables in database are updated
+
+    Workflow:
+    1.The function attempts to establish a database connection.
+    2.If the connection is successful, the function prints a success message and sets the batch size for data insertion.
+    3.The function saves recover data into the database.
+    4.The function saves contract history data into the database.
+    5.The function deletes the current contract data for the specified company.
+    6.Depending on the control unit value, the function performs different actions:
+    - If the control mode is 1, the function deletes the current fund and saving data,
+      and saves new fund and saving history data.
+    - If the control mode is 2, the function deletes the current transaction data and
+      saves new transaction history data.
+    - If the control mode is 4, the function deletes the current participant, beneficiary,
+      and client data, and saves new participant, beneficiary, and client history data.
+    7.The function saves the current tables accordingly based on the control mode.
+    8.The function closes the database cursor.
+    """
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -219,6 +245,26 @@ def save_csv_to_db(control_unit, files, tables, company):
 
 ## fetch contracts_current table from SQL Server to compare with newly downloaded contract excel file.
 def check_new_clients(tables):
+    """
+    This method  checks for new clients in a database table. It connects to the database,
+    retrieves the list of existing clients, and compares it with a list of contract numbers
+    from a CSV file. It then identifies the new clients by finding the contract numbers that
+    are not present in the database. The function returns a list of the contract numbers of the new clients.
+    :param tables: A dictionary containing the tables used in the function. It should have a key 'contracts'
+                   with a value of a pandas DataFrame representing the CSV data.
+    :return: list of the contract numbers of the new clients.
+
+    Workflow:
+    1.Attempt to establish a connection to the database.
+    2.If the connection is successful, print a success message and proceed.
+    3.Retrieve the list of existing clients from the database.
+    4.Extract the contract numbers from the retrieved data and store them in the clients list.
+    5.Remove duplicate rows based on the 'Contract_number' column from the 'contracts'.
+    6.Create a new DataFrame new_client_df containing only the rows with contract numbers that are not present
+      in the clients list.
+    7.Store the contract numbers of the new clients in the tables dictionary under the key 'new_contracts'.
+    8.Close the database cursor.
+    """
     try:
         cursor = connection.connect_db().cursor()
     except Exception as e:
