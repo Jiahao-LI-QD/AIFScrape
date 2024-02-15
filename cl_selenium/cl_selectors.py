@@ -73,6 +73,7 @@ def holdings_paths():
         'statement_date': '//*[@id="1"]/div[1]/div[6]/div/div[2]/span',
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/'
                            'div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
+        'guarantee': '//*[@id="1"]/div[1]/div[5]/div/div[2]/span',
         'holdings_button': '//*[@id="2__item"]',
         'table_xpath': '//*[@id="2"]/article/div[2]/div[5]/table/tbody',
         'text': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/'
