@@ -2,12 +2,12 @@ import threading
 
 from ia_selenium import ia_scrap
 from ia_selenium.ia_contract_list import click_contract_list
-from ia_selenium.ia_scrap import ia_threading
 from utilities.companys import companies
 from utilities.split_excel import read_excel
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
 from utilities.tables_utilities import merge_tables
+from utilities.thread_generator import thread_generator
 
 # {
 #         'csvs': csvs,
@@ -32,8 +32,9 @@ threads_list = []
 # for loop generate threads
 for i in range(confs['thread_number']):
     thread_name = 'thread' + str(i)
-    threads_list.append(threading.Thread(target=ia_threading,
-                                         args=(confs, 'thread' + str(i), contract_files[i],)))
+    threads_list.append(threading.Thread(target=thread_generator,
+                                         args=(confs, 'thread' + str(i), companies['iA'], contract_files[i],)))
+
 # start and join threads
 for t in threads_list:
     t.start()
@@ -53,4 +54,4 @@ save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
 ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
 
 # request contract list for next time
-click_contract_list(confs)
+# click_contract_list(confs)

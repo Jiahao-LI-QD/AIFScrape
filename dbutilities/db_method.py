@@ -128,6 +128,6 @@ def read_clients(db_cursor):
     db_cursor.execute("SELECT * FROM Client_Current")
 
 
-def save_recover(cursor, company, values):
-    cursor.executemany("insert into Error_contract_number_History values (?, ?, " + company + ", getdate())", values)
+def save_recover(cursor, values):
+    cursor.executemany("insert into Error_contract_number_History values (?, ?, ?, getdate())", values)
     cursor.commit()
