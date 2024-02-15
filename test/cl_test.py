@@ -43,12 +43,13 @@ sleep(5)
 
 holdings = pd.DataFrame(columns=dbColumns.fund_columns)
 test_holdings = cl_holdings.scrape_holdings(wd, holdings)
+pd.set_option('display.max_columns', None)
 print(test_holdings)
 
 transactions = pd.DataFrame(columns=dbColumns.transaction_columns)
 test_transactions = cl_transactions.scrape_transactions(wd, transactions)
 print(test_transactions)
-# pd.set_option('display.max_columns', None)
+
 # print(test_holdings.head())
 # wd.find_element(By.XPATH, paths['holdings']).click()
 # sleep(5)
