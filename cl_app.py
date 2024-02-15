@@ -1,8 +1,10 @@
 import threading
 
 from cl_selenium.cl_policies import get_serial_number
+from utilities.dataframe_format import adjust_dataframe
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
+from utilities.split_excel import split_dataframe
 from utilities.tables_utilities import merge_tables
 
 # {
@@ -19,29 +21,33 @@ confs = get_confs('CL')
 
 # get dataframe with policies
 policies = get_serial_number(confs)
-# split contract file into n part according to thread number
-# TODO : split <policies> into n parts
 
+# adjust dataframe format to fit iA contracts Excel.
+policies = adjust_dataframe(policies)
+
+# split contract file into n part according to thread number
+split_policies = split_dataframe(policies, confs['thread_number'])
+print(policies)
 
 # TODO create thread
 # 1. cl_threading
 # 2. scrape_traverse for cl?
-
-# list for store threads
-threads_list = []
-
-# for loop generate threads
-for i in range(confs['thread_number']):
-    thread_name = 'thread' + str(i)
-    # threads_list.append(threading.Thread(target=ia_threading,
-    #                                      args=()))
-
-# start and join threads
-for t in threads_list:
-    t.start()
-for t in threads_list:
-    t.join()
-
+#
+# # list for store threads
+# threads_list = []
+#
+# # for loop generate threads
+# for i in range(confs['thread_number']):
+#     thread_name = 'thread' + str(i)
+#     # threads_list.append(threading.Thread(target=ia_threading,
+#     #                                      args=()))
+#
+# # start and join threads
+# for t in threads_list:
+#     t.start()
+# for t in threads_list:
+#     t.join()
+#
 # # merge tables from threads
 # tables = merge_tables(confs, 'CL')
 #

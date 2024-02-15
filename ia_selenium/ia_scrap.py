@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
 from utilities.web_driver import driver_setup
+from utilities.companys import companies
 
 
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
@@ -24,7 +25,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
     :return:
 
     Flow:
-    1. navigates to the specified web URL using the webdriver.
+    1.Navigates to the specified web URL using the webdriver.
     2.It checks if the login button is present on the page. If not, it means the user is already logged in.
     3.If the login button is present, the function calls the ia_login function to perform the login process
     4.After logging in, the function waits for the cookie consent button to be clickable and clicks it to accept the cookies.
@@ -70,25 +71,28 @@ def save_csv_to_db(control_unit, files, tables, company):
         db_method.save_recover(cursor, company,
                                zip(tables['recover'], [None] * len(tables['recover']), [company] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
-        db_method.delete_current_contract(cursor)
+        db_method.delete_current_contract(cursor, company)
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            db_method.delete_current_fund_saving(cursor)
+            db_method.delete_current_fund_saving(cursor, company)
 
             # save saving & fund history
             db_method.save_data_into_db(cursor, files['saving'], db_method.save_saving_history, batch_size)
             db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            db_method.delete_current_transaction(cursor)
+            db_method.delete_current_transaction(cursor, company)
 
             # save transaction history
             db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction_history, batch_size)
         if control_unit & 4:
             # delete current client information related tables for later insertion
-            db_method.delete_current_participant_beneficiary(cursor)
-            db_method.delete_current_client(cursor)
+            # if there is no new contracts
+            # otherwise just extend the table
+            # if not new_contracts:
+            db_method.delete_current_participant_beneficiary(cursor, company)
+            db_method.delete_current_client(cursor, company)
             db_method.save_data_into_db(cursor, files['client'], db_method.save_client_history, batch_size)
             db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant_history, batch_size)
             db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary_history, batch_size)
@@ -113,6 +117,26 @@ def save_csv_to_db(control_unit, files, tables, company):
 
 ## fetch contracts_current table from SQL Server to compare with newly downloaded contract excel file.
 def check_new_clients(tables):
+    """
+    This method  checks for new clients in a database table. It connects to the database,
+    retrieves the list of existing clients, and compares it with a list of contract numbers
+    from a CSV file. It then identifies the new clients by finding the contract numbers that
+    are not present in the database. The function returns a list of the contract numbers of the new clients.
+    :param tables: A dictionary containing the tables used in the function. It should have a key 'contracts'
+                   with a value of a pandas DataFrame representing the CSV data.
+    :return: list of the contract numbers of the new clients.
+
+    Workflow:
+    1.Attempt to establish a connection to the database.
+    2.If the connection is successful, print a success message and proceed.
+    3.Retrieve the list of existing clients from the database.
+    4.Extract the contract numbers from the retrieved data and store them in the clients list.
+    5.Remove duplicate rows based on the 'Contract_number' column from the 'contracts'.
+    6.Create a new DataFrame new_client_df containing only the rows with contract numbers that are not present
+      in the clients list.
+    7.Store the contract numbers of the new clients in the tables dictionary under the key 'new_contracts'.
+    8.Close the database cursor.
+    """
     try:
         cursor = connection.connect_db().cursor()
     except Exception as e:
