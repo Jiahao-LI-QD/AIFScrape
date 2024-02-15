@@ -48,8 +48,8 @@ def scrape_holdings(wd, holdings):
     contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
     guarantee = wd.find_element(By.XPATH, paths['guarantee']).text
     text = wd.find_element(By.XPATH, paths['text']).text.split(' (', 1)
-    account_type = text[0]
-    investment_type = text[1][:-1] + guarantee
+    investment_type = text[0] + ' ' + guarantee
+    account_type = text[1][:-1]
     result = [formatted_date, contract_number, account_type, investment_type]
     sleep(1)
     # extracting table data from 'holdings' page
