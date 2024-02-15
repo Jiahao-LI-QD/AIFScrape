@@ -1,8 +1,4 @@
-import os.path
 import time
-import traceback
-
-import os
 from datetime import datetime
 
 from selenium.webdriver.common.by import By
@@ -14,8 +10,6 @@ from dbutilities import db_method
 from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
-from utilities.companys import companies
-from utilities.tables_utilities import create_table
 from utilities.web_driver import driver_setup
 
 
@@ -63,131 +57,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
             ia_app(wd, parameters, thread_name)
 
 
-def scrape_traverse(confs, tables, iteration_time, thread_name="Non-thread"):
-    # parameters setting
-
-    paths = ia_selectors.scrape_paths()
-    # keep contracts number if there is exception in the previous loop
-    if len(tables['recover']) == 0:
-        contracts = tables['contracts']
-    else:
-        contracts = tables['contracts'][tables['contracts']['Contract_number'].isin(tables['recover'])]
-    # clean the recover list
-    tables['recover'].clear()
-
-    # set up the driver and start IA page
-    wd = driver_setup(confs['parameters'])
-    ia_app(wd, confs['parameters'], thread_name)
-
-    # generate the log file name to record the exceptions
-    logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
-
-    # set uo the max reset count
-    max_reset_count = 50
-    max_error_reset_count = 5
-    # initialize the counters
-    loop_continuous_error = 0
-    driver_reset_count = 0
-    error_count = 0
-    with open(logfile, 'a') as log:
-        for index, row in contracts.iterrows():
-            # if the counter exceed the max values, restart the web driver
-            if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
-                wd.close()
-                wd = driver_setup(confs['parameters'])
-                ia_app(wd, confs['parameters'], thread_name)
-                loop_continuous_error = 0
-                driver_reset_count = 0
-            # if the website is in error page, get to the root url
-            if len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
-                print(f"{thread_name} Error happens: Website crash")
-                time.sleep(5)
-                wd.get(confs['parameters']['web_url'])
-            contract_number_ = row['Contract_number']
-            print(f"{thread_name} - {datetime.now()}: scrapping for contract number {contract_number_}")
-
-            try:
-                # go to clients and search for contract number
-                wd.find_element(By.XPATH, paths['myclient_button']).click()
-
-                wd.find_element(By.XPATH, paths['contract_number_input']).clear()
-
-                wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(contract_number_)
-
-                wd.find_element(By.XPATH, paths['search_button']).click()
-
-                if confs['control_unit'] & 1:
-                    ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
-                if confs['control_unit'] & 2:
-                    ia_transactions.scrape_transaction(wd, tables['transaction'], row['Contract_start_date'])
-                if confs['control_unit'] & 4:
-                    ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
-                                     contract_number_)
-                loop_continuous_error = 0
-                driver_reset_count += 1
-            except Exception as e:
-                loop_continuous_error += 1
-                error_count += 1
-                print(f"{thread_name} Error: Scrape interrupted on customer: {contract_number_}")
-                tables['recover'].append(contract_number_)
-
-                log.write(f"{thread_name} Error: Scrape interrupted on customer: {contract_number_}\n")
-                log.write(str(e))
-                log.write(traceback.format_exc())
-                log.write("=============================================================\n")
-
-    # save recovery list after current traverse
-    recovery = os.path.join(confs['csvs'], "recovery_list_" + thread_name + "_" + str(iteration_time) + ".txt")
-    with open(recovery, 'a') as f:
-        for item in tables['recover']:
-            # write each item on a new line
-            f.write(str(item) + '\n')
-
-    # remove records that there are exceptions
-    if confs['control_unit'] & 1:
-        tables['saving'] = tables['saving'][~tables['saving']['Contract_number'].isin(tables['recover'])]
-        tables['fund'] = tables['fund'][~tables['fund']['Contract_number'].isin(tables['recover'])]
-    if confs['control_unit'] & 2:
-        tables['transaction'] = tables['transaction'][~tables['transaction']['Contract_number'].isin(tables['recover'])]
-    if confs['control_unit'] & 4:
-        tables['beneficiary'] = tables['beneficiary'][~tables['beneficiary']['Contract_number'].isin(tables['recover'])]
-        tables['participant'] = tables['participant'][~tables['participant']['Contract_number'].isin(tables['recover'])]
-        tables['client'] = tables['client'][~tables['client']['Contract_number_as_owner'].isin(tables['recover'])]
-
-    wd.close()
-
-    print(f"{thread_name} {datetime.now()}: scrape traverse complete")
-    print(f"{thread_name} Total error during scrape: {error_count}")
-    print("=========================")
-
-
 def save_csv_to_db(control_unit, files, tables, company):
-    """
-    This code defines a function that saves data from CSV files into a database.
-    The function takes in control unit, files, tables, and company as inputs.
-    :param control_unit: an integer representing the control unit for determining which data to save
-    :param files: a dictionary containing the file paths for different tables
-    :param tables: a dictionary containing the table names for different dataframes containing data
-                   scraped from website
-    :param company: a string representing the company name
-    :return: nothing return but current and history tables in database are updated
-
-    Workflow:
-    1.The function attempts to establish a database connection.
-    2.If the connection is successful, the function prints a success message and sets the batch size for data insertion.
-    3.The function saves recover data into the database.
-    4.The function saves contract history data into the database.
-    5.The function deletes the current contract data for the specified company.
-    6.Depending on the control unit value, the function performs different actions:
-    - If the control mode is 1, the function deletes the current fund and saving data,
-      and saves new fund and saving history data.
-    - If the control mode is 2, the function deletes the current transaction data and
-      saves new transaction history data.
-    - If the control mode is 4, the function deletes the current participant, beneficiary,
-      and client data, and saves new participant, beneficiary, and client history data.
-    7.The function saves the current tables accordingly based on the control mode.
-    8.The function closes the database cursor.
-    """
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -197,20 +67,22 @@ def save_csv_to_db(control_unit, files, tables, company):
     else:
         print("Database connection successful!")
         batch_size = 1000
-        db_method.save_recover(cursor, company, zip(tables['recover'], [None] * len(tables['recover'])))
+        db_method.save_recover(cursor,
+                               zip(tables['recover'], [None] * len(tables['recover']),
+                                   [company] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
-        db_method.delete_current_contract(cursor, companies['iA'])
+        db_method.delete_current_contract(cursor, company)
 
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            db_method.delete_current_fund_saving(cursor, companies['iA'])
+            db_method.delete_current_fund_saving(cursor, company)
 
             # save saving & fund history
             db_method.save_data_into_db(cursor, files['saving'], db_method.save_saving_history, batch_size)
             db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            db_method.delete_current_transaction(cursor, companies['iA'])
+            db_method.delete_current_transaction(cursor, company)
 
             # save transaction history
             db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction_history, batch_size)
@@ -219,8 +91,8 @@ def save_csv_to_db(control_unit, files, tables, company):
             # if there is no new contracts
             # otherwise just extend the table
             # if not new_contracts:
-            db_method.delete_current_participant_beneficiary(cursor, companies['iA'])
-            db_method.delete_current_client(cursor, companies['iA'])
+            db_method.delete_current_participant_beneficiary(cursor, company)
+            db_method.delete_current_client(cursor, company)
             db_method.save_data_into_db(cursor, files['client'], db_method.save_client_history, batch_size)
             db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant_history, batch_size)
             db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary_history, batch_size)
@@ -290,23 +162,6 @@ def check_new_clients(tables):
         cursor.close()
 
 
-def ia_threading(confs, thread_name, contract_file):
-    # start the ia company scrapy process
-
-    # create dataframes for all the tables
-    # and get contract numbers for ia company
-    tables = create_table(contract_file, companies['iA'], True)
-    # do - while loop to traverse through the contract numbers until no exception
-    iteration_time = 0
-    while iteration_time < confs['maximum_iteration']:
-        scrape_traverse(confs, tables, iteration_time, thread_name)
-        if len(tables['recover']) == 0:
-            break
-        iteration_time += 1
-    tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
-    confs['threading_tables'][thread_name] = tables
-
-
 def scrape_cleanup(tables):
     """
     removes rows from the 'contracts' table on the 'Contract_number' column that are present in the 'recover' table.
@@ -314,3 +169,21 @@ def scrape_cleanup(tables):
     :return: None, updated the 'contracts' table.
     """
     tables['contracts'] = tables['contracts'][~tables['contracts']['Contract_number'].isin(tables['recover'])]
+
+
+def ia_loop_actions(wd, paths, confs, contract_number, tables, start_date):
+    wd.find_element(By.XPATH, paths['myclient_button']).click()
+
+    wd.find_element(By.XPATH, paths['contract_number_input']).clear()
+
+    wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(contract_number)
+
+    wd.find_element(By.XPATH, paths['search_button']).click()
+
+    if confs['control_unit'] & 1:
+        ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
+    if confs['control_unit'] & 2:
+        ia_transactions.scrape_transaction(wd, tables['transaction'], start_date)
+    if confs['control_unit'] & 4:
+        ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
+                         contract_number)
