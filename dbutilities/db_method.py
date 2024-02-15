@@ -7,40 +7,89 @@ from dbutilities import dbColumns
 
 
 def parameter_len(columns):
+    """
+    This method returns a string that contains a comma-separated list of question marks,
+    with each question mark representing a parameter in the columns list.
+    :param columns: A list of column names.
+    :return: A string that contains a comma-separated list of question marks,
+             with each question mark representing a parameter in the columns list.
+    """
     return '?, ' * len(columns)
 
 
 def save_saving(cursor, values, company):
+    """
+    This function is used to save a list of values into a database table named "Saving_Current".
+    :param cursor: A database cursor object used to execute SQL statements.
+    :param values: A list of tuples representing the values to be inserted into the "Saving_Current" table.
+                   Each tuple should contain the values for each column in the table.
+    :param company: A string representing the name of the company.
+    :return: Nothing return. It saves the provided values into the "Saving_Current" table in the database.
+    """
     cursor.executemany("insert into Saving_Current values (" + parameter_len(dbColumns.saving_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_client(cursor, values):
+    """
+    This method is used to insert multiple rows of data into the "Client_Current" table in a database.
+    :param cursor: A cursor object that allows interaction with the database.
+    :param values: A list of tuples, where each tuple represents a row of data to be inserted into
+                   the "Client_Current" table.
+    :return: Nothing return. It inserts the rows of data into the "Client_Current" table in the database.
+    """
     cursor.executemany("insert into Client_Current values (" + parameter_len(dbColumns.client_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_contract(cursor, values):
+    """
+    This method is used to insert multiple rows of data into the "Contract_Current" table in a database.
+    :param cursor: A cursor object that allows interaction with the database.
+    :param values: A list of tuples, where each tuple represents a row of data to be inserted into the table.
+    :return: Nothing return. It inserts the provided values into the "Contract_Current" table in the database.
+    """
     cursor.executemany("insert into Contract_Current values (" + parameter_len(dbColumns.contract_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_transaction(cursor, values):
+    """
+    This method is used to insert multiple rows of transaction data into a database table.
+    :param cursor: A cursor object used to execute SQL statements.
+    :param values: A list of tuples, where each tuple represents a row of transaction data.
+    :return: Nothing return. It inserts the provided values into the "Transaction_Current" table in the database.
+    """
     cursor.executemany("insert into Transaction_Current values (" + parameter_len(dbColumns.transaction_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_fund(cursor, values):
+    """
+    This method is used to insert multiple rows of data into the "Fund_Current" table in a database.
+    :param cursor: A cursor object that allows interaction with the database.
+    :param values:  A list of tuples, where each tuple represents a row of data to be inserted into
+                    the "Fund_Current" table. Each tuple should contain the values for the columns in the table.
+    :return: Nothing return. The rows of data are inserted into the "Fund_Current" table in the database.
+    """
     cursor.executemany("insert into Fund_Current values (" + parameter_len(dbColumns.fund_columns) +
                        "getdate())", values)
     cursor.commit()
 
 
 def save_participant(cursor, values):
+    """
+    This method is used to insert multiple rows of data into the "Participant_Current" table in a database.
+    :param cursor: A database cursor object.
+    :param values: A list of rows to be inserted into the "Participant_Current" table. Each row should be
+                   a tuple or list containing the values for each column in the table.
+    :return: Nothing return.  It inserts the rows specified in the values parameter into the
+                              "Participant_Current" table in the database.
+    """
     cursor.executemany("insert into Participant_Current values (" + parameter_len(dbColumns.participant_columns) +
                        "getdate())", values)
     cursor.commit()
