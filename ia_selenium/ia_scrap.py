@@ -11,7 +11,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities import connection
 from ia_selenium import ia_selectors
 from utilities.web_driver import driver_setup
-from utilities.companys import companies
 
 
 def ia_app(wd, parameters, thread_name="Main", recursive=0):
@@ -69,7 +68,8 @@ def save_csv_to_db(control_unit, files, tables, company):
         print("Database connection successful!")
         batch_size = 1000
         db_method.save_recover(cursor, company,
-                               zip(tables['recover'], [None] * len(tables['recover']), [company] * len(tables['recover'])))
+                               zip(tables['recover'], [None] * len(tables['recover']),
+                                   [company] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
         db_method.delete_current_contract(cursor, company)
 
