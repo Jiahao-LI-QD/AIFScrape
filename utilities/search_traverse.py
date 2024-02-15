@@ -5,6 +5,7 @@ from datetime import datetime
 
 from selenium.webdriver.common.by import By
 
+from cl_selenium import cl_selectors, cl_scrap
 from ia_selenium import ia_selectors
 from ia_selenium.ia_scrap import ia_app, ia_loop_actions
 from utilities.companys import companies
@@ -62,8 +63,10 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # set up the driver and start IA page
             ia_app(wd, confs['parameters'], thread_name)
         case 'CL':
-            # TODO: initialize the cl_web and selenium paths, finish log in and go to client page.
-            pass
+            paths = cl_selectors.login_paths()
+            # set up the driver and start CL page
+            cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
+            # initialize the cl_web and selenium paths, finish log in and go to client page.
 
     # generate the log file name to record the exceptions
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
@@ -85,8 +88,8 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                     case 'iA':
                         ia_app(wd, confs['parameters'], thread_name)
                     case 'CL':
-                        # TODO: initialize the app
-                        pass
+                        cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
+                        # initialize the app
 
                 loop_continuous_error = 0
                 driver_reset_count = 0
