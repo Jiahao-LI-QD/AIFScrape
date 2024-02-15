@@ -27,7 +27,7 @@ policies = adjust_dataframe(policies)
 
 # split contract file into n part according to thread number
 split_policies = split_dataframe(policies, confs['thread_number'])
-print(policies)
+print(split_policies)
 
 # TODO create thread
 # 1. cl_threading

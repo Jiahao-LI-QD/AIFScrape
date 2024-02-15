@@ -65,4 +65,7 @@ def scrape_transactions(wd, transactions):
         new_row.append(companies['CL'])
         transactions.loc[len(transactions)] = new_row
 
+    transactions['Transaction_type'], transactions['Fundcode'] =\
+        (transactions['Fundcode'], transactions['Transaction_type'])
+
     return transactions
