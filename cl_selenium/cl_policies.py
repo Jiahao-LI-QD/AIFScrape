@@ -58,9 +58,9 @@ def get_serial_number(confs):
     wd.find_element(By.XPATH, paths['filter_button']).click()
 
     # remove subtotals
-    wd.find_element(By.XPATH, paths['subtotal_button']).click()
+    # wd.find_element(By.XPATH, paths['subtotal_button']).click()
     # remove grand totals
-    wd.find_element(By.XPATH, paths['grand_total_button']).click()
+    # wd.find_element(By.XPATH, paths['grand_total_button']).click()
     # At the beginning of loop there is no last-serial number
     policies = pd.DataFrame(columns=['Name', 'policy_number', 'fund_name', 'account_type', 'advisor'])
     last_serial = ''

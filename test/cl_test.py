@@ -24,7 +24,7 @@ traverse_paths = cl_selectors.traverse_paths()
 sleep(1)
 wd.find_element(By.XPATH, traverse_paths['search_field']).send_keys(310127600)
 sleep(2)
-wd.find_element(By.XPATH, traverse_paths['search_button']).click()
+wd.find_element(By.XPATH, traverse_paths['policy_submit']).click()
 sleep(10)
 
 client = pd.DataFrame(columns=dbColumns.client_columns)

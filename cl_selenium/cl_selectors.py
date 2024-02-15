@@ -22,8 +22,9 @@ def traverse_paths():
     return {
         'search_field': '//*[@id="178:0"]',
         'test_Account': '410351753',
-        'search_button': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[2]',
+        'policy_submit': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[2]',
         'holdings': '//*[@id="2__item"]',
+        'summary_table': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]'
     }
 
 
@@ -45,8 +46,8 @@ def client_paths():
         'client_c3': {
             'c3_main': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[4]',
             'c3_row': './div/div/div/div'
-        }
-
+        },
+        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a'
     }
 
 
@@ -93,7 +94,7 @@ def transaction_paths():
         'date_apply': '//*[@id="4"]/article/div[2]/div[1]/div/span[2]/button[1]',
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
-        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a'
+        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a',
     }
 
 
