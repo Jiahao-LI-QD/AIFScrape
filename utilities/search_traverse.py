@@ -6,6 +6,7 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 
 from cl_selenium import cl_selectors, cl_scrap
+from cl_selenium.cl_scrap import cl_loop_actions
 from ia_selenium import ia_selectors
 from ia_selenium.ia_scrap import ia_app, ia_loop_actions
 from utilities.companys import companies
@@ -109,8 +110,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                     case 'iA':
                         ia_loop_actions(wd, paths, confs, contract_number_, tables, row['Contract_start_date'])
                     case 'CL':
-                        # TODO: follow the ia_loop_actions, put the action of CL into one method
-                        pass
+                        cl_loop_actions(wd, paths, confs, contract_number_, tables)
 
                 loop_continuous_error = 0
                 driver_reset_count += 1

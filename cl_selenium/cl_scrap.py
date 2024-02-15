@@ -4,11 +4,18 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from cl_selenium import cl_selectors
+from cl_selenium import cl_selectors, cl_holdings, cl_transactions, cl_client, cl_participant, cl_beneficiary
 
 
 # Login for Canada Life Advisor Workspace
 def login(wd, user, password):
+    """
+
+    :param wd:
+    :param user:
+    :param password:
+    :return:
+    """
     paths = cl_selectors.login_paths()
     wait = WebDriverWait(wd, 15)
     wait.until(EC.presence_of_element_located((By.XPATH, paths['username'])))
@@ -20,7 +27,7 @@ def login(wd, user, password):
     print(f"user : {user} login successful!")
 
 
-def ia_loop_actions(wd, paths, confs, contract_number, tables, start_date):
+def cl_loop_actions(wd, paths, confs, contract_number, tables):
     """
 
     :param wd:
@@ -28,21 +35,23 @@ def ia_loop_actions(wd, paths, confs, contract_number, tables, start_date):
     :param confs:
     :param contract_number:
     :param tables:
-    :param start_date:
     :return:
     """
-    wd.find_element(By.XPATH, paths['myclient_button']).click()
+    # search policy number and go into account page
+    wd.find_element(By.XPATH, paths['search_field']).send_keys(contract_number)
+    time.sleep(2)
+    wd.find_element(By.XPATH, paths['policy_submit']).click()
 
-    wd.find_element(By.XPATH, paths['contract_number_input']).clear()
-
-    wd.find_element(By.XPATH, paths['contract_number_input']).send_keys(contract_number)
-
-    wd.find_element(By.XPATH, paths['search_button']).click()
+    # wait for policy home page to be loaded
+    wait = WebDriverWait(wd, 15)
+    wait.until(EC.presence_of_element_located((By.XPATH, paths['summary_table'])))
+    time.sleep(1)
 
     if confs['control_unit'] & 1:
-        ia_investment.scrape_investment(wd, tables['fund'], tables['saving'])
+        cl_holdings.scrape_holdings(wd, tables['fund'])
     if confs['control_unit'] & 2:
-        ia_transactions.scrape_transaction(wd, tables['transaction'], start_date)
+        cl_transactions.scrape_transactions(wd, tables['transaction'])
     if confs['control_unit'] & 4:
-        ia_client.scrape(wd, tables['client'], tables['beneficiary'], tables['participant'],
-                         contract_number)
+        cl_client.scrape_client(wd, tables['client'])
+        cl_participant.scrape_participant(wd, tables['participant'])
+        cl_beneficiary.scrape_beneficiary(wd, tables['beneficiary'])

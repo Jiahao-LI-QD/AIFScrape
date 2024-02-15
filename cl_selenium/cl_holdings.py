@@ -51,9 +51,9 @@ def scrape_holdings(wd, holdings):
     investment_type = text[0] + ' ' + guarantee
     account_type = text[1][:-1]
     result = [formatted_date, contract_number, account_type, investment_type]
-    sleep(1)
     # extracting table data from 'holdings' page
     wd.find_element(By.XPATH, paths['holdings_button']).click()
+    sleep(1)
 
     # loading table data
     table_element = wd.find_elements(By.XPATH, paths['table_xpath'])
@@ -82,5 +82,3 @@ def scrape_holdings(wd, holdings):
             holdings.loc[len(holdings)] = final
             # for column data under same category:
             row_data = [category]
-
-    return holdings

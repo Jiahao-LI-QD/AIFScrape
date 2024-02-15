@@ -3,13 +3,16 @@ import pandas as pd
 from dbutilities import dbColumns
 
 
-def create_table(file_path, company_name, thread=False):
+def create_table(contract_info, company_name, thread=False):
     """
     creating empty dataframes for different tables and initializing an empty list.
     It also reads contract numbers from an Excel file if the thread parameter is True.
 
     :param company_name: the company name for the tables
-    :param file_path: The path to the Excel file containing contract numbers.
+    :param contract_info:
+        in iA: The path to the Excel file containing contract numbers.
+        in CL: The dataframe which holds the contract(policy) information.
+        in EQ: ...
     :param thread: A boolean flag indicating whether the function is being called in a threaded context. Default is False.
     :return: "contracts" table
 
@@ -34,12 +37,12 @@ def create_table(file_path, company_name, thread=False):
     match company_name:
         case 'iA':
             if thread:
-                contracts = pd.read_excel(file_path)
+                contracts = pd.read_excel(contract_info)
                 contracts.columns = dbColumns.contract_columns
             else:
                 contracts = pd.DataFrame(columns=dbColumns.contract_columns)
         case 'CL':
-            # TODO
+            contracts = contract_info
             pass
         case _:
             print("Error: Company for table is not specified")
