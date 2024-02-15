@@ -10,8 +10,22 @@ from utilities.get_account import account
 def get_confs(company):
     """
     This method get all the configurations for a given company
-    :param company:
-    :return:
+    :param company: (string) The name of the company for which configurations are needed.
+    :return: a dictionary containing various parameters and settings.
+
+    Workflow:
+    1.The function first calls the get_control function to retrieve the control mode, maximum iteration,
+      thread number, and contract file from the command line arguments.
+    2.It then uses a match statement to determine the appropriate configuration file based on the company name.
+    3.If the company name is not recognized, it prints an error message and exits the program.
+    4.The function calls the account function to retrieve the parameters for the specified company.
+    5.It calls the generate_date_csv_confs function to generate the date and CSV directory for saving the app result.
+    6.If the company is 'iA' and no contract file is provided, it calls the save_contract_list function
+      to download and save the contract list.
+    7.The function constructs a dictionary containing the CSV directory, parameters, control unit, maximum iteration,
+      date today, threading tables, and thread number.
+    8.If the company is 'iA', it adds the contract file and contract path to the dictionary.
+    9.The dictionary is returned as the output of the function.
     """
     control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
     # Get required parameters for ia_app

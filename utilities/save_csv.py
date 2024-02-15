@@ -5,6 +5,16 @@ from utilities.companys import companies
 
 
 def save_table_into_csv(control_unit, tables, files, company):
+    """
+    This method saves different tables into CSV files based on the value of control_unit and the specified company.
+    :param control_unit: an integer of the control mode. Each mode corresponds to a specific table to be saved.
+    :param tables: a dictionary containing the tables to be saved.
+                   The keys are the table names and the values are the table data.
+    :param files: a dictionary containing the file names for each table to be saved.
+                  The keys are the table names and the values are the file names.
+    :param company: a string representing the company name.
+    :return: nothing return, but new csv files of dataframe scraped from website saved.
+    """
     print("Saving to CSVS")
     if control_unit & 1:
         tables['fund'].to_csv(files['fund'])
@@ -23,7 +33,13 @@ def save_table_into_csv(control_unit, tables, files, company):
 
 
 def get_csv_file_names(path):
+    """
+    This method returns a dictionary that maps specific file names to their corresponding paths.
+    :param path: (string) The path to the directory where the CSV files are located.
+    :return: the dictionary mapping file names to their paths.
+    """
     return {
+        # The full path is obtained by joining the path with the specific file name
         'contracts': os.path.join(path, 'ia_contracts.csv'),
         'fund': os.path.join(path, 'ia_funds.csv'),
         'saving': os.path.join(path, 'ia_savings.csv'),
