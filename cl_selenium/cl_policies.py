@@ -37,8 +37,8 @@ def get_serial_number(confs):
     """
     # setup driver and login to the policies table
     wd = driver_setup(confs['parameters'], confs['head_mode'])
-    wd.get(confs['parameters']['policies_url'])
     login(wd, confs['parameters']['username'], confs['parameters']['password'])
+    wd.get(confs['parameters']['policies_url'])
     paths = policies_paths()
 
     # clear filter

@@ -23,8 +23,9 @@ def login(wd, user, password):
     wait.until(EC.presence_of_element_located((By.XPATH, paths['username'])))
     wd.find_element(By.XPATH, paths['username']).send_keys(user)
     wd.find_element(By.XPATH, paths['password']).send_keys(password)
-    time.sleep(1)
+    time.sleep(2)
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
+    wait.until(EC.presence_of_element_located((By.XPATH, paths['page_load'])))
 
     print(f"user : {user} login successful!")
 
@@ -53,6 +54,11 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
     scrape_participant, and scrape_beneficiary functions from the respective modules to scrape data from the web page.
     """
     # search policy number and go into account page
+    paths = cl_selectors.traverse_paths()
+    wait = WebDriverWait(wd, 15)
+    wait.until(EC.presence_of_element_located((By.XPATH, paths['page_load'])))
+    time.sleep(1)
+
     wd.find_element(By.XPATH, paths['search_field']).send_keys(contract_number)
     time.sleep(2)
     wd.find_element(By.XPATH, paths['policy_submit']).click()
