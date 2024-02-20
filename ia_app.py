@@ -45,7 +45,7 @@ for t in threads_list:
 tables = merge_tables(confs, companies['iA'])
 
 # record file names
-files = get_csv_file_names(confs['csvs'])
+files = get_csv_file_names(confs['csvs'], companies['iA'])
 
 # save tables into csv files
 save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
