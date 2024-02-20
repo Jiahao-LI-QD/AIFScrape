@@ -32,7 +32,9 @@ def scrape_client(wd, client):
     wd.find_element(By.XPATH, paths['client_account']).click()
     sleep(5)
 
-    wd.find_element(By.XPATH, paths['client_hide']).click()
+    if wd.find_element(By.XPATH, paths['client_kind']).text=='Individual':
+        wd.find_element(By.XPATH, paths['client_hide']).click()
+        province = wd.find_element(By.XPATH, paths['client_province']).text
     c_item1 = wd.find_elements(By.XPATH, paths['client_c1']['c1_main'])
     for c_item in c_item1:
         c1 = [c.text.split('\n', 2)[1] for c in c_item.find_elements(By.XPATH, paths['client_c1']['c1_row'])]
@@ -41,7 +43,7 @@ def scrape_client(wd, client):
     for c_item in c_item2:
         c2 = [c.text.split('\n', 1)[1] for c in c_item.find_elements(By.XPATH, paths['client_c2']['c2_row'])]
         # print(c2)
-    province = wd.find_element(By.XPATH, paths['client_province']).text
+
     # print(province)
     address = wd.find_element(By.XPATH, paths['client_address']).text
     # print(address)
@@ -50,8 +52,11 @@ def scrape_client(wd, client):
     for c_item in c_item3:
         c3 = [c.text for c in c_item.find_elements(By.XPATH, paths['client_c3']['c3_row'])]
         # print(c3)
-    result = [c1[0], None, None, c2[0], c1[-1], address, None, None, province, None, c3[2], c3[-1], None, c3[1], c3[0],
+    if wd.find_element(By.XPATH, paths['client_kind']).text == 'Individual':
+        result = [c1[0], None, None, c2[0], c1[-1], address, None, None, province, None, c3[2], c3[-1], None, c3[1], c3[0],
               None,contract_number, companies['CL']]
+    else:
+        result=[c1[0],None,None,c1[-1],None,address,None,None,c2[0],None,None,None,None,c3[0],None,None,contract_number, companies['CL']]
 
     # print(result)
     client.loc[len(client)] = result
