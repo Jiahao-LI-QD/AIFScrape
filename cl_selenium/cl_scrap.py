@@ -10,11 +10,12 @@ from cl_selenium import cl_selectors, cl_holdings, cl_transactions, cl_client, c
 # Login for Canada Life Advisor Workspace
 def login(wd, user, password):
     """
+    responsible for logging in to a website using the provided username and password.
+    :param wd: The WebDriver object that represents the browser session, initiated in web_driver.py.
+    :param user: The username to be used for logging in, initiated in get_confs.py.
+    :param password: The password to be used for logging in, initiated in get_confs.py.
+    :return: does not return any value. print user login info.
 
-    :param wd:
-    :param user:
-    :param password:
-    :return:
     """
     paths = cl_selectors.login_paths()
     wait = WebDriverWait(wd, 15)
@@ -29,13 +30,26 @@ def login(wd, user, password):
 
 def cl_loop_actions(wd, paths, confs, contract_number, tables):
     """
+    performs a series of actions on a web page: searches for the contract number, waits for the policy home page to load
+    , and then performs different actions based on the configurations. These actions include scraping holdings,
+    transactions, client information, participant information, and beneficiary information from the web page.
+    :param wd: The WebDriver object that represents the browser session, initiated in web_driver.py.
+    :param paths: A dictionary containing XPaths to different elements on the web page.
+    :param confs: A dictionary containing configurations for the function.
+    :param contract_number: The contract number to search for on the web page.
+    :param tables: A dictionary containing names of tables to store scraped data.
+    :return: does not return any value. It performs actions on the web page and scrapes data into the provided tables.
 
-    :param wd:
-    :param paths:
-    :param confs:
-    :param contract_number:
-    :param tables:
-    :return:
+    Workflow:
+    1. The function searches for the contract number by locating the search field element using the XPath provided.
+    2. After a short delay, the function clicks the submit button to initiate the search.
+    3. The function waits for the policy home page to load by waiting for the presence of the summary table element.
+    4. If the first control unit is enabled (bitwise AND with 1), the function calls the scrape_holdings function from
+    the cl_holdings module to scrape holdings data from the web page.
+    5. If the second control unit is enabled (bitwise AND with 2), the function calls the scrape_transactions function
+    from the cl_transactions module to scrape transactions data from the web page.
+    6. If the third control unit is enabled (bitwise AND with 4), the function calls the scrape_client,
+    scrape_participant, and scrape_beneficiary functions from the respective modules to scrape data from the web page.
     """
     # search policy number and go into account page
     wd.find_element(By.XPATH, paths['search_field']).send_keys(contract_number)
