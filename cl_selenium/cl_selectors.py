@@ -5,6 +5,15 @@ def login_paths():
         'password': '//*[@id="pass-input-id"]',
         'web_url': 'https://lifeco.my.site.com/workspace/s/login/'
     }
+def client_paths():
+    return {
+        'contract_specifications': '//*[@id="Specifications"]/a',
+        'personal_information': '//*[@id="content"]/div[3]/table[2]/tbody/tr[4]/td[2]/a',
+        'table_client': {
+            'main_client': '//*[@id="search_content"]/div/div[3]/table/tbody/tr',
+            'row_client': './td[2]'
+        }
+    }
 
 
 def fund_paths():
