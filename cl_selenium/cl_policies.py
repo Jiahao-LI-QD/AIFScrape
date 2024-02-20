@@ -69,7 +69,7 @@ def get_serial_number(confs):
         last_serial, ended = loop_list(wd, paths, policies, last_serial)
         if ended:
             break
-    policies.to_csv(os.path.join(confs['csvs'], "cl_policies.csv"))
+    policies.to_csv(os.path.join(confs['csvs'], "CL_policies.csv"))
     wd.close()
     return policies
 
