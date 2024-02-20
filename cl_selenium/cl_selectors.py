@@ -26,8 +26,14 @@ def fund_paths():
 def traverse_paths():
     return {
         'search_field': '//*[@id="178:0"]',
+        'dropdown_layer': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li',
         'policy_submit': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[2]',
+        'policy_search': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[1]',
+        'search_sort': '/html/body/div[3]/div/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[1]/div/div[1]/div/div[2]/div/button',
+        'sort_status': '/html/body/div[3]/div/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[1]/div/div[1]/div/div[2]/div/div/ul/li[7]/a/span',
+        'correct_policy': '/html/body/div[3]/div/div[1]/div/div[2]/div/div/div/div[2]/div/div[2]/div[2]/div/table/tbody/tr[1]/td[1]/a',
         'holdings': '//*[@id="2__item"]',
+        'summary_button': '//*[@id="1__item"]',
         'summary_table': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]',
         'page_load': '/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div/c-w-page-title/div'
     }
