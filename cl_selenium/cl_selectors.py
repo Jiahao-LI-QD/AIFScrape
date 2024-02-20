@@ -7,6 +7,9 @@ def login_paths():
     }
 
 
+
+
+
 def fund_paths():
     return {
         'statement_date': '//*[@id="1"]/div[1]/div[6]/div/div[2]/span',

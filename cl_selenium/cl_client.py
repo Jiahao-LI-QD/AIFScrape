@@ -32,7 +32,8 @@ def scrape_client(wd, client):
     wd.find_element(By.XPATH, paths['client_account']).click()
     sleep(5)
 
-    wd.find_element(By.XPATH, paths['client_hide']).click()
+    if len(wd.find_element(By.XPATH, paths['client_hide']))>0:
+        wd.find_element(By.XPATH, paths['client_hide']).click()
     c_item1 = wd.find_elements(By.XPATH, paths['client_c1']['c1_main'])
     for c_item in c_item1:
         c1 = [c.text.split('\n', 2)[1] for c in c_item.find_elements(By.XPATH, paths['client_c1']['c1_row'])]
