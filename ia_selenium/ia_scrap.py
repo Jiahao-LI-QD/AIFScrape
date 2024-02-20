@@ -197,6 +197,20 @@ def scrape_cleanup(tables):
 
 
 def ia_loop_actions(wd, paths, confs, contract_number, tables, start_date):
+    """
+    This method performs a series of actions using the Selenium WebDriver. It takes in various inputs such
+    as the WebDriver object, paths to different elements on the webpage, configurations, contract number,
+    tables, and start date. Based on the configurations, it performs different actions like scraping investment
+    data, scraping transaction data, and scraping client data.
+
+    :param wd: The Selenium WebDriver object.
+    :param paths: A dictionary containing XPaths to different elements on the webpage.
+    :param confs: A dictionary containing configurations.
+    :param contract_number: The contract number.
+    :param tables: A dictionary containing tables to store scraped data.
+    :param start_date: The start date for scraping transaction data.
+    :return: Nothing return. database tables updated.
+    """
     wd.find_element(By.XPATH, paths['myclient_button']).click()
 
     wd.find_element(By.XPATH, paths['contract_number_input']).clear()
