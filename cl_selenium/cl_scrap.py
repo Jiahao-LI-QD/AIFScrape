@@ -26,6 +26,7 @@ def login(wd, user, password):
     time.sleep(2)
     wd.find_element(By.XPATH, paths['sign_in_button']).click()
     wait.until(EC.presence_of_element_located((By.XPATH, paths['page_load'])))
+    time.sleep(2)
 
     print(f"user : {user} login successful!")
 
@@ -55,10 +56,11 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
     """
     # search policy number and go into account page
     paths = cl_selectors.traverse_paths()
-    wait = WebDriverWait(wd, 15)
-    wait.until(EC.presence_of_element_located((By.XPATH, paths['page_load'])))
+    # wait = WebDriverWait(wd, 15)
+    # wait.until(EC.presence_of_element_located((By.XPATH, paths['page_load'])))
     time.sleep(1)
 
+    wd.find_element(By.XPATH, paths['search_field']).clear()
     wd.find_element(By.XPATH, paths['search_field']).send_keys(contract_number)
     time.sleep(2)
     wd.find_element(By.XPATH, paths['policy_submit']).click()
