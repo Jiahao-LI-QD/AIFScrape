@@ -60,4 +60,3 @@ save_table_into_csv(confs['control_unit'], tables, files, companies['CL'])
 # save csv files into db
 # TODO: save CL database
 # 1 client duplication problem?
-
