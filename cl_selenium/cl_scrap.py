@@ -63,11 +63,26 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
     wd.find_element(By.XPATH, paths['search_field']).clear()
     wd.find_element(By.XPATH, paths['search_field']).send_keys(contract_number)
     time.sleep(2)
-    wd.find_element(By.XPATH, paths['policy_submit']).click()
+
+    # there are duplicate policies, need to find the active one out of them.
+    dropdown_list = wd.find_elements(By.XPATH, paths['dropdown_layer'])
+    if len(dropdown_list) < 3:
+        wd.find_element(By.XPATH, paths['policy_submit']).click()
+    else:
+        wd.find_element(By.XPATH, paths['policy_search']).click()
+        wait = WebDriverWait(wd, 15)
+        wait.until(EC.presence_of_element_located((By.XPATH, paths['search_sort'])))
+        time.sleep(1)
+
+        wd.find_element(By.XPATH, paths['search_sort']).click()
+        wd.find_element(By.XPATH, paths['sort_status']).click()
+        wd.find_element(By.XPATH, paths['search_sort']).click()
+        wd.find_element(By.XPATH, paths['sort_status']).click()
+        wd.find_element(By.XPATH, paths['correct_policy']).click()
 
     # wait for policy home page to be loaded
     wait = WebDriverWait(wd, 15)
-    wait.until(EC.presence_of_element_located((By.XPATH, paths['summary_table'])))
+    wait.until(EC.presence_of_element_located((By.XPATH, paths['summary_button'])))
     time.sleep(1)
 
     if confs['control_unit'] & 1:
