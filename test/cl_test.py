@@ -12,7 +12,7 @@ from utilities import get_account
 parameters = get_account.account("cl_conf")
 
 # set up Chrome driver
-wd = driver_setup(parameters, True)
+wd = driver_setup(confs)
 wd.get(parameters['web_url'])
 sleep(1)
 

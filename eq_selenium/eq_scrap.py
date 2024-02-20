@@ -11,7 +11,7 @@ from utilities.web_driver import driver_setup
 def login(confs):
 
     parameters = confs['parameters']
-    wd = driver_setup(parameters, confs['head_mode'])
+    wd = driver_setup(confs)
     wait = WebDriverWait(wd, 10)
     wd.get(parameters['login_url'])
     paths = eq_selectors.login_paths()
