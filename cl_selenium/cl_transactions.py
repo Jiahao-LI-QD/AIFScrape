@@ -62,7 +62,7 @@ def scrape_transactions(wd, transactions):
         new_row = [contract_number]
         new_row.extend(unique_list)
         new_row.pop()
+        new_row[-2] = float(new_row[-2].replace("$", ""))
+        new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
         new_row.append(companies['CL'])
         transactions.loc[len(transactions)] = new_row
-
-    return transactions

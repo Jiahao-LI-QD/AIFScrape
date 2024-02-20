@@ -58,6 +58,31 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
 
 
 def save_csv_to_db(control_unit, files, tables, company):
+    """
+    This method saves data from CSV files into a database. It performs various operations based on
+    the control_unit parameter to determine which tables to update or delete.
+
+    :param control_unit: an integer representing the control unit for determining which tables to update or delete
+    :param files: a dictionary containing file paths for different CSV files.
+    :param tables: a dictionary containing table names for different data types.
+    :param company: a string representing the company name.
+    :return: Nothing return. Tables in database are updated.
+
+    Workflow:
+    1.Connect to the database using the connection module.
+    2.If the connection is successful, set the batch_size (1000) for batch processing.
+    3.Save recover data into the database using the db_method.save_recover function.
+    4.Save contract history data into the database using the db_method.save_data_into_db function.
+    5.Delete the current contract data for the specified company.
+    6.If the control mode is 1, delete the current fund and saving data for the company.
+    7.Save saving and fund history data into the database.
+    8.If the control mode is 2, delete the current transaction data for the company.
+    9.Save transaction history data into the database.
+    10.If the control mode is 4, delete the current participant, beneficiary, and client data for the company.
+    11.Save client, participant, and beneficiary history data into the database.
+    12.Save current tables accordingly based on the control unit.
+    13.Close the database cursor.
+    """
     # change file read to file paths
     try:
         cursor = connection.connect_db().cursor()
@@ -172,6 +197,20 @@ def scrape_cleanup(tables):
 
 
 def ia_loop_actions(wd, paths, confs, contract_number, tables, start_date):
+    """
+    This method performs a series of actions using the Selenium WebDriver. It takes in various inputs such
+    as the WebDriver object, paths to different elements on the webpage, configurations, contract number,
+    tables, and start date. Based on the configurations, it performs different actions like scraping investment
+    data, scraping transaction data, and scraping client data.
+
+    :param wd: The Selenium WebDriver object.
+    :param paths: A dictionary containing XPaths to different elements on the webpage.
+    :param confs: A dictionary containing configurations.
+    :param contract_number: The contract number.
+    :param tables: A dictionary containing tables to store scraped data.
+    :param start_date: The start date for scraping transaction data.
+    :return: Nothing return. database tables updated.
+    """
     wd.find_element(By.XPATH, paths['myclient_button']).click()
 
     wd.find_element(By.XPATH, paths['contract_number_input']).clear()
