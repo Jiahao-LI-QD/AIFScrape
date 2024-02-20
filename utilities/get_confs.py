@@ -35,6 +35,8 @@ def get_confs(company):
                 parameters = account("ia_conf")
             case 'CL':
                 parameters = account("cl_conf")
+            case 'EQ':
+                parameters = account("eq_conf")
             case _:
                 print("No Such Company！ Will Exit!")
                 exit()
@@ -44,7 +46,7 @@ def get_confs(company):
 
     date_today, csvs = generate_date_csv_confs(parameters, company)
 
-    if company == companies['iA'] and contract_file is None:
+    if company == companies['iA'] and contract_file is None and contract_file != '_':
         contract_file = save_contract_list(parameters, date_today)
 
     result = {
