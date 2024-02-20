@@ -13,8 +13,10 @@ def login(wd, user, password):
     wd.find_element(By.XPATH, paths['continue_button']).click()
     time.sleep(1)
     actions = ActionChains(wd)
-    password = wd.find_element(By.XPATH, paths['password'])
-    actions.move_to_element(password).perform()
-    password.click()
+
+    wd.find_element(By.XPATH, paths['password']).send_keys(password)
+    login_button = wd.find_element(By.XPATH, paths['login_button'])
+    actions.move_to_element(login_button).perform()
+    login_button.click()
 
     print(f"user : {user} login successful!")
