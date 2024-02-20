@@ -56,7 +56,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
     tables['recover'].clear()
 
     # set up the driver
-    wd = driver_setup(confs['parameters'])
+    wd = driver_setup(confs['parameters'], confs['head_mode'])
 
     match company:
         case 'iA':
@@ -84,7 +84,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # if the counter exceed the max values, restart the web driver
             if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
                 wd.close()
-                wd = driver_setup(confs['parameters'])
+                wd = driver_setup(confs['parameters'], confs['head_mode'])
                 match company:
                     case 'iA':
                         ia_app(wd, confs['parameters'], thread_name)

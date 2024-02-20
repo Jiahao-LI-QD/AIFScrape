@@ -34,18 +34,18 @@ def create_table(contract_info, company_name, thread=False):
               'recover': []}
 
     contracts = None
-    match company_name:
-        case 'iA':
-            if thread:
+    if thread:
+        match company_name:
+            case 'iA':
                 contracts = pd.read_excel(contract_info)
                 contracts.columns = dbColumns.contract_columns
-            else:
-                contracts = pd.DataFrame(columns=dbColumns.contract_columns)
-        case 'CL':
-            contracts = contract_info
-            pass
-        case _:
-            print("Error: Company for table is not specified")
+            case 'CL':
+                contracts = contract_info
+            case _:
+                print("Error: Company for table is not specified")
+    else:
+        contracts = pd.DataFrame(columns=dbColumns.contract_columns)
+
     # get contract numbers for ia company
 
     result['contracts'] = contracts

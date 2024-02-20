@@ -32,7 +32,7 @@ def save_table_into_csv(control_unit, tables, files, company):
     print("=========================")
 
 
-def get_csv_file_names(path):
+def get_csv_file_names(path, company):
     """
     This method returns a dictionary that maps specific file names to their corresponding paths.
     :param path: (string) The path to the directory where the CSV files are located.
@@ -40,11 +40,11 @@ def get_csv_file_names(path):
     """
     return {
         # The full path is obtained by joining the path with the specific file name
-        'contracts': os.path.join(path, 'ia_contracts.csv'),
-        'fund': os.path.join(path, 'ia_funds.csv'),
-        'saving': os.path.join(path, 'ia_savings.csv'),
-        'client': os.path.join(path, 'ia_clients.csv'),
-        'transaction': os.path.join(path, 'ia_transactions.csv'),
-        'beneficiary': os.path.join(path, 'ia_beneficiaries.csv'),
-        'participant': os.path.join(path, 'ia_participants.csv')
+        'contracts': os.path.join(path, company + '_contracts.csv'),
+        'fund': os.path.join(path, company + '_funds.csv'),
+        'saving': os.path.join(path, company + '_savings.csv'),
+        'client': os.path.join(path, company + '_clients.csv'),
+        'transaction': os.path.join(path, company + '_transactions.csv'),
+        'beneficiary': os.path.join(path, company + '_beneficiaries.csv'),
+        'participant': os.path.join(path, company + '_participants.csv')
     }

@@ -27,7 +27,7 @@ def get_confs(company):
     8.If the company is 'iA', it adds the contract file and contract path to the dictionary.
     9.The dictionary is returned as the output of the function.
     """
-    control_unit, maximum_iteration, thread_number, contract_file = get_control(sys.argv)
+    control_unit, maximum_iteration, thread_number, contract_file, head_mode = get_control(sys.argv)
     # Get required parameters for ia_app
     try:
         match company:
@@ -54,7 +54,8 @@ def get_confs(company):
         'maximum_iteration': maximum_iteration,
         'date_today': date_today,
         'threading_tables': {},
-        'thread_number': thread_number
+        'thread_number': thread_number,
+        'head_mode': head_mode
     }
 
     if company == companies['iA']:
@@ -78,6 +79,7 @@ def get_control(args):
     4: filename(Excel file)
     :param args: system arguments
     :return: control mode, iteration times, thread number and filename
+    5. head_mode: Web-driver runs with window if True. Default: False
 
     Workflow:
     1.Set the default control mode to 1.
@@ -95,7 +97,7 @@ def get_control(args):
     11.Set the default thread number to 1.
     12.If the length of args is greater than 3, set the thread number to be the third argument.
     13.If the length of args is greater than 4, assign the fourth argument to file_name.
-    14.Return the values of control, max_iteration, thread_number, and file_name as a tuple.
+    14.Return the values of control, max_iteration, thread_number, file_name and head_mode as a tuple.
     """
     control = 1
     if len(args) > 1:
@@ -124,13 +126,18 @@ def get_control(args):
 
     thread_number = 1
     file_name = None
+    head_mode = False
     if len(args) > 3:
         thread_number = int(args[3])
 
     if len(args) > 4:
         file_name = args[4]
 
-    return control, max_iteration, thread_number, file_name
+    if len(args) > 5:
+        if args[5].lower() in ['h', 'head']:
+            head_mode = True
+
+    return control, max_iteration, thread_number, file_name, head_mode
 
 
 def generate_date_csv_confs(parameters, company_name):
