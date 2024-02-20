@@ -47,6 +47,7 @@ def scrape(wd, fund, investment_type, block):
     if investment_type in ['TERMINATED', 'EMPTY']:
         row = [formatted_date, contract_number, account_type, investment_type]
         row.extend([None] * 7)
+        row.append(companies['iA'])
         fund.loc[len(fund)] = row
     else:
         tb = block.find_elements(By.XPATH, paths['table_body']['main_body'])

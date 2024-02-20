@@ -17,7 +17,7 @@ def parameter_len(columns):
     return '?, ' * len(columns)
 
 
-def save_saving(cursor, values, company):
+def save_saving(cursor, values):
     """
     This function is used to save a list of values into a database table named "Saving_Current".
     :param cursor: A database cursor object used to execute SQL statements.
