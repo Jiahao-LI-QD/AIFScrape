@@ -18,6 +18,7 @@ def login(wd, user, password):
 
     """
     paths = cl_selectors.login_paths()
+    wd.get(paths['web_url'])
     wait = WebDriverWait(wd, 15)
     wait.until(EC.presence_of_element_located((By.XPATH, paths['username'])))
     wd.find_element(By.XPATH, paths['username']).send_keys(user)
