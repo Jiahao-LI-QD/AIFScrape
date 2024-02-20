@@ -3,4 +3,5 @@ def login_paths():
         'continue_button': '//html/body/main/section/div/div/div/div/div/form/div[2]/button',
         'username': '//*[@id="username"]',
         'password': '//*[@id="password"]',
+        'login_button': '/html/body/main/section/div/div/div/form/div[2]/button'
     }
