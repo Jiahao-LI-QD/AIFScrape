@@ -3,7 +3,8 @@ def login_paths():
         'sign_in_button': '/html/body/div[3]/div[1]/div/div[2]/div/div/div/div[5]/button',
         'username': '//*[@id="email-input-id"]',
         'password': '//*[@id="pass-input-id"]',
-        'web_url': 'https://lifeco.my.site.com/workspace/s/login/'
+        'web_url': 'https://lifeco.my.site.com/workspace/s/login/',
+        'page_load': '/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div/c-w-page-title/div'
     }
 
 
@@ -22,10 +23,10 @@ def fund_paths():
 def traverse_paths():
     return {
         'search_field': '//*[@id="178:0"]',
-        'test_Account': '410351753',
         'policy_submit': '/html/body/div[3]/div/header/div[2]/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/ul/li[2]',
         'holdings': '//*[@id="2__item"]',
-        'summary_table': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]'
+        'summary_table': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]',
+        'page_load': '/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div/c-w-page-title/div'
     }
 
 
