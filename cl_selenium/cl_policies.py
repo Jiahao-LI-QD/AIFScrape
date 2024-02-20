@@ -36,7 +36,7 @@ def get_serial_number(confs):
     11. Save the policies table to csv file and return it
     """
     # setup driver and login to the policies table
-    wd = driver_setup(confs['parameters'], confs['head_mode'])
+    wd = driver_setup(confs)
     login(wd, confs['parameters']['username'], confs['parameters']['password'])
     wd.get(confs['parameters']['policies_url'])
     paths = policies_paths()

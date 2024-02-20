@@ -13,12 +13,12 @@ from ia_selenium import ia_selectors
 from utilities.web_driver import driver_setup
 
 
-def ia_app(wd, parameters, thread_name="Main", recursive=0):
+def ia_app(wd, confs, thread_name="Main", recursive=0):
     """
     Getting website, and logging in .
 
     :param wd: represents webdriver
-    :param parameters:"parameters" is getting from in ia_conf
+    :param confs: dictionary generated at the start of app
     :param thread_name: Name of the thread (default is "Main").
     :param recursive:Indicates the number of recursive attempts (default is 0).
     :return:
@@ -33,6 +33,7 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
     """
 
     # get the url and login
+    parameters = confs['parameters']
     try:
         paths = ia_selectors.scrape_paths()
         wd.get(parameters['web_url'])
@@ -50,11 +51,11 @@ def ia_app(wd, parameters, thread_name="Main", recursive=0):
         # print(traceback.format_exc())
         print(f"{thread_name}: Exception during login to IA, Will Try Again")
         if recursive < 5:
-            ia_app(wd, parameters, thread_name, recursive=(recursive + 1))
+            ia_app(wd, confs, thread_name, recursive=(recursive + 1))
         else:
             wd.close()
-            wd = driver_setup(parameters)
-            ia_app(wd, parameters, thread_name)
+            wd = driver_setup(confs)
+            ia_app(wd, confs, thread_name)
 
 
 def save_csv_to_db(control_unit, files, tables, company):

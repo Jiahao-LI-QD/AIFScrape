@@ -46,9 +46,6 @@ def get_confs(company):
 
     date_today, csvs = generate_date_csv_confs(parameters, company)
 
-    if company == companies['iA'] and contract_file is None and contract_file != '_':
-        contract_file = save_contract_list(parameters, date_today)
-
     result = {
         'csvs': csvs,
         'parameters': parameters,
@@ -59,6 +56,9 @@ def get_confs(company):
         'thread_number': thread_number,
         'head_mode': head_mode
     }
+
+    if company == companies['iA'] and contract_file is None and contract_file != '_':
+        contract_file = save_contract_list(result)
 
     if company == companies['iA']:
         result['contract_file'] = contract_file

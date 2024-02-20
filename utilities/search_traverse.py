@@ -56,18 +56,22 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
     tables['recover'].clear()
 
     # set up the driver
-    wd = driver_setup(confs['parameters'], confs['head_mode'])
+    wd = driver_setup(confs)
 
+    paths = {}
     match company:
         case 'iA':
             paths = ia_selectors.scrape_paths()
             # set up the driver and start IA page
-            ia_app(wd, confs['parameters'], thread_name)
+            ia_app(wd, confs, thread_name)
         case 'CL':
             paths = cl_selectors.login_paths()
             # set up the driver and start CL page
             cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
             # initialize the cl_web and selenium paths, finish log in and go to client page.
+        case '_':
+            print('Company: ' + company + 'Not Found! Will Terminate the loop')
+            exit()
 
     # generate the log file name to record the exceptions
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
@@ -84,10 +88,10 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # if the counter exceed the max values, restart the web driver
             if loop_continuous_error > max_error_reset_count or driver_reset_count >= max_reset_count:
                 wd.close()
-                wd = driver_setup(confs['parameters'], confs['head_mode'])
+                wd = driver_setup(confs)
                 match company:
                     case 'iA':
-                        ia_app(wd, confs['parameters'], thread_name)
+                        ia_app(wd, confs, thread_name)
                     case 'CL':
                         cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
                         # initialize the app
