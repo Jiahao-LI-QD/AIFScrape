@@ -65,4 +65,4 @@ def get_policies(confs):
     contracts = contracts.loc[contracts['Contract_number'].str.startswith('6')]
     contracts.reset_index(drop=True, inplace=True)
 
-    return export_all, contracts
+    return contracts
