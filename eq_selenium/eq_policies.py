@@ -1,3 +1,4 @@
+import os
 import time
 
 import pandas as pd
@@ -6,6 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from dbutilities.dbColumns import contract_columns
+from eq_selenium.eq_scrap import login
 from eq_selenium.eq_selectors import policy_paths
 
 
@@ -38,15 +40,29 @@ def get_advisor_codes(wd, paths):
     return result
 
 
-def get_policies(wd, confs):
+def get_policies(confs):
     paths = policy_paths()
     contracts = pd.DataFrame(columns=contract_columns)
+    wd = login(confs)
     # get policy url
     wd.get(confs['parameters']['policy_url'])
 
+    wait = WebDriverWait(wd, 15)
     # click search
-    wd.find_element(By.XPATH, paths['export_all']).click()
-    # TODO: get csv
-
+    wait.until(EC.element_to_be_clickable((By.XPATH, paths['search_button']))).click()
+    # click export
+    wait.until(EC.element_to_be_clickable((By.XPATH, paths['export_all']))).click()
+    time.sleep(5)
+    export_all = pd.read_csv(os.path.join(confs['csvs'], 'export_documents.csv'))
+    export_all[['First Name', 'Last Name']] = [x.rsplit(' ', 1) for x in export_all['Client Name']]
+    contracts['Applicant_last_name'] = export_all['Last Name']
+    contracts['Applicant_first_name'] = export_all['First Name']
+    contracts['Birthday'] = export_all['Birthdate']
+    contracts['Contract_number'] = str(export_all['Policy'])
+    contracts['Type'] = export_all['Registration']
+    contracts['Representative_name'] = export_all['Agent Name']
+    contracts['Product'] = export_all['Product']
+    contracts = contracts.loc[contracts['Contract_number'].str.startswith('6')]
+    contracts.reset_index(drop=True, inplace=True)
 
     return contracts
