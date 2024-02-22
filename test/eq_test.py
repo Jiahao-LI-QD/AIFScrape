@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from time import sleep
 import pandas as pd
@@ -23,44 +24,22 @@ investment_type = text[0]
 account_type = wd.find_element(By.XPATH, '//*[@id="policy_content"]/div[3]/div[1]/p[2]/span').text
 result = [statement_date, policy_number, account_type, investment_type]
 
-print(result)
-
 # determine if table exist
-elements = wd.find_elements(By.XPATH, '//*[@id="policy_details"]/div[3]/div/div[3]/div[1]/*')
-rows = elements[0].find_elements(By.XPATH, "./tr")
+# elements = wd.find_elements(By.XPATH, '//*[@id="policy_details"]/div[3]/div/div[3]/div[1]/*')
+
+i_table = wd.find_elements(By.XPATH, '//*[@id="policy_details"]/div[3]/div/div[3]/div[1]/table/tbody')
 row_data = []
-for element in elements:
-    if elements[2].tag_name == 'table':
-        category = None
-        for row in rows:
-            cells = row.find_elements(By.TAG_NAME, 'td')
-            if cells:
-                fund_name = cells[0].text
-                fund_code = cells[1].text
-                units = cells[3].text
-                unit_value = cells[4].text
-                value = cells[5].text
-                row_data.extend([fund_name, fund_code, units, unit_value, value, None])
-        row_data.append(category)
-        result.extend(row_data)
-
-    else:
-        # TODO finish and test code
-        category = 'TERMINATED'
-        row_data.append(category)
-        row_data.append([None] * 6)
-        result.extend(row_data)
-
+for r in i_table:
+    i_row = [i_row.text for i_row in r.find_elements(By.XPATH, './tr/td')]
+    raw = [i_row[i:i + 6][:2] + [i_row[i:i + 6][-2].replace('$', '')] + i_row[i:i + 6][-1:] for i in range(0, len(i_row), 6)]
+    for sublist in raw:
+        row_data.extend(raw)
 print(row_data)
-print(result)
-
-
-
-
-
-
-
-
-# extract row data from table
-
-
+# # check if it is a table
+# if elements[1].get_attribute('class') == "sm-show no-print":
+#     result.extend([None])
+# else:
+#     category = 'TERMINATED'
+#     result.append(category)
+#
+# print(result)
