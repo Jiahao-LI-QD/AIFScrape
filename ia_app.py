@@ -54,4 +54,4 @@ save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
 ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
 
 # request contract list for next time
-# click_contract_list(confs)
+click_contract_list(confs)

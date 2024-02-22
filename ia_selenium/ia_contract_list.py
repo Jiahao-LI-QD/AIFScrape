@@ -73,7 +73,6 @@ def save_contract_list(confs):
     11.Save the concatenated dataframe to the new filename as an Excel file.
     """
 
-    parameters = confs['parameters']
     paths = ia_selectors.save_path()
     wd = driver_setup(confs)
     ia_app(wd, confs)
@@ -84,20 +83,21 @@ def save_contract_list(confs):
     wd.find_element(By.XPATH, paths['next_button']).click()
     time.sleep(3)
     wd.find_element(By.XPATH, paths['file_link2']).click()
-    wd.find_element(By.XPATH, paths['download_file']).click()
+    if not confs['head_mode']:
+        wd.find_element(By.XPATH, paths['download_file']).click()
     time.sleep(3)
     filename2 = wd.find_element(By.XPATH, paths['download_file']).text
     time.sleep(3)
-    df1 = pd.read_excel(os.path.join(parameters['csv_path'], filename1))
-    df2 = pd.read_excel(os.path.join(parameters['csv_path'], filename2))
+    df1 = pd.read_excel(os.path.join(confs['csvs'], filename1))
+    df2 = pd.read_excel(os.path.join(confs['csvs'], filename2))
     df_total = pd.concat([df1, df2[2:]], ignore_index=True)
     result = confs['date_today'] + '_contract.xlsx'
-    new_filename = os.path.join(parameters['csv_path'], result)
+    new_filename = os.path.join(confs['csvs'], result)
     os.remove(
-        os.path.join(parameters['csv_path'], filename1)
+        os.path.join(confs['csvs'], filename1)
     )
     os.remove(
-        os.path.join(parameters['csv_path'], filename2)
+        os.path.join(confs['csvs'], filename2)
     )
     df_total.to_excel(str(new_filename), index=False)
     print('File saved')
