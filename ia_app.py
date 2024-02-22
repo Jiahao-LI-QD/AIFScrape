@@ -26,32 +26,32 @@ contract_files = read_excel(confs['contract_path'],
                             confs['csvs'],
                             confs['thread_number'])
 
-# list for store threads
-threads_list = []
-
-# for loop generate threads
-for i in range(confs['thread_number']):
-    thread_name = 'thread' + str(i)
-    threads_list.append(threading.Thread(target=thread_generator,
-                                         args=(confs, 'thread' + str(i), companies['iA'], contract_files[i],)))
-
-# start and join threads
-for t in threads_list:
-    t.start()
-for t in threads_list:
-    t.join()
-
-# merge tables from threads
-tables = merge_tables(confs, companies['iA'])
-
-# record file names
-files = get_csv_file_names(confs['csvs'], companies['iA'])
-
-# save tables into csv files
-save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
-
-# save csv files into db
-ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+# # list for store threads
+# threads_list = []
+#
+# # for loop generate threads
+# for i in range(confs['thread_number']):
+#     thread_name = 'thread' + str(i)
+#     threads_list.append(threading.Thread(target=thread_generator,
+#                                          args=(confs, 'thread' + str(i), companies['iA'], contract_files[i],)))
+#
+# # start and join threads
+# for t in threads_list:
+#     t.start()
+# for t in threads_list:
+#     t.join()
+#
+# # merge tables from threads
+# tables = merge_tables(confs, companies['iA'])
+#
+# # record file names
+# files = get_csv_file_names(confs['csvs'], companies['iA'])
+#
+# # save tables into csv files
+# save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
+#
+# # save csv files into db
+# ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
 
 # request contract list for next time
 # click_contract_list(confs)
