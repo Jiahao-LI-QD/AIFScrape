@@ -47,7 +47,7 @@ def get_policies(confs):
     # get policy url
     wd.get(confs['parameters']['policy_url'])
 
-    wait = WebDriverWait(wd, 15)
+    wait = WebDriverWait(wd, 30)
     # click search
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['search_button']))).click()
     # click export
@@ -58,11 +58,11 @@ def get_policies(confs):
     contracts['Applicant_last_name'] = export_all['Last Name']
     contracts['Applicant_first_name'] = export_all['First Name']
     contracts['Birthday'] = export_all['Birthdate']
-    contracts['Contract_number'] = str(export_all['Policy'])
+    contracts['Contract_number'] = export_all['Policy'].apply(lambda x : str(x))
     contracts['Type'] = export_all['Registration']
     contracts['Representative_name'] = export_all['Agent Name']
     contracts['Product'] = export_all['Product']
     contracts = contracts.loc[contracts['Contract_number'].str.startswith('6')]
     contracts.reset_index(drop=True, inplace=True)
-
+    wd.close()
     return contracts
