@@ -12,7 +12,7 @@ def driver_setup(confs):
     # Initializes Chrome options for the web driver.
     chrome_options = webdriver.ChromeOptions()
     # set the default download directory to the contracts folder
-    prefs = {'download.default_directory': confs['csv']}
+    prefs = {'download.default_directory': confs['csvs']}
     chrome_options.add_experimental_option('prefs', prefs)
     if not confs['head_mode']:
         chrome_options.add_argument('headless')
