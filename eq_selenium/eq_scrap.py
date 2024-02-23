@@ -12,7 +12,7 @@ def login(confs):
 
     parameters = confs['parameters']
     wd = driver_setup(confs)
-    wait = WebDriverWait(wd, 10)
+    wait = WebDriverWait(wd, 30)
     wd.get(parameters['login_url'])
     paths = eq_selectors.login_paths()
     wait.until(EC.presence_of_element_located((By.XPATH, paths['username'])))
