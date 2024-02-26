@@ -19,14 +19,27 @@ def scrape_beneficiary(wd,beneficiary):
 
     for b3_row in b_table:
         b3 = [b3.text for b3 in b3_row.find_elements(By.XPATH, paths['b_table']['b_row'])]
-        # print(b3)
+        print(len(b3))
+        print(b3)
+        print(b3[-1])
         for b in b3:
-            bs = b.split('\n')
-            b_item = [bi for index, bi in enumerate(bs) if index % 2 == 0]
-            if b_item[0] == '':
+            print(b)
+            if b=='':
                 continue
-            if len(b_item) > 2:
-                result = [contract_number[0], None, b_item[2], b_item[0], b_item[-1], None, None, None, companies['EQ']]
+            bs = b.split('\n')
+            print(bs)
+            if len(bs)%2==0:
+                b_item = [bi for index, bi in enumerate(bs) if index % 2 == 0]
+            else:
+                b_item=[bs[0],bs[3],bs[5]]
+
+            # print(b_item[0])
+            # print(b_item[-1])
+            # print(b_item[-2])
+            print(b_item)
+            print(len(b_item))
+            if len(b_item) > 1:
+                result = [contract_number[0], None, b_item[1], b_item[0], float(b_item[-1].strip('%'))/100, None, None, None, companies['EQ']]
             else:
                 result = [contract_number[0], None, None, b_item[0], None, None, None, None, companies['EQ']]
             return result

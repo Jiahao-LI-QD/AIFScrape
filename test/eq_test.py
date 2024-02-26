@@ -34,7 +34,7 @@ for index,contract in contracts.iterrows():
 
     client = pd.DataFrame(columns=dbColumns.client_columns)
     test_client = eq_client.scrape_client(wd, client)
-    # pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_columns', None)
     print(test_client)
 
     participant = pd.DataFrame(columns=dbColumns.participant_columns)
