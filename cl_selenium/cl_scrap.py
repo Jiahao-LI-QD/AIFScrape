@@ -70,15 +70,19 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
         wd.find_element(By.XPATH, paths['policy_submit']).click()
     else:
         wd.find_element(By.XPATH, paths['policy_search']).click()
-        wait = WebDriverWait(wd, 15)
-        wait.until(EC.presence_of_element_located((By.XPATH, paths['search_sort'])))
-        time.sleep(1)
+        time.sleep(6)
 
-        wd.find_element(By.XPATH, paths['search_sort']).click()
-        wd.find_element(By.XPATH, paths['sort_status']).click()
-        wd.find_element(By.XPATH, paths['search_sort']).click()
-        wd.find_element(By.XPATH, paths['sort_status']).click()
-        wd.find_element(By.XPATH, paths['correct_policy']).click()
+        # search for the account with the "Active" status , click for the policy number under "ASSET NAME".
+        table = wd.find_elements(By.XPATH, paths['table_data'])
+        for row in table:
+            rows_data = row.find_elements(By.XPATH, "./*")
+            result = [cell.text for cell in rows_data]
+            if 'Active' in result[0]:
+                wd.find_element(By.XPATH, paths['asset_name1']).click()
+            elif 'Active' in result[1]:
+                wd.find_element(By.XPATH, paths['asset_name2']).click()
+            elif 'Active' in result[2]:
+                wd.find_element(By.XPATH, paths['asset_name3']).click()
 
     # wait for policy home page to be loaded
     wait = WebDriverWait(wd, 15)
