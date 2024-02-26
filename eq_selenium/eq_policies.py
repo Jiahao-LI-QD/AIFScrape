@@ -2,6 +2,7 @@ import os
 import time
 
 import pandas as pd
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -47,12 +48,16 @@ def get_policies(confs):
     # get policy url
     wd.get(confs['parameters']['policy_url'])
 
-    wait = WebDriverWait(wd, 30)
+    wait = WebDriverWait(wd, 60)
     # click search
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['search_button']))).click()
     # click export
+    actions = ActionChains(wd)
+    export_all=wd.find_element(By.XPATH, paths['export_all'])
+    actions.move_to_element(export_all).perform()
+
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['export_all']))).click()
-    time.sleep(5)
+    time.sleep(10)
     export_all = pd.read_csv(os.path.join(confs['csvs'], 'export_documents.csv'))
     export_all[['First Name', 'Last Name']] = [x.rsplit(' ', 1) for x in export_all['Client Name']]
     contracts['Applicant_last_name'] = export_all['Last Name']
