@@ -31,21 +31,21 @@ for index,contract in contracts.iterrows():
     test_holdings = eq_holdings.scrape_holdings(wd, holdings)
     pd.set_option('display.max_columns', None)
     print(test_holdings)
-
-    client = pd.DataFrame(columns=dbColumns.client_columns)
-    test_client = eq_client.scrape_client(wd, client)
+    #
+    # client = pd.DataFrame(columns=dbColumns.client_columns)
+    # test_client = eq_client.scrape_client(wd, client)
+    # # pd.set_option('display.max_columns', None)
+    # print(test_client)
+    #
+    # participant = pd.DataFrame(columns=dbColumns.participant_columns)
+    # test_participant = eq_participant.scrape_participant(wd, participant)
     # pd.set_option('display.max_columns', None)
-    print(test_client)
-
-    participant = pd.DataFrame(columns=dbColumns.participant_columns)
-    test_participant = eq_participant.scrape_participant(wd, participant)
-    pd.set_option('display.max_columns', None)
-    print(test_participant)
-
-    beneficiary = pd.DataFrame(columns=dbColumns.beneficiary_columns)
-    test_beneficiary = eq_beneficiary.scrape_beneficiary(wd, beneficiary)
-    pd.set_option('display.max_columns', None)
-    print(test_beneficiary)
+    # print(test_participant)
+    #
+    # beneficiary = pd.DataFrame(columns=dbColumns.beneficiary_columns)
+    # test_beneficiary = eq_beneficiary.scrape_beneficiary(wd, beneficiary)
+    # pd.set_option('display.max_columns', None)
+    # print(test_beneficiary)
 
 
 

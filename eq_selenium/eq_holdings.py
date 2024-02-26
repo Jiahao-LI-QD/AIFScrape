@@ -1,3 +1,4 @@
+import re
 import time
 from datetime import datetime
 from time import sleep
@@ -23,8 +24,12 @@ def scrape_holdings(wd, holdings):
     paths = eq_selectors.holdings_paths()
     statement_date = datetime.today().strftime('%Y-%m-%d')
     text = wd.find_element(By.XPATH, paths['text']).text.split(' (', 1)
-    policy_number = text[1][:-1]
-    investment_type = text[0]
+    if len(text) > 1:
+        investment_type = text[0]
+        policy_number = text[1][:-1]
+    else:
+        investment_type = None
+        policy_number = ''.join(s.replace('(', '').replace(')', '') for s in text)
     account_type = wd.find_element(By.XPATH, paths['account_type']).text
     result = [statement_date, policy_number, account_type, investment_type]
 
