@@ -1,4 +1,5 @@
 import threading
+import time
 
 from ia_selenium import ia_scrap
 from ia_selenium.ia_contract_list import click_contract_list
@@ -38,6 +39,8 @@ for i in range(confs['thread_number']):
 # start and join threads
 for t in threads_list:
     t.start()
+    time.sleep(10)
+
 for t in threads_list:
     t.join()
 
