@@ -24,13 +24,20 @@ from dbutilities.dbColumns import contract_columns
 confs = get_confs('CL')
 
 # get dataframe with policies
-policies = get_serial_number(confs)
+# policies = get_serial_number(confs)
+
+policies = pd.read_csv('D:/cl_csvs/recovery_list.txt', header=None)
+policies.columns = ["policy_number"]
 
 # adjust dataframe format to fit iA contracts Excel.
-policies = adjust_dataframe(policies)
+# policies = adjust_dataframe(policies)
+
+num_rows = len(policies.index)
+recovery_policies = pd.DataFrame(index=range(num_rows), columns=contract_columns)
+recovery_policies['Contract_number'] = policies['policy_number']
 
 # split contract file into n part according to thread number
-split_policies = split_dataframe(policies, confs['thread_number'])
+split_policies = split_dataframe(recovery_policies, confs['thread_number'])
 
 # list for store threads
 threads_list = []
