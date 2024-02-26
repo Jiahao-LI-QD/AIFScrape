@@ -38,33 +38,10 @@ else:
     result.extend([None])
 
 final_result = []
-print(raw)
 for raw_list in raw:
     final_result.append(result + raw_list + [None, 'EQ'])
 
 df = pd.DataFrame(final_result, columns=dbColumns.fund_columns)
 print(df)
 
-# check if it is a table
-# if elements[1].get_attribute('class') == "sm-show no-print":
-#     result.extend([None])
-#     for element in elements:
-# #         details_block = element.find_elements(By.XPATH, './div[2]/*')
-# #         for row in details_block:
-# #             data = row.find_elements(By.XPATH, './*')
-# #             if len(data) > 1 and data[0].tag_name == 'p':
-# #                 for item in data:
-# #                     print("Value:", item.text)
-# #             # for item in data:
-# #             #     if len(data) > 1 and data[0].tag_name == 'p':
-# #             #         fund_name = item.text
-# #             #         print(fund_name)
-#
-#
-#
-#
-# else:
-#     category = 'TERMINATED'
-#     result.append(category)
 
-# print(result)
