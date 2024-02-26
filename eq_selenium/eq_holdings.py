@@ -1,18 +1,10 @@
-import re
-import time
+
 from datetime import datetime
-from time import sleep
-import pandas as pd
+
 
 from selenium.webdriver.common.by import By
 
 from eq_selenium import eq_scrap, eq_selectors
-from dbutilities import dbColumns
-from eq_selenium.eq_scrap import login
-from utilities.companys import companies
-from utilities.get_confs import get_confs
-from utilities.web_driver import driver_setup
-from utilities import get_account
 
 
 def scrape_holdings(wd, holdings):
