@@ -33,7 +33,6 @@ def ia_app(wd, confs, thread_name="Main", recursive=0):
     """
 
     # get the url and login
-    print(confs.keys())
     parameters = confs['parameters']
     try:
         paths = ia_selectors.scrape_paths()
