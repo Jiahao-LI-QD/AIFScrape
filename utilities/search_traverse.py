@@ -99,10 +99,15 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                 loop_continuous_error = 0
                 driver_reset_count = 0
             # iA: if the website is in error page, get to the root url
-            if company == companies['iA'] and len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
-                print(f"{thread_name} Error happens: Website crash")
-                time.sleep(5)
-                wd.get(confs['parameters']['web_url'])
+            try:
+                if company == companies['iA'] and len(wd.find_elements(By.XPATH, paths['error_page'])) != 0:
+                    print(f"{thread_name} Error happens: Website crash")
+                    time.sleep(5)
+                    wd.get(confs['parameters']['web_url'])
+            except Exception as e:
+                log.write(f"{thread_name} Error: iA - website page\n")
+                log.write(str(e))
+                log.write(traceback.format_exc())
 
             # set up the current contract number
             contract_number_ = row['Contract_number']

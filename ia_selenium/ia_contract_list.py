@@ -29,7 +29,7 @@ def click_contract_list(confs):
 
     """
     wd = driver_setup(confs)
-    ia_app(wd, confs['parameters'])
+    ia_app(wd, confs)
     paths = ia_selectors.download_path()
     wd.find_element(By.XPATH, paths['myclient_button']).click()
     wd.find_element(By.XPATH, paths['group']).click()
