@@ -83,5 +83,14 @@ def connect_db(port=None, user=None, password=None):
         exit()
     else:
         print("Property file load successful!")
-
-    return pyodbc.connect(connect_str(d["server"], d["database"],d["port"], d["user"], d["password"]))
+    connection_string = connect_str(d["server"], d["database"], d["port"], d["user"], d["password"])
+    print(connection_string)
+    # connection_string = (
+    #     "DRIVER={ODBC Driver 17 for SQL Server};"
+    #     "SERVER=192.168.2.63,51433;"  # Note the comma separating the IP and the port
+    #     "DATABASE=WebInformation;"  # Replace with your actual database name if it's not the default
+    #     "UID=Scraper;"
+    #     "PWD=123456;"  # Replace with your actual password
+    # )
+    # print(connection_string)
+    return pyodbc.connect(connection_string)

@@ -1,8 +1,6 @@
 !/dbutilities/dbProperties.properties
-!/dbutilities/dbtemplate.py
 
-!/confs
-!/confs/*
+!/keys
+!/keys/*
 
-!/test
-!/test/*
+!/confs/
