@@ -38,6 +38,8 @@ policies = adjust_dataframe(policies)
 
 # split contract file into n part according to thread number
 split_policies = split_dataframe(policies, confs['thread_number'])
+# split_policies = split_dataframe(recovery_policies, confs['thread_number'])
+
 
 # list for store threads
 threads_list = []

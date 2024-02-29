@@ -1,17 +1,11 @@
-import threading
-import time
-
-import pandas as pd
-
-from dbutilities.dbColumns import contract_columns
-from ia_selenium import ia_scrap
+from dbutilities import save_to_db
 from ia_selenium.ia_contract_list import click_contract_list
 from utilities.companys import companies
 from utilities.split_excel import read_excel, split_dataframe
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
 from utilities.tables_utilities import merge_tables
-from utilities.thread_generator import thread_generator, contracts_restart, threads_handler
+from utilities.thread_generator import contracts_restart, threads_handler
 
 # {
 #         'csvs': csvs,
@@ -58,7 +52,7 @@ files = get_csv_file_names(confs['csvs'], companies['iA'])
 save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
 
 # save csv files into db
-ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+save_to_db.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
 
 # request contract list for next time
 click_contract_list(confs)
