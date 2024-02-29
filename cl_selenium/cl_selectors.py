@@ -35,8 +35,8 @@ def traverse_paths():
         'asset_name2': '/html/body/div[3]/div/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div/div/table/tbody/tr[2]/td[1]/a',
         'asset_name3': '/html/body/div[3]/div/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div/div/table/tbody/tr[3]/td[1]/a',
         'holdings': '//*[@id="2__item"]',
-        'account_header': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]',
-        'account_error': 'slds-align_absolute-center error-title',
+        'account_header': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/ul/li[4]/div/div/div/span',
+        'account_error': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div/div/div[1]',
         # 'account_error': '<div class="slds-align_absolute-center error-title" data-aura-rendered-by="3187:0">Sorry, something went wrong</div>',
         'summary_table': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]',
         'page_load': '/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div/c-w-page-title/div'
