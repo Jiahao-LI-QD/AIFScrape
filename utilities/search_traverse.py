@@ -77,7 +77,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
     logfile = os.path.join(confs['csvs'], "error_log_" + thread_name + "_" + str(iteration_time) + ".txt")
 
     # set uo the max reset count
-    max_reset_count = 50
+    max_reset_count = 25
     max_error_reset_count = 5
     # initialize the counters
     loop_continuous_error = 0

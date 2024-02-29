@@ -84,7 +84,7 @@ def connect_db(port=None, user=None, password=None):
     else:
         print("Property file load successful!")
     connection_string = connect_str(d["server"], d["database"], d["port"], d["user"], d["password"])
-    print(connection_string)
+    # print(connection_string)
     # connection_string = (
     #     "DRIVER={ODBC Driver 17 for SQL Server};"
     #     "SERVER=192.168.2.63,51433;"  # Note the comma separating the IP and the port

@@ -16,6 +16,7 @@ def account(filename):
     6. Return the dictionary if all keys are present.
     """
 
+    #     with open(os.path.join(sys.path[1], "confs", filename)) as f:
     with open(os.path.join(sys.path[1], "confs", filename)) as f:
         lines = [line.rstrip('\n').split("=", 1) for line in f.readlines()]
         d = {key.strip(): value.strip() for key, value in lines}
