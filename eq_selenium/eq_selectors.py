@@ -56,3 +56,19 @@ def holdings_paths():
         'table_data': '//*[@id="policy_details"]/div[3]/div/div[3]/div[1]/table/tbody/tr/td'
 
     }
+
+
+def transactions_paths():
+    return {
+        'transaction_button': '//*[@id="Transactions"]',
+        'update_button': '//*[@id="update_period"]',
+        'start_date': '//*[@id="policy_content"]/div[3]/div[2]/p[2]',
+        'date_range': '//*[@id="periodSelection"]',
+        'from_month': '//*[@id="from_month"]',
+        'from_year': '//*[@id="from_year"]',
+        'to_month': '//*[@id="to_month"]',
+        'to_year': '//*[@id="to_year"]',
+        'no_transaction_alert': '//*[@id="no_transactions"]',
+        'rows': '//*[@id="policy_details"]/div[@class="Transactions"]/div/div[2]/div[2]/table/tbody/tr',
+        'columns': './*'
+    }
