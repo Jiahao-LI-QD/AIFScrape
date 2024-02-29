@@ -1,4 +1,6 @@
 import threading
+
+import dbutilities.save_to_db
 from ia_selenium import ia_scrap
 from ia_selenium.ia_contract_list import click_contract_list
 from utilities.companys import companies
@@ -50,7 +52,7 @@ files = get_csv_file_names(confs['csvs'], companies['iA'])
 save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
 
 # save csv files into db
-ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+dbutilities.save_to_db.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
 
 # request contract list for next time
 click_contract_list(confs)

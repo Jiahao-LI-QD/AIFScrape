@@ -1,6 +1,7 @@
 import threading
 
 from cl_selenium.cl_policies import get_serial_number
+from dbutilities.save_to_db import save_csv_to_db
 from utilities.companys import companies
 from utilities.dataframe_format import adjust_dataframe
 from utilities.get_confs import get_confs
@@ -55,5 +56,5 @@ files = get_csv_file_names(confs['csvs'], companies['CL'])
 save_table_into_csv(confs['control_unit'], tables, files, companies['CL'])
 
 # save csv files into db
-# TODO: save CL database
+save_csv_to_db(confs['control_unit'], files, tables, companies['CL'])
 # 1 client duplication problem?
