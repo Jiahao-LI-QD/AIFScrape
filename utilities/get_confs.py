@@ -59,10 +59,12 @@ def get_confs(company):
 
     if company == companies['iA'] and (contract_file is None or contract_file == '_'):
         contract_file = save_contract_list(result)
+        result['contract_path'] = os.path.join(result['csvs'], str(contract_file))
+    else:
+        result['contract_path'] = os.path.join(parameters['csv_path'], contract_file)
 
     if company == companies['iA']:
         result['contract_file'] = contract_file
-        result['contract_path'] = os.path.join(result['csvs'], contract_file)
     return result
 
 
