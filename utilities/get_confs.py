@@ -45,6 +45,9 @@ def get_confs(company):
         exit()
 
     date_today, csvs = generate_date_csv_confs(parameters, company)
+    thread_names = []
+    for i in range(thread_number):
+        thread_names.append('thread' + str(i))
 
     result = {
         'csvs': csvs,
@@ -52,9 +55,11 @@ def get_confs(company):
         'control_unit': control_unit,
         'maximum_iteration': maximum_iteration,
         'date_today': date_today,
-        'threading_tables': {},
+        'thread_tables': {},
         'thread_number': thread_number,
-        'head_mode': head_mode
+        'head_mode': head_mode,
+        'thread_status': {},
+        'thread_names': thread_names
     }
 
     if company == companies['iA'] and (contract_file is None or contract_file == '_'):
