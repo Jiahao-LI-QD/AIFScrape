@@ -15,8 +15,10 @@ def driver_setup(confs):
     prefs = {'download.default_directory': confs['csvs']}
     chrome_options.add_experimental_option('prefs', prefs)
     if not confs['head_mode']:
-        chrome_options.add_argument('user-agent=Chrome/122.0.6261.69')
+        # chrome_options.add_argument('user-agent=Chrome/122.0.6261.69')
         chrome_options.add_argument('headless')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--window-size=1920,1080')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
