@@ -1,14 +1,17 @@
 import threading
 import time
 
+import pandas as pd
+
+from dbutilities.dbColumns import contract_columns
 from ia_selenium import ia_scrap
 from ia_selenium.ia_contract_list import click_contract_list
 from utilities.companys import companies
-from utilities.split_excel import read_excel
+from utilities.split_excel import read_excel, split_dataframe
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
 from utilities.tables_utilities import merge_tables
-from utilities.thread_generator import thread_generator
+from utilities.thread_generator import thread_generator, contracts_restart, threads_handler
 
 # {
 #         'csvs': csvs,
@@ -26,39 +29,36 @@ confs = get_confs(companies['iA'])
 contract_files = read_excel(confs['contract_path'],
                             confs['csvs'],
                             confs['thread_number'])
-#
-# # list for store threads
-# threads_list = []
-#
-# # for loop generate threads
-# for i in range(confs['thread_number']):
-#     thread_name = 'thread' + str(i)
-#     threads_list.append(threading.Thread(target=thread_generator,
-#                                          args=(confs, 'thread' + str(i), companies['iA'], contract_files[i],)))
-#
-# # start and join threads
-# for t in threads_list:
-#     t.start()
-#     time.sleep(10)
-#
-# for t in threads_list:
-#     t.join()
-#
-# # TODO: find the crashed thread
-# # 1. restart
-# # 2. find what left start again
-#
-# # merge tables from threads
-# tables = merge_tables(confs, companies['iA'])
-#
-# # record file names
-# files = get_csv_file_names(confs['csvs'], companies['iA'])
-#
-# # save tables into csv files
-# save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
-#
-# # save csv files into db
-# ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
-#
-# # request contract list for next time
+
+# list for store threads
+threads_list = {}
+# store the current alive threads names
+current_list = []
+
+# for loop generate threads
+start_index = threads_handler(confs, threads_list, current_list, companies['iA'], contract_files)
+
+# find the crashed thread
+# 1. restart
+# 2. find what left start again
+while True:
+    contracts_left = contracts_restart(confs, contract_files, current_list)
+    if len(contracts_left) == 0:
+        break
+    contract_files = split_dataframe(contracts_left, confs['thread_number'])
+    threads_handler(confs, threads_list, current_list, companies['iA'], contract_files)
+
+# merge tables from threads
+tables = merge_tables(confs, companies['iA'])
+
+# record file names
+files = get_csv_file_names(confs['csvs'], companies['iA'])
+
+# save tables into csv files
+save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
+
+# save csv files into db
+ia_scrap.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+
+# request contract list for next time
 click_contract_list(confs)

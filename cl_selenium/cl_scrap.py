@@ -86,8 +86,13 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
 
     # wait for policy home page to be loaded
     wait = WebDriverWait(wd, 15)
-    wait.until(EC.presence_of_element_located((By.XPATH, paths['summary_button'])))
+    wait.until(EC.presence_of_element_located((By.XPATH, paths['account_header'])))
     time.sleep(1)
+
+    error_list = wd.find_elements(By.CLASS_NAME, paths['account_error'])
+    if len(error_list) > 0:
+        print("Inactive account, no info on workspace!")
+        return
 
     if confs['control_unit'] & 1:
         cl_holdings.scrape_holdings(wd, tables['fund'])
