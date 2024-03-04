@@ -9,10 +9,7 @@ def create_table(contract_info, company_name, thread=False):
     It also reads contract numbers from an Excel file if the thread parameter is True.
 
     :param company_name: the company name for the tables
-    :param contract_info:
-        in iA: The path to the Excel file containing contract numbers.
-        in CL: The dataframe which holds the contract(policy) information.
-        in EQ: ...
+    :param contract_info: Dataframe of the contract lists
     :param thread: A boolean flag indicating whether the function is being called in a threaded context. Default is False.
     :return: "contracts" table
 
@@ -33,16 +30,8 @@ def create_table(contract_info, company_name, thread=False):
               'client': pd.DataFrame(columns=dbColumns.client_columns),
               'recover': []}
 
-    contracts = None
     if thread:
-        match company_name:
-            case 'iA':
-                contracts = pd.read_excel(contract_info)
-                contracts.columns = dbColumns.contract_columns
-            case 'CL':
-                contracts = contract_info
-            case _:
-                print("Error: Company for table is not specified")
+        contracts = contract_info
     else:
         contracts = pd.DataFrame(columns=dbColumns.contract_columns)
 
@@ -65,7 +54,7 @@ def merge_tables(confs, company):
     key in the dictionary contains a list of recover values.
     """
     tables = create_table(None, company)
-    for o in confs['threading_tables'].values():
+    for o in confs['thread_tables'].values():
         tables['saving'] = pd.concat([tables['saving'], o['saving']], axis=0)
         tables['fund'] = pd.concat([tables['fund'], o['fund']], axis=0)
         tables['transaction'] = pd.concat([tables['transaction'], o['transaction']], axis=0)

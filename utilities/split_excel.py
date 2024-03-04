@@ -26,7 +26,7 @@ def read_excel(file_path, folder_path, num_chunks):
     5. Calculate chunk size.
     6. Save as separate Excel files.
     """
-    df = pd.read_excel(file_path).iloc[2:]
+    df = pd.read_excel(file_path, dtype=str).iloc[2:]
     df['Company'] = companies['iA']
     df.columns = dbColumns.contract_columns
     df = df.drop_duplicates(subset=['Contract_number'])
@@ -39,7 +39,8 @@ def read_excel(file_path, folder_path, num_chunks):
         full_path = os.path.join(folder_path, file_name)
         file_paths.append(full_path)
         split_dfs[i].to_excel(full_path, index=False)
-    return file_paths
+
+    return split_dfs
 
 
 def split_dataframe(df, num_chunks):
