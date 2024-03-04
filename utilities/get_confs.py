@@ -27,7 +27,7 @@ def get_confs(company):
     8.If the company is 'iA', it adds the contract file and contract path to the dictionary.
     9.The dictionary is returned as the output of the function.
     """
-    control_unit, maximum_iteration, thread_number, contract_file, head_mode = get_control(sys.argv)
+    control_unit, maximum_iteration, thread_number, contract_file, head_mode, delete_flag = get_control(sys.argv)
     # Get required parameters for ia_app
     try:
         match company:
@@ -58,6 +58,7 @@ def get_confs(company):
         'thread_tables': {},
         'thread_number': thread_number,
         'head_mode': head_mode,
+        'delete_flag': delete_flag,
         'thread_status': {},
         'thread_names': thread_names
     }
@@ -89,6 +90,7 @@ def get_control(args):
     :param args: system arguments
     :return: control mode, iteration times, thread number and filename
     5. head_mode: Web-driver runs with window if True. Default: False
+    6. delete_flag: delete the current data in SQL server if True. Default: True
 
     Workflow:
     1.Set the default control mode to 1.
@@ -106,7 +108,9 @@ def get_control(args):
     11.Set the default thread number to 1.
     12.If the length of args is greater than 3, set the thread number to be the third argument.
     13.If the length of args is greater than 4, assign the fourth argument to file_name.
-    14.Return the values of control, max_iteration, thread_number, file_name and head_mode as a tuple.
+    13.If the length of args is greater than 5, assign the fifth argument to head_mode.
+    13.If the length of args is greater than 6, assign the sixth argument to delete_flag.
+    14.Return the values of control, max_iteration, thread_number, file_name, head_mode and delete_flag as a tuple.
     """
     control = 1
     if len(args) > 1:
@@ -136,6 +140,7 @@ def get_control(args):
     thread_number = 1
     file_name = None
     head_mode = False
+    delete_flag = True
     if len(args) > 3:
         thread_number = int(args[3])
 
@@ -146,7 +151,11 @@ def get_control(args):
         if args[5].lower() in ['h', 'head']:
             head_mode = True
 
-    return control, max_iteration, thread_number, file_name, head_mode
+    if len(args) > 6:
+        if args[6].lower() in ['k', 'keep']:
+            delete_flag = False
+
+    return control, max_iteration, thread_number, file_name, head_mode, delete_flag
 
 
 def generate_date_csv_confs(parameters, company_name):
