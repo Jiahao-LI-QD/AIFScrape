@@ -13,7 +13,7 @@ def scrape_client(wd,client):
     time.sleep(15)
     header=wd.find_element(By.XPATH,'//*[@id="policy_content"]/div[1]/h1[1]').text
     contract_number=re.findall(r'\((.*?)\)',header)
-    # print(contract_number)
+
     wait=WebDriverWait(wd,60)
     paths = eq_selectors.client_paths()
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['owner']))).click()
@@ -30,8 +30,13 @@ def scrape_client(wd,client):
     c2_table = wd.find_elements(By.XPATH, paths['c2_table']['c2_main'])
     for c2_row in c2_table:
         c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c2_table']['c2_row'])]
-
-    result = [name, None, None, None, None, address, None, None, None, c2[0], None, None, None, c2[1], None,
+        if '@'in c2[0]:
+            result = [name, None, None, None, None, address, None, None, None, None, None, None, None, None,c2[-1], None,
               contract_number[0], companies['EQ']]
-    return result
+        else:
+            result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, c2[-1], None,
+              contract_number[0], companies['EQ']]
+
+    client.loc[len(client)]=result
+
 

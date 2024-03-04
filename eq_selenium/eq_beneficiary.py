@@ -16,7 +16,7 @@ def scrape_beneficiary(wd,beneficiary):
     print(contract_number)
     wd.find_element(By.XPATH, paths['beneficiary']).click()
     b_table = wd.find_elements(By.XPATH, paths['b_table']['b_main'])
-
+    result=[]
     for b3_row in b_table:
         b3 = [b3.text for b3 in b3_row.find_elements(By.XPATH, paths['b_table']['b_row'])]
         # print(b3)
@@ -34,4 +34,8 @@ def scrape_beneficiary(wd,beneficiary):
                 result = [contract_number[0], None, b_item[-2], b_item[0], float(b_item[-1].strip('%'))/100, None, None, None, companies['EQ']]
             else:
                 result = [contract_number[0], None, None, b_item[0], None, None, None, None, companies['EQ']]
-            print(result)
+
+            # print(result)
+            beneficiary.loc[len(beneficiary)] = result
+            # print(beneficiary)
+    # return result
