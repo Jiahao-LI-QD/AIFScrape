@@ -1,6 +1,4 @@
-
 from datetime import datetime
-
 
 from selenium.webdriver.common.by import By
 
@@ -36,4 +34,7 @@ def scrape_holdings(wd, holdings):
     for raw_list in raw:
         final_result.append(result + raw_list + [None, 'EQ'])
 
-    return final_result
+    if final_result[0][-5] is not None:
+        final_result[0][-5] = float((final_result[0][-5].replace(",", "")))
+
+    holdings.loc[len(holdings)] = final_result[0]
