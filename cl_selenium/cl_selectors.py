@@ -99,6 +99,7 @@ def holdings_paths():
         'table_xpath': '//*[@id="2"]/article/div[2]/div[5]/table/tbody',
         'text': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/'
                 'div/div/div[1]/header/div[2]/ul/li[3]/div/div/div/span'
+
     }
 
 
