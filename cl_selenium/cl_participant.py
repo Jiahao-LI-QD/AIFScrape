@@ -38,6 +38,6 @@ def scrape_participant(wd,participant):
                 row = [p.text.split('\n', 1)[0] for p in
                             p_row.find_elements(By.XPATH, paths['participant_table']['participant_row'])]
             result = [contract_number, row[0], row[1], row[-1], companies['CL']]
-        print(result)
+        # print(result)
         participant.loc[len(participant)]=result
-        print(participant)
+        # print(participant)
