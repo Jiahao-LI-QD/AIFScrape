@@ -12,7 +12,7 @@ from eq_selenium.eq_selectors import transactions_paths
 from utilities.companys import companies
 
 
-def eq_transaction(wd, transaction, contract_number):
+def scrape_transaction(wd, transaction, contract_number):
     paths = transactions_paths()
 
     time.sleep(5)
@@ -73,5 +73,4 @@ def eq_transaction(wd, transaction, contract_number):
             unit_value = float(columns[4].replace("$", "").replace(",", ""))
             amount = columns[5]
             row = [contract_number, transaction_date, transaction_type, fund_code, amount, unit, unit_value, companies['EQ']]
-            print(row)
             transaction.loc[len(transaction)] = row
