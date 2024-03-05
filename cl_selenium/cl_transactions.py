@@ -25,8 +25,11 @@ def scrape_transactions(wd, transactions):
 
     paths = cl_selectors.transaction_paths()
 
-    # find the issue date from summary page
+    # find the issue date from summary page, check if the account is too new/empty.
     wd.find_element(By.XPATH, paths['summary_button']).click()
+    if len(wd.find_elements(By.XPATH, paths['issue_date'])) == 0:
+        return
+
     input_date_string = wd.find_element(By.XPATH, paths['issue_date']).text
 
     # going to transactions page

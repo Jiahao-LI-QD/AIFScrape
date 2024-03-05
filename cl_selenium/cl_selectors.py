@@ -57,7 +57,7 @@ def client_paths():
             'c2_main': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[2]',
             'c2_row': './div/div'
         },
-        'client_province': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[3]/div/div/div',
+        'client_r3': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[3]/div/div/div',
         'client_address': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[5]/div[3]/div[1]/span',
         'client_c3': {
             'c3_main': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[4]',
@@ -71,9 +71,9 @@ def client_paths():
 def participant_paths():
     return {
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
-        'participant_hide': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button',
         'participant_table': {
             'participant_main': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr',
+            'hide_row': './td[3]/div/span/lightning-helptext/div/lightning-button-icon/button',
             'participant_row': './td/div'
         }
     }
@@ -111,8 +111,8 @@ def transaction_paths():
         'date_apply': '//*[@id="4"]/article/div[2]/div[1]/div/span[2]/button[1]',
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
-        # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a',
-        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]'
+        # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]',
+        'summary_button': '//*[@id="1__item"]',
     }
 
 

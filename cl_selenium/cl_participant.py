@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
 from cl_selenium import cl_selectors
 from utilities.companys import companies
-
+from datetime import datetime
 
 def scrape_participant(wd,participant):
     """
@@ -24,13 +26,32 @@ def scrape_participant(wd,participant):
     """
     paths = cl_selectors.participant_paths()
     contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
-    # print(contract_number)
-    wd.find_element(By.XPATH, paths['participant_hide']).click()
+
+    row_number = 1
+    element = wd.find_elements(By.XPATH,
+                                    f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{row_number}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button")
+
+    while len(element)!=0:
+        xpath = f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{row_number}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button"
+        element=wd.find_elements(By.XPATH, xpath)
+
+        if len(element)!=0:
+            wd.find_element(By.XPATH, xpath).click()
+            row_number += 1
+        else:
+            break
+
+
     p_item = wd.find_elements(By.XPATH, paths['participant_table']['participant_main'])
-    for p_row in p_item:
-        row = [p.text.split('\n', 1)[0] for p in
-               p_row.find_elements(By.XPATH, paths['participant_table']['participant_row'])]
-        result = [contract_number, row[0], row[1], row[-1], companies['CL']]
-        # print(result)
-        participant.loc[len(participant)]=result
-    return participant
+    if len(p_item) == 0:
+        result = [contract_number, None, None, None, companies['CL']]
+        participant.loc[len(participant)] = result
+    else:
+        for p_row in p_item:
+            row = [p.text.split('\n', 1)[0] for p in
+                            p_row.find_elements(By.XPATH, paths['participant_table']['participant_row'])]
+            if len(row[-1])>2:
+                result = [contract_number, row[0], row[1], datetime.strptime(row[-1],"%B %d, %Y").strftime("%m-%d-%Y"), companies['CL']]
+            else:
+                result = [contract_number, row[0], row[1],None,companies['CL']]
+            participant.loc[len(participant)]=result
