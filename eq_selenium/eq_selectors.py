@@ -22,9 +22,14 @@ def client_paths():
             'c1_main':'//*[@id="policy_details"]/div[@class="Owner"]/div/div[2]/div[2]/div[2]/div',
             'c1_row':'./p'
         },
+        'assigned':'//*[@id="policy_details"]/div[@class="Owner"]/div/div[2]/div[3]/div[2]/div[1]/p',
         'c2_table':{
             'c2_main':'//*[@id="policy_details"]/div[@class="Owner"]/div/div[2]/div[3]',
             'c2_row':'./div/div[2]/p'
+        },
+        'c3_table':{
+            'c3_main':'//*[@id="policy_details"]/div[@class="Owner"]/div/div[2]/div[4]',
+            'c3_row':'./div/div[2]/p'
         }
     }
 def participant_paths():
