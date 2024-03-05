@@ -26,16 +26,22 @@ def scrape_client(wd,client):
     for c1_row in c1_table:
         c1 = [c1.text for c1 in c1_row.find_elements(By.XPATH, paths['c1_table']['c1_row'])]
         address = ' '.join(c1)
+    c2=wd.find_elements(By.XPATH,paths['assigned'])
+    if len(c2)==0:
+        c2_table = wd.find_elements(By.XPATH, paths['c2_table']['c2_main'])
+        for c2_row in c2_table:
+            c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c2_table']['c2_row'])]
+    else:
+        c2_table = wd.find_elements(By.XPATH, paths['c3_table']['c3_main'])
+        for c2_row in c2_table:
+            c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c3_table']['c3_row'])]
 
-    c2_table = wd.find_elements(By.XPATH, paths['c2_table']['c2_main'])
-    for c2_row in c2_table:
-        c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c2_table']['c2_row'])]
-        if '@'in c2[0]:
-            result = [name, None, None, None, None, address, None, None, None, None, None, None, None, None,c2[-1], None,
-              contract_number[0], companies['EQ']]
-        else:
-            result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, c2[-1], None,
-              contract_number[0], companies['EQ']]
+    if '@'in c2[0]:
+        result = [name, None, None, None, None, address, None, None, None, None, None, None, None, None,c2[0], None,
+        contract_number[0], companies['EQ']]
+    else:
+        result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, c2[-1], None,
+        contract_number[0], companies['EQ']]
 
     client.loc[len(client)]=result
 
