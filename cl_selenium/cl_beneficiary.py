@@ -27,7 +27,7 @@ def scrape_beneficiary(wd, beneficiary):
 
     for b_row in b_item:
         row = [b.text for b in b_row.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_row'])]
-        result = [contract_number, None, row[0], row[1], row[-1], row[2], row[3], None, companies['CL']]
+        result = [contract_number, None, row[0], row[1], float(row[-1].strip('%'))/100, row[2], row[3], None, companies['CL']]
 
         beneficiary.loc[len(beneficiary)] = result
 
