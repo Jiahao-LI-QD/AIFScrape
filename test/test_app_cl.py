@@ -21,7 +21,7 @@ from dbutilities.dbColumns import contract_columns
 #         'threading_tables': threading_tables,
 #         'thread_number': thread_number
 #  }
-confs = get_confs('CL')
+confs = get_confs()
 
 # get dataframe with policies
 # policies = get_serial_number(confs)

@@ -69,11 +69,16 @@ def scrape_transactions(wd, transactions):
             # transform data to fit database format
             new_row = [contract_number]
             new_row.extend(unique_list[:6])
-            new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
-            new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
             new_row.append(companies['CL'])
+            new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
+
+            # transform data to fit data type
+            new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
             new_row[-3] = float(new_row[-3].replace(",", ""))
             transactions.loc[len(transactions)] = new_row
 
-            i += 1
+        i += 1
+        if i < len(page_count):
             page_count[i].click()
+        else:
+            wd.execute_script("window.scrollTo(0, 0)")
