@@ -67,7 +67,7 @@ def scrape_client(wd, client):
         c3 = [c.text for c in c_item.find_elements(By.XPATH, paths['client_c3']['c3_row'])]
         # print(c3)
     if wd.find_element(By.XPATH, paths['client_kind']).text == 'Individual':
-        result = [c1[0], None, None, c2[0], datetime.strptime(c1[-1],"%B %d, %Y").strftime("%m-%d-%Y"), address, None, None, province, None, c3[2], c3[-1], None, c3[1], c3[0],
+        result = [c1[0], None, None, c2[0], datetime.strptime(c1[-1],"%B %d, %Y").strftime("%Y-%m-%d"), address, None, None, province, None, c3[2], c3[-1], None, c3[1], c3[0],
               None,contract_number, companies['CL']]
     else:
         result=[c1[0],None,None,c1[-1],None,address,None,None,c2[0],None,None,None,None,c3[0],None,None,contract_number, companies['CL']]
