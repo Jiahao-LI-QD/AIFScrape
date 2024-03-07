@@ -23,13 +23,30 @@ def scrape_beneficiary(wd, beneficiary):
     paths = cl_selectors.beneficiary_paths()
     contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
 
-    b_item = wd.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_main'])
 
-    for b_row in b_item:
-        row = [b.text for b in b_row.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_row'])]
-        result = [contract_number, None, row[0], row[1], float(row[-1].strip('%'))/100, row[2], row[3], None, companies['CL']]
+    if len(wd.find_elements(By.XPATH,paths['block']))>6:
+        b_item=wd.find_elements(By.XPATH,paths['beneficiary_t1']['beneficiary_m1'])
+        for b_row in b_item:
+            row=[b.text for b in b_row.find_elements(By.XPATH,paths['beneficiary_t1']['beneficiary_r1'])]
+            row = [None if element == '--' else element for element in row]
+            if all(value is None for value in row):
+                result = [contract_number, None, None, None, None, None, None, None, companies['CL']]
+            else:
+                result = [contract_number, None, row[0], row[1], float(row[-1].strip('%')) / 100, row[2], row[3], None,
+                          companies['CL']]
+            beneficiary.loc[len(beneficiary)] = result
+    else:
+        b_item = wd.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_main'])
 
-        beneficiary.loc[len(beneficiary)] = result
+        for b_row in b_item:
+            row = [b.text for b in b_row.find_elements(By.XPATH, paths['beneficiary_table']['beneficiary_row'])]
+            row = [None if element == '--' else element for element in row]
+            if all(value is None for value in row):
+                result=[contract_number,None,None,None,None,None,None,None,companies['CL']]
+            else:
+                result = [contract_number, None, row[0], row[1], float(row[-1].strip('%'))/100, row[2], row[3], None, companies['CL']]
+
+            beneficiary.loc[len(beneficiary)] = result
 
     wd.execute_script("window.scrollTo(0, 0)")
 
