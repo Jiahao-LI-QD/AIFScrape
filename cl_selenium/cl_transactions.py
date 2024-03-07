@@ -87,7 +87,6 @@ def scrape_transactions(wd, transactions):
                 parsed_date = datetime.strptime(new_row[1], '%B %d, %Y')
                 formatted_date = parsed_date.strftime('%Y-%m-%d')
                 new_row[1] = formatted_date
-            print(new_row)
 
             transactions.loc[len(transactions)] = new_row
 
