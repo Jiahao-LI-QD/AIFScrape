@@ -20,16 +20,8 @@ from utilities.thread_generator import thread_generator
 #         'threading_tables': threading_tables,
 #         'thread_number': thread_number
 #  }
-confs = get_confs('CL')
+confs = get_confs()
 
-# get dataframe with policies
-policies = get_serial_number(confs)
-
-# adjust dataframe format to fit iA contracts Excel.
-policies = adjust_dataframe(policies)
-
-# split contract file into n part according to thread number
-split_policies = split_dataframe(policies, confs['thread_number'])
 
 # list for store threads
 threads_list = []
