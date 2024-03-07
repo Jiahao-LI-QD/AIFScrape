@@ -8,10 +8,10 @@ from eq_selenium import eq_selectors
 from utilities.web_driver import driver_setup
 
 
-def login(confs):
+def login(wd, confs):
 
     parameters = confs['parameters']
-    wd = driver_setup(confs)
+    # wd = driver_setup(confs)
     wait = WebDriverWait(wd, 30)
     wd.get(parameters['login_url'])
     paths = eq_selectors.login_paths()
@@ -28,4 +28,4 @@ def login(confs):
     wait.until(EC.presence_of_element_located((By.XPATH, paths['main_page'])))
 
     print(f"user : {parameters['username']} login successful!")
-    return wd
+

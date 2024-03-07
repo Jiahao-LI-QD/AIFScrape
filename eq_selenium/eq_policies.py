@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities.dbColumns import contract_columns
 from eq_selenium.eq_scrap import login
 from eq_selenium.eq_selectors import policy_paths
+from utilities.web_driver import driver_setup
 
 
 def get_advisor_codes(wd, paths):
@@ -44,7 +45,8 @@ def get_advisor_codes(wd, paths):
 def get_policies(confs):
     paths = policy_paths()
     contracts = pd.DataFrame(columns=contract_columns)
-    wd = login(confs)
+    wd = driver_setup(confs)
+    login(wd, confs)
     # get policy url
     wd.get(confs['parameters']['policy_url'])
 
