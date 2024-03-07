@@ -64,8 +64,10 @@ def scrape_transactions(wd, transactions):
 
         new_row = [contract_number]
         new_row.extend(unique_list[:6])
-        new_row[-2] = new_row[-2].replace("$", "")
-        new_row[-2] = float(new_row[-2].replace(",", ""))
+        new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
         new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
         new_row.append(companies['CL'])
+        # change new_row indexes for unit and unit_value to floats
+        new_row[-3] = float(new_row[-3])
+
         transactions.loc[len(transactions)] = new_row
