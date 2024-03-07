@@ -56,16 +56,43 @@ def scrape_transactions(wd, transactions):
     text = wd.find_element(By.XPATH, paths['contract_number']).text
     contract_number = text
 
-    table = wd.find_elements(By.XPATH, paths['table_body'])
-    for row in table:
-        rows = row.find_elements(By.XPATH, ".//*")
-        result = [cell.text for cell in rows]
-        unique_list = list(OrderedDict.fromkeys(result))
+    # check for multiple pages of transaction
+    page_count = wd.find_elements(By.XPATH, paths['page_count'])
 
-        new_row = [contract_number]
-        new_row.extend(unique_list[:6])
-        new_row[-2] = new_row[-2].replace("$", "")
-        new_row[-2] = float(new_row[-2].replace(",", ""))
-        new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
-        new_row.append(companies['CL'])
-        transactions.loc[len(transactions)] = new_row
+    for i in range(len(page_count)):
+        table = wd.find_elements(By.XPATH, paths['table_body'])
+        for row in table:
+            rows = row.find_elements(By.XPATH, ".//*")
+            result = [cell.text for cell in rows]
+            unique_list = list(OrderedDict.fromkeys(result))
+
+            # transform data to fit database format
+            new_row = [contract_number]
+            new_row.extend(unique_list[:6])
+            new_row.append(companies['CL'])
+            new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
+
+            # transform data to fit data type
+            new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
+            new_row[-3] = float(new_row[-3].replace(",", ""))
+            if '.' in new_row[1]:
+                try:
+                    parsed_date = datetime.strptime(new_row[1], '%b. %d, %Y')
+                except ValueError as e:
+                    new_row[1] = new_row[1][:3] + new_row[1][4:]
+                    parsed_date = datetime.strptime(new_row[1], '%b. %d, %Y')
+                formatted_date = parsed_date.strftime('%Y-%m-%d')
+                new_row[1] = formatted_date
+            else:
+                parsed_date = datetime.strptime(new_row[1], '%B %d, %Y')
+                formatted_date = parsed_date.strftime('%Y-%m-%d')
+                new_row[1] = formatted_date
+            print(new_row)
+
+            transactions.loc[len(transactions)] = new_row
+
+        i += 1
+        if i < len(page_count):
+            page_count[i].click()
+        else:
+            wd.execute_script("window.scrollTo(0, 0)")
