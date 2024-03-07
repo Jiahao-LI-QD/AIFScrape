@@ -56,16 +56,25 @@ def scrape_transactions(wd, transactions):
     text = wd.find_element(By.XPATH, paths['contract_number']).text
     contract_number = text
 
-    table = wd.find_elements(By.XPATH, paths['table_body'])
-    for row in table:
-        rows = row.find_elements(By.XPATH, ".//*")
-        result = [cell.text for cell in rows]
-        unique_list = list(OrderedDict.fromkeys(result))
+    # check for multiple pages of transaction
+    page_count = wd.find_elements(By.XPATH, paths['page_count'])
+    print(len(page_count))
 
-        new_row = [contract_number]
-        new_row.extend(unique_list[:6])
-        new_row[-2] = new_row[-2].replace("$", "")
-        new_row[-2] = float(new_row[-2].replace(",", ""))
-        new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
-        new_row.append(companies['CL'])
-        transactions.loc[len(transactions)] = new_row
+    for i in range(len(page_count)):
+        table = wd.find_elements(By.XPATH, paths['table_body'])
+        for row in table:
+            rows = row.find_elements(By.XPATH, ".//*")
+            result = [cell.text for cell in rows]
+            unique_list = list(OrderedDict.fromkeys(result))
+
+            # transform data to fit database format
+            new_row = [contract_number]
+            new_row.extend(unique_list[:6])
+            new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
+            new_row[2], new_row[3], new_row[4], new_row[5], new_row[6] = new_row[3], new_row[2], new_row[6], new_row[4], new_row[5]
+            new_row.append(companies['CL'])
+            new_row[-3] = float(new_row[-3].replace(",", ""))
+            transactions.loc[len(transactions)] = new_row
+
+            i += 1
+            page_count[i].click()
