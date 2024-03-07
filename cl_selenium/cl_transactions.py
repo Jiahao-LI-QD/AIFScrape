@@ -76,13 +76,18 @@ def scrape_transactions(wd, transactions):
             new_row[-2] = float(new_row[-2].replace(",", "").replace("$", ""))
             new_row[-3] = float(new_row[-3].replace(",", ""))
             if '.' in new_row[1]:
-                parsed_date = datetime.strptime(input_date_string, '%b. %d, %Y')
+                try:
+                    parsed_date = datetime.strptime(new_row[1], '%b. %d, %Y')
+                except ValueError as e:
+                    new_row[1] = new_row[1][:3] + new_row[1][4:]
+                    parsed_date = datetime.strptime(new_row[1], '%b. %d, %Y')
                 formatted_date = parsed_date.strftime('%Y-%m-%d')
                 new_row[1] = formatted_date
             else:
-                parsed_date = datetime.strptime(input_date_string, '%B %d, %Y')
+                parsed_date = datetime.strptime(new_row[1], '%B %d, %Y')
                 formatted_date = parsed_date.strftime('%Y-%m-%d')
                 new_row[1] = formatted_date
+            print(new_row)
 
             transactions.loc[len(transactions)] = new_row
 
