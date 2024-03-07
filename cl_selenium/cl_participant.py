@@ -28,11 +28,10 @@ def scrape_participant(wd,participant):
     contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
 
     row_number = 1
-    element = wd.find_elements(By.XPATH,
-                                    f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{row_number}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button")
+    element = wd.find_elements(By.XPATH, paths['hidden'](row_number))
 
     while len(element)!=0:
-        xpath = f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{row_number}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button"
+        xpath = paths['hidden'](row_number)
         element=wd.find_elements(By.XPATH, xpath)
 
         if len(element)!=0:
