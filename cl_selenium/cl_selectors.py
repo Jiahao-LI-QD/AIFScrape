@@ -61,7 +61,7 @@ def client_paths():
             'c3_row': './div/div/div/div'
         },
         # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a',
-        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]'
+        'summary_button': '//*[@id="1__item"]'
     }
 
 
@@ -74,7 +74,13 @@ def participant_paths():
             'participant_row': './td/div'
         },
         'hidden': lambda
-            x: f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{x}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button"
+            x: f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{x}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button",
+        'hidden_1':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div/div[1]/div[4]/div[2]/table/tbody/tr/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button',
+        'block': '//*[@id="1"]/div[1]/*',
+        'participant_t1':{
+            'participant_m1':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div/div[1]/div[4]/div[2]/table/tbody/tr',
+            'participant_r1':'./td/div'
+        }
     }
 
 
@@ -84,6 +90,11 @@ def beneficiary_paths():
         'beneficiary_table': {
             'beneficiary_main': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[5]/div[2]/table/tbody/tr',
             'beneficiary_row': './td/div'
+        },
+        'block':'//*[@id="1"]/div[1]/*',
+        'beneficiary_t1':{
+            'beneficiary_m1':'/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div/div[1]/div[5]/div[2]/table/tbody/tr',
+            'beneficiary_r1':'./td/div'
         }
     }
 
@@ -112,6 +123,9 @@ def transaction_paths():
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
         # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]',
         'summary_button': '//*[@id="1__item"]',
+        'page_2': '//*[@id="4"]/article/div[3]/div/span[2]/a',
+        'page_1': '//*[@id="4"]/article/div[3]/div/span[1]/a',
+        'page_count': '//*[@id="4"]/article/div[3]/div/span'
     }
 
 
