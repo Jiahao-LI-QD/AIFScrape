@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from dbutilities.dbColumns import contract_columns
 from eq_selenium.eq_scrap import login
 from eq_selenium.eq_selectors import policy_paths
+from utilities.web_driver import driver_setup
 
 
 def get_advisor_codes(wd, paths):
@@ -44,7 +45,8 @@ def get_advisor_codes(wd, paths):
 def get_policies(confs):
     paths = policy_paths()
     contracts = pd.DataFrame(columns=contract_columns)
-    wd = login(confs)
+    wd = driver_setup(confs)
+    login(wd, confs)
     # get policy url
     wd.get(confs['parameters']['policy_url'])
 
@@ -52,9 +54,10 @@ def get_policies(confs):
     # click search
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['search_button']))).click()
     # click export
-    actions = ActionChains(wd)
-    export_all=wd.find_element(By.XPATH, paths['export_all'])
-    actions.move_to_element(export_all).perform()
+    # actions = ActionChains(wd)
+    # time.sleep(3)
+    # export_all = wd.find_element(By.XPATH, paths['export_all'])
+    # actions.move_to_element(export_all).perform()
 
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['export_all']))).click()
     time.sleep(10)
@@ -63,7 +66,7 @@ def get_policies(confs):
     contracts['Applicant_last_name'] = export_all['Last Name']
     contracts['Applicant_first_name'] = export_all['First Name']
     contracts['Birthday'] = export_all['Birthdate']
-    contracts['Contract_number'] = export_all['Policy'].apply(lambda x : str(x))
+    contracts['Contract_number'] = export_all['Policy'].apply(lambda x: str(x))
     contracts['Type'] = export_all['Registration']
     contracts['Representative_name'] = export_all['Agent Name']
     contracts['Product'] = export_all['Product']
