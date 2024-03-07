@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from cl_selenium import cl_selectors, cl_scrap
 from cl_selenium.cl_scrap import cl_loop_actions
 from eq_selenium import eq_scrap
+from eq_selenium.eq_scrap import eq_loop_actions
 from ia_selenium import ia_selectors
 from ia_selenium.ia_scrap import ia_app, ia_loop_actions
 from utilities.companys import companies
@@ -132,6 +133,7 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                         cl_loop_actions(wd, paths, confs, contract_number_, tables)
                     case 'EQ':
                         # TODO: perform the actions
+                        eq_loop_actions(wd, confs, contract_number_, tables)
                         pass
 
                 loop_continuous_error = 0
