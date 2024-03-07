@@ -4,6 +4,7 @@ from datetime import datetime
 from collections import OrderedDict
 
 import pandas as pd
+from selenium.common import NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -43,25 +44,30 @@ def scrape_holdings(wd, holdings):
     category = ''
     # calling holding xpath from cl_selector
     paths = cl_selectors.holdings_paths()
-    # extracting data from 'summary' page
-    statement_date = wd.find_element(By.XPATH, paths['statement_date']).text
     try:
-        # Try parsing the statement date with the first format '%b. %d, %Y'
-        formatted_date = datetime.strptime(statement_date, '%b. %d, %Y')
-    except ValueError:
+        # extracting data from 'summary' page
+        statement_date = wd.find_element(By.XPATH, paths['statement_date']).text
         try:
-            # Try parsing the statement date with the second format '%B. %d, %Y'
-            formatted_date = datetime.strptime(statement_date, '%B %d, %Y')
+            # Try parsing the statement date with the first format '%b. %d, %Y'
+            formatted_date = datetime.strptime(statement_date, '%b. %d, %Y')
         except ValueError:
-            # If the statement date doesn't match either format, keep it as it is
-            formatted_date = None
+            try:
+                # Try parsing the statement date with the second format '%B. %d, %Y'
+                formatted_date = datetime.strptime(statement_date, '%B %d, %Y')
+            except ValueError:
+                # If the statement date doesn't match either format, keep it as it is
+                formatted_date = None
 
-    # If the statement date matched one of the formats, convert it to '%Y-%m-%d'
-    if formatted_date:
-        formatted_date_str = formatted_date.strftime('%Y-%m-%d')
-    else:
-        # Otherwise, keep the statement date unchanged
-        formatted_date_str = statement_date
+        # If the statement date matched one of the formats, convert it to '%Y-%m-%d'
+        if formatted_date:
+            formatted_date_str = formatted_date.strftime('%Y-%m-%d')
+        else:
+            # Otherwise, keep the statement date unchanged
+            formatted_date_str = statement_date
+    except NoSuchElementException:
+        # if statement date not found, set it to today's date
+        formatted_date_str = datetime.now().strftime('%Y-%m-%d')
+
     contract_number = wd.find_element(By.XPATH, paths['contract_number']).text
     # guarantee = wd.find_element(By.XPATH, paths['guarantee']).text
     text = wd.find_element(By.XPATH, paths['text']).text.split(' (', 1)
