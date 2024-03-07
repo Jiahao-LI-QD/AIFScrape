@@ -57,7 +57,7 @@ def beneficiary_paths():
 def holdings_paths():
     return {
         'text': '//*[@id="policy_content"]/div[1]/h1[1]',
-        'account_type': '//*[@id="policy_content"]/div[3]/div[1]/p[2]/span',
+        'account_type': '//*[@id="policy_content"]/div[3]/div[1]/p[2]',
         'table_data': '//*[@id="policy_details"]/div[3]/div/div[3]/div[1]/table/tbody/tr/td'
 
     }
