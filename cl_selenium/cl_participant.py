@@ -38,7 +38,7 @@ def scrape_participant(wd,participant):
                             p_row.find_elements(By.XPATH, paths['participant_t1']['participant_r1'])]
                 if len(row[-1]) > 2:
                     result = [contract_number, row[0], row[1],
-                              datetime.strptime(row[-1], "%B %d, %Y").strftime("%m-%d-%Y"), companies['CL']]
+                              datetime.strptime(row[-1], "%B %d, %Y").strftime("%Y-%m-%d"), companies['CL']]
                 else:
                     result = [contract_number, row[0], row[1], None, companies['CL']]
                 participant.loc[len(participant)] = result
@@ -67,7 +67,7 @@ def scrape_participant(wd,participant):
                 row = [p.text.split('\n', 1)[0] for p in
                                 p_row.find_elements(By.XPATH, paths['participant_table']['participant_row'])]
                 if len(row[-1])>2:
-                    result = [contract_number, row[0], row[1], datetime.strptime(row[-1],"%B %d, %Y").strftime("%m-%d-%Y"), companies['CL']]
+                    result = [contract_number, row[0], row[1], datetime.strptime(row[-1],"%B %d, %Y").strftime("%Y-%m-%d"), companies['CL']]
                 else:
                     result = [contract_number, row[0], row[1],None,companies['CL']]
                 participant.loc[len(participant)]=result

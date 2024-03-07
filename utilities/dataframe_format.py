@@ -19,6 +19,7 @@ def adjust_dataframe(df):
     new_df['Product'] = df['fund_name']
     new_df['Type'] = df['account_type']
     new_df['Representative_name'] = df['advisor']
+    new_df['Company'] = 'CL'
 
     return new_df
 
