@@ -1,8 +1,11 @@
 import os
 import pandas as pd
 
+from cl_selenium.cl_policies import get_serial_number
 from dbutilities import dbColumns
+from eq_selenium.eq_policies import get_policies
 from utilities.companys import companies
+from utilities.dataframe_format import adjust_dataframe
 
 
 def read_excel(file_path, folder_path, num_chunks):
@@ -76,3 +79,29 @@ def split_dataframe(df, num_chunks):
         parts[-1] = last_df
 
     return parts
+
+
+def split_select_by_company(confs):
+    contracts = pd.DataFrame()
+
+    match confs['company']:
+        case 'iA':
+            contracts = read_excel(confs['contract_path'],
+                                   confs['csvs'],
+                                   confs['thread_number'])
+        case 'CL':
+            # get dataframe with policies
+            policies = get_serial_number(confs)
+
+            # adjust dataframe format to fit iA contracts Excel.
+            policies = adjust_dataframe(policies)
+
+            # split contract file into n part according to thread number
+            contracts = split_dataframe(policies, confs['thread_number'])
+        case 'EQ':
+            contracts = get_policies(confs)
+        case _:
+            # This case should never be taken
+            print('Invalid company is taken. Will Exit!')
+            exit()
+    return contracts

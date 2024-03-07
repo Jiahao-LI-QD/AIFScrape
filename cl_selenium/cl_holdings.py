@@ -113,11 +113,11 @@ def scrape_holdings(wd, holdings):
                 # assigning 'None' to 'ACB' column
                 row_data.append(None)
                 final = result + row_data
-                if final[8] != None:
+                if final[8] is not None:
                     final[8] = float(final[8].replace("$", ""))
                 else:
                     final.insert(4, None)
-                if final[-4] != None:
+                if final[-4] is not None:
                     final[-4] = float(final[-4].replace(",", ""))
                 final.append(companies['CL'])
                 holdings.loc[len(holdings)] = final

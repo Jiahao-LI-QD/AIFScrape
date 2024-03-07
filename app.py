@@ -1,7 +1,7 @@
 from dbutilities import save_to_db
 from ia_selenium.ia_contract_list import click_contract_list
 from utilities.companys import companies
-from utilities.split_excel import read_excel, split_dataframe
+from utilities.split_excel import read_excel, split_dataframe, split_select_by_company
 from utilities.get_confs import get_confs
 from utilities.save_csv import get_csv_file_names, save_table_into_csv
 from utilities.tables_utilities import merge_tables
@@ -20,9 +20,7 @@ from utilities.thread_generator import contracts_restart, threads_handler
 confs = get_confs()
 
 # split contract file into n part according to thread number
-contract_files = read_excel(confs['contract_path'],
-                            confs['csvs'],
-                            confs['thread_number'])
+contract_files = split_select_by_company(confs)
 
 # list for store threads
 threads_list = {}
@@ -30,7 +28,7 @@ threads_list = {}
 current_list = []
 
 # for loop generate threads
-start_index = threads_handler(confs, threads_list, current_list, companies['iA'], contract_files)
+start_index = threads_handler(confs, threads_list, current_list, confs['company'], contract_files)
 
 # find the crashed thread
 # 1. restart
@@ -40,19 +38,20 @@ while True:
     if len(contracts_left) == 0:
         break
     contract_files = split_dataframe(contracts_left, confs['thread_number'])
-    threads_handler(confs, threads_list, current_list, companies['iA'], contract_files)
+    threads_handler(confs, threads_list, current_list, confs['company'], contract_files)
 
 # merge tables from threads
-tables = merge_tables(confs, companies['iA'])
+tables = merge_tables(confs, confs['company'])
 
 # record file names
-files = get_csv_file_names(confs['csvs'], companies['iA'])
+files = get_csv_file_names(confs['csvs'], confs['company'])
 
 # save tables into csv files
-save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
+save_table_into_csv(confs['control_unit'], tables, files, confs['company'])
 
 # save csv files into db
-save_to_db.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+save_to_db.save_csv_to_db(confs['control_unit'], files, tables, confs['company'])
 
 # request contract list for next time
-click_contract_list(confs)
+if confs['company'] == companies['iA']:
+    click_contract_list(confs)

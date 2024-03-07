@@ -8,9 +8,6 @@ def login_paths():
     }
 
 
-
-
-
 def fund_paths():
     return {
         'statement_date': '//*[@id="1"]/div[1]/div[6]/div/div[2]/span',
@@ -47,7 +44,7 @@ def client_paths():
     return {
         'contract_number': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/div/div[1]/div[2]/h1/div[2]/span',
         'client_account': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[1]/header/div[2]/ul/li[1]/div/div/div',
-        'client_kind':'/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div[2]/c-w-custom-compact-layout/div/div[2]/div/ul/li[2]/div[2]',
+        'client_kind': '/html/body/div[3]/div/div[1]/div/div/div[1]/div/div[3]/div/div/div[2]/c-w-custom-compact-layout/div/div[2]/div/ul/li[2]/div[2]',
         'client_hide': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[1]/div[2]/div/div/span/lightning-helptext/div/lightning-button-icon/button',
         'client_c1': {
             'c1_main': '/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[3]/div/div/div[1]/div/section/div/div/article/div/div[2]/div[1]',
@@ -75,7 +72,9 @@ def participant_paths():
             'participant_main': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr',
             'hide_row': './td[3]/div/span/lightning-helptext/div/lightning-button-icon/button',
             'participant_row': './td/div'
-        }
+        },
+        'hidden': lambda
+            x: f"/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/div[1]/div[4]/div[2]/table/tbody/tr[{x}]/td[3]/div/span/lightning-helptext/div/lightning-button-icon/button"
     }
 
 

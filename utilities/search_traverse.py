@@ -69,6 +69,9 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # set up the driver and start CL page
             cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
             # initialize the cl_web and selenium paths, finish log in and go to client page.
+        case 'EQ':
+            # TODO: prepare paths and login eq if needed
+            pass
         case '_':
             print('Company: ' + company + 'Not Found! Will Terminate the loop')
             exit()
@@ -95,6 +98,9 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                     case 'CL':
                         cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
                         # initialize the app
+                    case 'EQ':
+                        # TODO: prepare paths and login eq if needed
+                        pass
 
                 loop_continuous_error = 0
                 driver_reset_count = 0
@@ -120,6 +126,9 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                         ia_loop_actions(wd, paths, confs, contract_number_, tables, row['Contract_start_date'])
                     case 'CL':
                         cl_loop_actions(wd, paths, confs, contract_number_, tables)
+                    case 'EQ':
+                        # TODO: perform the actions
+                        pass
 
                 loop_continuous_error = 0
                 driver_reset_count += 1
