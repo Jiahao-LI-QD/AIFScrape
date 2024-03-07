@@ -77,7 +77,9 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
         for row in table:
             rows_data = row.find_elements(By.XPATH, "./*")
             result = [cell.text for cell in rows_data]
-            if 'Active' in result:
+            substring = 'Active'
+            exists = any(substring in x for x in result)
+            if exists:
                 if 'Active' in result[0]:
                     wd.find_element(By.XPATH, paths['asset_name1']).click()
                 elif 'Active' in result[1]:
