@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from cl_selenium import cl_selectors, cl_scrap
 from cl_selenium.cl_scrap import cl_loop_actions
+from eq_selenium import eq_scrap
 from ia_selenium import ia_selectors
 from ia_selenium.ia_scrap import ia_app, ia_loop_actions
 from utilities.companys import companies
@@ -71,6 +72,8 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
             # initialize the cl_web and selenium paths, finish log in and go to client page.
         case 'EQ':
             # TODO: prepare paths and login eq if needed
+            eq_scrap.login(wd, confs)
+
             pass
         case '_':
             print('Company: ' + company + 'Not Found! Will Terminate the loop')
@@ -99,7 +102,8 @@ def scrape_traverse(confs, tables, iteration_time, company, thread_name="Non-thr
                         cl_scrap.login(wd, confs['parameters']['username'], confs['parameters']['password'])
                         # initialize the app
                     case 'EQ':
-                        # TODO: prepare paths and login eq if needed
+                        # TODO: login eq if needed
+                        eq_scrap.login(wd, confs)
                         pass
 
                 loop_continuous_error = 0
