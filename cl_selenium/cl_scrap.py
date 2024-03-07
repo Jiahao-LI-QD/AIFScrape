@@ -77,12 +77,15 @@ def cl_loop_actions(wd, paths, confs, contract_number, tables):
         for row in table:
             rows_data = row.find_elements(By.XPATH, "./*")
             result = [cell.text for cell in rows_data]
-            if 'Active' in result[0]:
-                wd.find_element(By.XPATH, paths['asset_name1']).click()
-            elif 'Active' in result[1]:
-                wd.find_element(By.XPATH, paths['asset_name2']).click()
-            elif 'Active' in result[2]:
-                wd.find_element(By.XPATH, paths['asset_name3']).click()
+            if 'Active' in result:
+                if 'Active' in result[0]:
+                    wd.find_element(By.XPATH, paths['asset_name1']).click()
+                elif 'Active' in result[1]:
+                    wd.find_element(By.XPATH, paths['asset_name2']).click()
+                elif 'Active' in result[2]:
+                    wd.find_element(By.XPATH, paths['asset_name3']).click()
+            else:
+                print("Inactive account, no info on workspace!")
 
     # wait for policy home page to be loaded
     # wait = WebDriverWait(wd, 15)
