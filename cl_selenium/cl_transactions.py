@@ -58,7 +58,6 @@ def scrape_transactions(wd, transactions):
 
     # check for multiple pages of transaction
     page_count = wd.find_elements(By.XPATH, paths['page_count'])
-    print(len(page_count))
 
     for i in range(len(page_count)):
         table = wd.find_elements(By.XPATH, paths['table_body'])
