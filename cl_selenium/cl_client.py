@@ -26,7 +26,7 @@ def scrape_client(wd, client):
     10.Return the updated client DataFrame.
     """
     paths = cl_selectors.client_paths()
-    wd.find_element(By.XPATH, paths['summary_button']).click()
+    # wd.find_element(By.XPATH, paths['summary_button']).click()
     contract_number=wd.find_element(By.XPATH,paths['contract_number']).text
 
     wd.find_element(By.XPATH, paths['client_account']).click()

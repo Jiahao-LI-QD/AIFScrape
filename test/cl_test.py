@@ -23,7 +23,7 @@ cl_scrap.login(wd, parameters['username'], parameters['password'])
 # Going to an account for testing
 traverse_paths = cl_selectors.traverse_paths()
 sleep(1)
-wd.find_element(By.XPATH, traverse_paths['search_field']).send_keys(410316269)
+wd.find_element(By.XPATH, traverse_paths['search_field']).send_keys(410581714)
 sleep(2)
 wd.find_element(By.XPATH, traverse_paths['policy_submit']).click()
 sleep(10)
@@ -33,13 +33,13 @@ sleep(10)
 # pd.set_option('display.max_columns', None)
 # print(test_client)
 #
-participant = pd.DataFrame(columns=dbColumns.participant_columns)
-test_participant = cl_participant.scrape_participant(wd, participant)
-print(test_participant)
+# participant = pd.DataFrame(columns=dbColumns.participant_columns)
+# test_participant = cl_participant.scrape_participant(wd, participant)
+# print(test_participant)
 #
-# beneficiary = pd.DataFrame(columns=dbColumns.beneficiary_columns)
-# test_beneficiary = cl_beneficiary.scrape_beneficiary(wd, beneficiary)
-# print(test_beneficiary)
+beneficiary = pd.DataFrame(columns=dbColumns.beneficiary_columns)
+cl_beneficiary.scrape_beneficiary(wd, beneficiary)
+print(beneficiary)
 #
 # sleep(5)
 
