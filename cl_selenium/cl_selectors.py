@@ -61,7 +61,7 @@ def client_paths():
             'c3_row': './div/div/div/div'
         },
         # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]/a',
-        'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]'
+        'summary_button': '//*[@id="1__item"]'
     }
 
 
@@ -123,6 +123,9 @@ def transaction_paths():
         'table_body': '//*[@id="4"]/article/div[2]/div[2]/table/tbody/tr',
         # 'summary_button': '/html/body/div[3]/div/div[1]/div/div/div/div/div[3]/div/div/div[2]/div[2]/lightning-tab-bar/ul/li[1]',
         'summary_button': '//*[@id="1__item"]',
+        'page_2': '//*[@id="4"]/article/div[3]/div/span[2]/a',
+        'page_1': '//*[@id="4"]/article/div[3]/div/span[1]/a',
+        'page_count': '//*[@id="4"]/article/div[3]/div/span'
     }
 
 
