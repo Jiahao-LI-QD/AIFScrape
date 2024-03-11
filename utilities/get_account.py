@@ -17,7 +17,7 @@ def account(filename):
     """
 
     #     with open(os.path.join(sys.path[1], "confs", filename)) as f:
-    with open(os.path.join(sys.path[1], "confs", filename)) as f:
+    with open(os.path.join(sys.path[0], "confs", filename)) as f:
         lines = [line.rstrip('\n').split("=", 1) for line in f.readlines()]
         d = {key.strip(): value.strip() for key, value in lines}
     if "username" not in d or "password" not in d:

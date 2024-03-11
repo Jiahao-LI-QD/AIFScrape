@@ -1,6 +1,0 @@
-pip install numpy
-pip install pandas
-pip install pyodbc
-pip install faker
-pip install openpyxl
-pip install selenium
