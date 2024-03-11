@@ -6,3 +6,6 @@
 
 !/test
 !/test/*
+
+!/cl_app.py
+!/ia_app.py
