@@ -31,16 +31,21 @@ def scrape_client(wd,client,contract_number):
         c2_table = wd.find_elements(By.XPATH, paths['c2_table']['c2_main'])
         for c2_row in c2_table:
             c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c2_table']['c2_row'])]
+            print(c2)
     else:
         c2_table = wd.find_elements(By.XPATH, paths['c3_table']['c3_main'])
         for c2_row in c2_table:
             c2 = [c2.text for c2 in c2_row.find_elements(By.XPATH, paths['c3_table']['c3_row'])]
+            print(c2)
 
-    if '@'in c2[0]:
+    if '@'in c2[0] and len(c2)==1:
         result = [name, None, None, None, None, address, None, None, None, None, None, None, None, None,c2[0], None,
         contract_number, companies['EQ']]
-    else:
+    if '@'in c2[-1] and len(c2)==2:
         result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, c2[-1], None,
+        contract_number, companies['EQ']]
+    if '@'not in c2[-1] and len(c2)==1:
+        result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, None, None,
         contract_number, companies['EQ']]
 
     client.loc[len(client)]=result
