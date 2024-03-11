@@ -100,6 +100,7 @@ def split_select_by_company(confs):
             contracts = split_dataframe(policies, confs['thread_number'])
         case 'EQ':
             contracts = get_policies(confs)
+            contracts = split_dataframe(contracts, confs['thread_number'])
         case _:
             # This case should never be taken
             print('Invalid company is taken. Will Exit!')

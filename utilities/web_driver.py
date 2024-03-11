@@ -14,11 +14,11 @@ def driver_setup(confs):
     # set the default download directory to the contracts folder
     prefs = {'download.default_directory': confs['csvs']}
     chrome_options.add_experimental_option('prefs', prefs)
+    chrome_options.add_argument('--window-size=1920,1080')
     if not confs['head_mode']:
         # chrome_options.add_argument('user-agent=Chrome/122.0.6261.69')
         chrome_options.add_argument('headless')
         chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--window-size=1920,1080')
     wd = webdriver.Chrome(chrome_options)
     wd.implicitly_wait(15)
     return wd
