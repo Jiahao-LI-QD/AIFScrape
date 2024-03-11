@@ -4,7 +4,7 @@ from dbutilities import connection, db_method
 from utilities.companys import companies
 
 
-def save_csv_to_db(control_unit, files, tables, company):
+def save_csv_to_db(confs, files, tables, company):
     """
     This method saves data from CSV files into a database. It performs various operations based on
     the control_unit parameter to determine which tables to update or delete.
@@ -43,11 +43,13 @@ def save_csv_to_db(control_unit, files, tables, company):
                                zip(tables['recover'], [None] * len(tables['recover']),
                                    [company] * len(tables['recover'])))
         db_method.save_data_into_db(cursor, files['contracts'], db_method.save_contract_history, batch_size)
-        db_method.delete_current_contract(cursor, company)
-
+        if confs['delete_flag']:
+            db_method.delete_current_contract(cursor, company)
+        control_unit = confs['control_unit']
         if control_unit & 1:
             # delete current table of fund & saving for later insertion
-            db_method.delete_current_fund_saving(cursor, company)
+            if confs['delete_flag']:
+                db_method.delete_current_fund_saving(cursor, company)
 
             # save saving & fund history
             if company == companies['iA']:
@@ -55,7 +57,8 @@ def save_csv_to_db(control_unit, files, tables, company):
             db_method.save_data_into_db(cursor, files['fund'], db_method.save_fund_history, batch_size)
         if control_unit & 2:
             # delete current table of transaction for later insertion
-            db_method.delete_current_transaction(cursor, company)
+            if confs['delete_flag']:
+                db_method.delete_current_transaction(cursor, company)
 
             # save transaction history
             db_method.save_data_into_db(cursor, files['transaction'], db_method.save_transaction_history, batch_size)
@@ -64,8 +67,9 @@ def save_csv_to_db(control_unit, files, tables, company):
             # if there is no new contracts
             # otherwise just extend the table
             # if not new_contracts:
-            db_method.delete_current_participant_beneficiary(cursor, company)
-            db_method.delete_current_client(cursor, company)
+            if confs['delete_flag']:
+                db_method.delete_current_participant_beneficiary(cursor, company)
+                db_method.delete_current_client(cursor, company)
             db_method.save_data_into_db(cursor, files['client'], db_method.save_client_history, batch_size)
             db_method.save_data_into_db(cursor, files['participant'], db_method.save_participant_history, batch_size)
             db_method.save_data_into_db(cursor, files['beneficiary'], db_method.save_beneficiary_history, batch_size)
