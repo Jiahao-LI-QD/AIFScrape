@@ -15,13 +15,13 @@ from utilities.companys import companies
 def scrape_transaction(wd, transaction, contract_number):
     paths = transactions_paths()
 
-    time.sleep(5)
+    time.sleep(3)
     transaction_button = wd.find_element(By.XPATH, paths['transaction_button'])
 
     while (len(wd.find_elements(By.XPATH, paths['update_button']))) == 0:
         time.sleep(1)
         transaction_button.click()
-    time.sleep(5)
+    time.sleep(3)
 
     month_to_num = {name: num for num, name in enumerate(calendar.month_name) if num}
 

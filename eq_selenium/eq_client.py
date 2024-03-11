@@ -9,10 +9,10 @@ from time import sleep
 from utilities.companys import companies
 from selenium.webdriver.support import expected_conditions as EC
 
-def scrape_client(wd,client):
-    time.sleep(15)
-    header=wd.find_element(By.XPATH,'//*[@id="policy_content"]/div[1]/h1[1]').text
-    contract_number=re.findall(r'\((.*?)\)',header)
+def scrape_client(wd,client,contract_number):
+    time.sleep(5)
+    # header=wd.find_element(By.XPATH,'//*[@id="policy_content"]/div[1]/h1[1]').text
+    # contract_number=re.findall(r'\((.*?)\)',header)
 
     wait=WebDriverWait(wd,60)
     paths = eq_selectors.client_paths()
@@ -38,10 +38,10 @@ def scrape_client(wd,client):
 
     if '@'in c2[0]:
         result = [name, None, None, None, None, address, None, None, None, None, None, None, None, None,c2[0], None,
-        contract_number[0], companies['EQ']]
+        contract_number, companies['EQ']]
     else:
         result=[name, None, None, None, None, address, None, None, None, None,c2[0], None, None, None, c2[-1], None,
-        contract_number[0], companies['EQ']]
+        contract_number, companies['EQ']]
 
     client.loc[len(client)]=result
 
