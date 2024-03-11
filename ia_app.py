@@ -52,7 +52,7 @@ files = get_csv_file_names(confs['csvs'], companies['iA'])
 save_table_into_csv(confs['control_unit'], tables, files, companies['iA'])
 
 # save csv files into db
-save_to_db.save_csv_to_db(confs['control_unit'], files, tables, companies['iA'])
+save_to_db.save_csv_to_db(confs, files, tables, companies['iA'])
 
 # request contract list for next time
 click_contract_list(confs)

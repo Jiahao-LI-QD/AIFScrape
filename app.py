@@ -50,7 +50,7 @@ files = get_csv_file_names(confs['csvs'], confs['company'])
 save_table_into_csv(confs['control_unit'], tables, files, confs['company'])
 
 # save csv files into db
-save_to_db.save_csv_to_db(confs['control_unit'], files, tables, confs['company'])
+save_to_db.save_csv_to_db(confs, files, tables, confs['company'])
 
 # request contract list for next time
 if confs['company'] == companies['iA']:

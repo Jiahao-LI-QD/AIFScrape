@@ -48,5 +48,5 @@ files = get_csv_file_names(confs['csvs'], companies['CL'])
 save_table_into_csv(confs['control_unit'], tables, files, companies['CL'])
 
 # save csv files into db
-save_csv_to_db(confs['control_unit'], files, tables, companies['CL'])
+save_csv_to_db(confs, files, tables, companies['CL'])
 # 1 client duplication problem?

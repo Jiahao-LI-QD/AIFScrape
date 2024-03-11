@@ -55,7 +55,7 @@ def get_policies(confs):
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['search_button']))).click()
     # click export
     # actions = ActionChains(wd)
-    # time.sleep(3)
+    time.sleep(5)
     # export_all = wd.find_element(By.XPATH, paths['export_all'])
     # actions.move_to_element(export_all).perform()
 
@@ -72,5 +72,6 @@ def get_policies(confs):
     contracts['Product'] = export_all['Product']
     contracts = contracts.loc[contracts['Contract_number'].str.startswith('6')]
     contracts.reset_index(drop=True, inplace=True)
+    contracts['Company'] = 'EQ'
     wd.close()
     return contracts

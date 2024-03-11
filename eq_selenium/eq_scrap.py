@@ -36,6 +36,6 @@ def eq_loop_actions(wd, confs, contract_number_, tables):
     if confs['control_unit'] & 2:
         eq_transaction.scrape_transaction(wd, tables['transaction'],contract_number_)
     if confs['control_unit'] & 4:
-        eq_client.scrape_client(wd, tables['client'])
-        eq_participant.scrape_participant(wd, tables['participant'])
-        eq_beneficiary.scrape_beneficiary(wd, tables['beneficiary'])
+        eq_client.scrape_client(wd, tables['client'],contract_number_)
+        eq_participant.scrape_participant(wd, tables['participant'],contract_number_)
+        eq_beneficiary.scrape_beneficiary(wd, tables['beneficiary'],contract_number_)
