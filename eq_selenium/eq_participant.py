@@ -7,6 +7,8 @@ from time import sleep
 
 
 from utilities.companys import companies
+from datetime import datetime
+
 
 def scrape_participant(wd,participant):
     time.sleep(10)
@@ -22,5 +24,6 @@ def scrape_participant(wd,participant):
     a2_table = wd.find_elements(By.XPATH, paths['a2_table']['a2_main'])
     for a2_row in a2_table:
         a2 = [a2.text for a2 in a2_row.find_elements(By.XPATH, paths['a2_table']['a2_row'])]
-    result = [contract_number[0], a1[0], a1[-1], a2[-1], companies['EQ']]
+
+    result = [contract_number[0], a1[0], a1[-1], datetime.strptime(a2[-1].split(',',1)[1].strip(),'%B %d, %Y').strftime("%Y-%m-%d"), companies['EQ']]
     participant.loc[len(participant)]=result
