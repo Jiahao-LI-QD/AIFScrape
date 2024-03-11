@@ -71,6 +71,7 @@ def get_policies(confs):
     contracts['Representative_name'] = export_all['Agent Name']
     contracts['Product'] = export_all['Product']
     contracts = contracts.loc[contracts['Contract_number'].str.startswith('6')]
+    contracts = contracts.drop_duplicates(subset=['Contract_number'])
     contracts.reset_index(drop=True, inplace=True)
     contracts['Company'] = 'EQ'
     wd.close()
