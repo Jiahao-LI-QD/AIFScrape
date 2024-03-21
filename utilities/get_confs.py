@@ -86,7 +86,7 @@ def get_control(args):
     3:number of iteration
     set up default iteration to 3, range from 1-5
     4:number of thread
-    set up default thread to 1, when filename is not defined
+    set up default thread to 1, when thread number is not defined
     5: filename(Excel file)
     :param args: system arguments
     :return: control mode, iteration times, thread number and filename
