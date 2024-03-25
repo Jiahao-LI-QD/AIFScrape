@@ -19,7 +19,10 @@ def scrape_client(wd, client, contract_number):
     wait.until(EC.element_to_be_clickable((By.XPATH, paths['owner']))).click()
     # wd.find_element(By.XPATH, paths['owner']).click()
 
-    name = wd.find_element(By.XPATH, paths['name']).text.split('.', 1)[-1].lstrip()
+    name = wd.find_element(By.XPATH, paths['name']).text
+
+    if name.startswiths('MS.') or name.startswiths('MR.'):
+        name = name.split('.', 1)[-1].lstrip()
 
     c1_table = wd.find_elements(By.XPATH, paths['c1_table']['c1_main'])
     for c1_row in c1_table:
